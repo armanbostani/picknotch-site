@@ -1,0 +1,17 @@
+---
+import Base from '../layouts/Base.astro';
+import { getCollection } from 'astro:content';
+const reviews = (await getCollection('reviews')).sort((a, b) => b.data.score - a.data.score);
+---
+<Base>
+  <section class="hero">
+    <h1>Honest e-bike reviews, with the codes that actually work.</h1>
+    <p>Independently researched. Affiliate supported. A notch above the usual picks.</p>
+  </section>
+  {reviews.map((r) => (
+    <a class="card" href={`/reviews/${r.slug}`}>
+      <span class="score">{r.data.score}</span>
+      <span><h2>{r.data.title}</h2><span class="meta">{r.data.brand} · {r.data.category} · Updated {r.data.updated}</span></span>
+    </a>
+  ))}
+</Base>

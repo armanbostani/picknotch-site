@@ -1,0 +1,39 @@
+---
+import Base from '../../layouts/Base.astro';
+import { getCollection } from 'astro:content';
+export async function getStaticPaths() {
+  const reviews = await getCollection('reviews');
+  return reviews.map((r) => ({ params: { slug: r.slug }, props: { review: r } }));
+}
+const { review } = Astro.props;
+const d = review.data;
+const { Content } = await review.render();
+const schema = {
+  "@context": "https://schema.org", "@type": "Review",
+  "itemReviewed": { "@type": "Product", "name": d.product, "brand": { "@type": "Brand", "name": d.brand } },
+  "reviewRating": { "@type": "Rating", "ratingValue": d.score, "bestRating": 10 },
+  "author": { "@type": "Organization", "name": "PickNotch" },
+  "publisher": { "@type": "Organization", "name": "PickNotch" }
+};
+---
+<Base title={`${d.title} | PickNotch`} description={d.summary}>
+  <div class="lead">{d.category} › {d.brand} · Independently researched · affiliate supported · Updated {d.updated}</div>
+  <h1 class="title">{d.title}</h1>
+  <div class="row">
+    <div class="verdict"><div class="k">The verdict</div><div>{d.summary}</div></div>
+    <div class="deal">
+      <div>Best price today</div>
+      <div class="price">{d.price} <span style="font-size:13px;color:#9FB0C4;font-weight:400;">at {d.brand}</span></div>
+      {d.code && <div class="code">code {d.code}{d.discount ? ` · ${d.discount}` : ''}</div>}
+      <a class="cta" href={d.merchantUrl} rel="nofollow sponsored" target="_blank">Check price</a>
+      <small>We may earn a commission. It never changes our score.</small>
+    </div>
+  </div>
+  <div class="pc">
+    <div><h3 class="good">What's good</h3><ul>{d.pros.map((p) => (<li>{p}</li>))}</ul></div>
+    <div><h3 class="bad">What's not</h3><ul>{d.cons.map((c) => (<li>{c}</li>))}</ul></div>
+  </div>
+  <article><Content /></article>
+  <div class="disclosure">PickNotch is reader-supported. When you buy through links on our site, we may earn an affiliate commission. We only recommend products we'd buy ourselves, and commissions never affect our scores or rankings.</div>
+  <script type="application/ld+json" set:html={JSON.stringify(schema)} />
+</Base>
