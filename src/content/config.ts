@@ -22,6 +22,20 @@ const reviews = defineCollection({
     avoidIf: z.string().optional(),
     priceRange: z.string().optional(),
     specs: z.record(z.string()).optional(),
+    image: z.string().optional(),
+    imageAlt: z.string().optional(),
+    gallery: z.array(z.object({
+      src: z.string(),
+      alt: z.string(),
+    })).optional(),
+    customerReviews: z.array(z.object({
+      name: z.string(),
+      rating: z.number(),
+      title: z.string(),
+      body: z.string(),
+      avatar: z.string().optional(),
+      source: z.string().optional(),
+    })).optional(),
   }),
 });
 

@@ -6,19 +6,25 @@ import ReviewCard from '../components/ReviewCard.astro';
 import PlaceholderVisual from '../components/PlaceholderVisual.astro';
 import HeroVisual from '../components/HeroVisual.astro';
 import MethodologyPreview from '../components/MethodologyPreview.astro';
+import Icon from '../components/Icon.astro';
 import { getCollection } from 'astro:content';
 
 const allReviews = await getCollection('reviews');
 const published = allReviews
   .filter(r => r.data.status === 'published' && r.data.score != null)
-  .sort((a, b) => (b.data.score ?? 0) - (a.data.score ?? 0));
+  .sort((a, b) => {
+    // Velotric Discover 3 is our first featured review — pin it first
+    if (a.slug === 'velotric-discover-3') return -1;
+    if (b.slug === 'velotric-discover-3') return 1;
+    return (b.data.score ?? 0) - (a.data.score ?? 0);
+  });
 
 const subcategories = [
-  { name: 'Budget e-bikes',   desc: 'Under $800. Real value vs cut corners.',              icon: '💰', status: 'Building' },
-  { name: 'Fat tyre e-bikes', desc: 'Rugged & stable — with real trade-offs.',             icon: '🏔️', status: 'Coming soon' },
-  { name: 'Folding e-bikes',  desc: 'Portability vs wheel size, weight, and quality.',     icon: '📦', status: 'Coming soon' },
-  { name: 'Commuter e-bikes', desc: 'Range honesty, motor type, real-world support.',      icon: '🏙️', status: 'Coming soon' },
-];
+  { name: 'Budget e-bikes',   desc: 'Under $800. Real value vs cut corners.',          iconName: 'budget', status: 'Building' },
+  { name: 'Fat tyre e-bikes', desc: 'Rugged & stable — with real trade-offs.',          iconName: 'outdoor', status: 'Coming soon' },
+  { name: 'Folding e-bikes',  desc: 'Portability vs wheel size, weight, and quality.', iconName: 'fold', status: 'Coming soon' },
+  { name: 'Commuter e-bikes', desc: 'Range honesty, motor type, real-world support.',  iconName: 'city', status: 'Coming soon' },
+] as const;
 
 const catchCards = [
   { title: 'Great specs. Weak support?',       body: 'High performance means nothing if the brand disappears after 6 months.' },
@@ -27,9 +33,9 @@ const catchCards = [
 ];
 
 const compareCards = [
-  { a: 'Qronge', b: 'Happyrunsport', desc: 'Two budget commuters at similar prices. Which one actually wins?' },
-  { a: 'Budget', b: 'Premium',       desc: "Is it worth spending 3× more? We break down what you actually gain." },
-  { a: 'Fat tyre', b: 'Commuter',    desc: 'Different use cases, different trade-offs. Which style suits your ride?' },
+  { a: 'Velotric', b: 'Rad Power',       desc: 'Two comfort commuters at different price points. Where the extra money actually goes.' },
+  { a: 'Budget',   b: 'Premium',          desc: "Is it worth spending 3× more? We break down what you actually gain." },
+  { a: 'Fat tyre', b: 'Commuter',         desc: 'Different use cases, different trade-offs. Which style suits your ride?' },
 ];
 ---
 
@@ -46,7 +52,6 @@ const compareCards = [
 
     <div class="wrap">
       <div class="hero-inner">
-
         <div class="hero-left">
           <p class="hero-micro">Independent research · Clear verdicts · No hype-first rankings</p>
           <h1 class="hero-heading">Better picks.<br />Fewer regrets.</h1>
@@ -56,11 +61,9 @@ const compareCards = [
             <a href="/methodology" class="btn btn-ghost">How we pick</a>
           </div>
         </div>
-
         <div class="hero-right">
           <HeroVisual />
         </div>
-
       </div>
     </div>
   </section>
@@ -81,14 +84,14 @@ const compareCards = [
           name="E-bikes"
           description="Budget commuters to fat-tyre models. We compare value, usability, and support confidence."
           status="active"
-          icon="🚲"
+          iconName="ebike"
           href="/categories/e-bikes"
           tint="default"
         />
-        <CategoryCard name="Tech & gadgets"      description="Phones, audio, laptops — where the spec sheet often lies."     status="coming-soon" icon="💻" tint="slate"  />
-        <CategoryCard name="Home gear"           description="Appliances and kitchen tools worth researching before buying." status="coming-soon" icon="🏠" tint="warm"   />
-        <CategoryCard name="Outdoor & mobility"  description="Scooters, camping gear, and outdoor equipment."               status="coming-soon" icon="🏕️" tint="forest" />
-        <CategoryCard name="Tools & equipment"   description="Power tools and workshop gear where quality matters."         status="coming-soon" icon="🔧" tint="slate"  />
+        <CategoryCard name="Tech & gadgets"      description="Phones, audio, laptops — where the spec sheet often lies."     status="coming-soon" iconName="tech"    tint="slate"  />
+        <CategoryCard name="Home gear"           description="Appliances and kitchen tools worth researching before buying." status="coming-soon" iconName="home"    tint="warm"   />
+        <CategoryCard name="Outdoor & mobility"  description="Scooters, camping gear, and outdoor equipment."               status="coming-soon" iconName="outdoor" tint="forest" />
+        <CategoryCard name="Tools & equipment"   description="Power tools and workshop gear where quality matters."         status="coming-soon" iconName="tools"   tint="slate"  />
       </div>
     </div>
   </section>
@@ -103,7 +106,6 @@ const compareCards = [
       </div>
 
       <div class="ebike-layout">
-        <!-- Feature card -->
         <div class="ebf-card">
           <div class="ebf-visual">
             <PlaceholderVisual label="E-bikes" />
@@ -124,12 +126,13 @@ const compareCards = [
           </div>
         </div>
 
-        <!-- Sub-type cards -->
         <div class="ebike-sub-grid">
-          {subcategories.map(({ name, desc, icon, status }) => (
+          {subcategories.map(({ name, desc, iconName, status }) => (
             <div class="ebs-card">
               <div class="ebs-icon-row">
-                <span class="ebs-icon">{icon}</span>
+                <div class="ebs-icon-wrap">
+                  <Icon name={iconName} size={18} />
+                </div>
                 <span class:list={['ebs-pill', status === 'Building' ? 'ebs-pill--building' : 'ebs-pill--soon']}>{status}</span>
               </div>
               <h4 class="ebs-name">{name}</h4>
@@ -161,10 +164,11 @@ const compareCards = [
             slug={r.slug}
             category={r.data.category}
             status={r.data.status}
+            image={r.data.image}
+            imageAlt={r.data.imageAlt}
           />
         ))}
 
-        <!-- In-progress placeholders -->
         <div class="ph-card">
           <div class="ph-thumb">
             <PlaceholderVisual label="E-bikes" />
@@ -390,9 +394,7 @@ const compareCards = [
   padding: 3px 10px;
   border-radius: 99px;
 }
-.ebf-body {
-  padding: 20px 22px 22px;
-}
+.ebf-body { padding: 20px 22px 22px; }
 .ebf-spec-tags {
   display: flex;
   gap: 6px;
@@ -419,12 +421,7 @@ const compareCards = [
   margin: 0 0 8px;
   letter-spacing: -0.02em;
 }
-.ebf-desc {
-  font-size: 14px;
-  color: var(--slate);
-  line-height: 1.6;
-  margin: 0 0 18px;
-}
+.ebf-desc { font-size: 14px; color: var(--slate); line-height: 1.6; margin: 0 0 18px; }
 .ebf-cta { font-size: 13px; }
 
 .ebike-sub-grid {
@@ -445,7 +442,17 @@ const compareCards = [
   justify-content: space-between;
   margin-bottom: 10px;
 }
-.ebs-icon { font-size: 22px; line-height: 1; }
+.ebs-icon-wrap {
+  width: 34px;
+  height: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(34,211,238,0.08);
+  border: 1px solid rgba(34,211,238,0.15);
+  border-radius: 10px;
+  color: #22D3EE;
+}
 .ebs-pill {
   font-family: 'Sora', sans-serif;
   font-size: 9px;
@@ -484,7 +491,7 @@ const compareCards = [
 }
 .list-cta { text-align: center; }
 
-/* ─── Placeholder cards (in-progress) ─── */
+/* ─── Placeholder cards ─── */
 .ph-card {
   display: flex;
   align-items: center;
@@ -496,8 +503,8 @@ const compareCards = [
 }
 .ph-thumb {
   position: relative;
-  width: 88px;
-  height: 88px;
+  width: 96px;
+  height: 96px;
   flex-shrink: 0;
   align-self: stretch;
   opacity: 0.5;
@@ -546,10 +553,7 @@ const compareCards = [
   background: radial-gradient(circle, rgba(34,211,238,0.07) 0%, transparent 65%);
   pointer-events: none;
 }
-.catch-head {
-  text-align: center;
-  margin-bottom: 52px;
-}
+.catch-head { text-align: center; margin-bottom: 52px; }
 .catch-heading {
   font-size: clamp(28px, 4vw, 52px);
   font-weight: 800;
@@ -625,12 +629,7 @@ const compareCards = [
   transform: translateY(-2px);
   border-color: rgba(34,211,238,0.35);
 }
-.cmp-vs-row {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-bottom: 12px;
-}
+.cmp-vs-row { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
 .cmp-side {
   font-family: 'Sora', sans-serif;
   font-size: 13px;
@@ -699,10 +698,8 @@ const compareCards = [
   font-size: 18px;
   color: rgba(255,255,255,0.48);
   line-height: 1.65;
-  margin: 0 0 36px;
+  margin: 0 auto 36px;
   max-width: 440px;
-  margin-left: auto;
-  margin-right: auto;
 }
 .cta-actions {
   display: flex;
@@ -711,10 +708,7 @@ const compareCards = [
   flex-wrap: wrap;
   margin-bottom: 28px;
 }
-.cta-disclosure {
-  font-size: 12px;
-  color: rgba(255,255,255,0.24);
-}
+.cta-disclosure { font-size: 12px; color: rgba(255,255,255,0.24); }
 .cta-disclosure-link {
   color: rgba(34,211,238,0.6);
   text-decoration: none;

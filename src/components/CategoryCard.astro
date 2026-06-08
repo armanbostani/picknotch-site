@@ -1,15 +1,18 @@
 ---
 import PlaceholderVisual from './PlaceholderVisual.astro';
+import Icon from './Icon.astro';
+
+type IconName = 'ebike' | 'tech' | 'home' | 'outdoor' | 'tools' | 'budget' | 'fold' | 'city';
 
 interface Props {
   name: string;
   description: string;
   status: 'active' | 'coming-soon';
-  icon: string;
+  iconName: IconName;
   href?: string;
   tint?: 'default' | 'warm' | 'forest' | 'slate';
 }
-const { name, description, status, icon, href, tint = 'default' } = Astro.props;
+const { name, description, status, iconName, href, tint = 'default' } = Astro.props;
 const active = status === 'active';
 const Tag = active && href ? 'a' : 'div';
 ---
@@ -18,16 +21,16 @@ const Tag = active && href ? 'a' : 'div';
   class:list={['cc-card', active ? 'cc-card--active' : 'cc-card--soon']}
   href={active && href ? href : undefined}
 >
-  <!-- Visual top area -->
   <div class="cc-visual">
     <PlaceholderVisual tint={tint} />
-    <span class="cc-icon" aria-hidden="true">{icon}</span>
+    <div class="cc-icon-wrap" aria-hidden="true">
+      <Icon name={iconName} size={26} class="cc-icon-svg" />
+    </div>
     <span class:list={['cc-pill', active ? 'cc-pill--active' : 'cc-pill--soon']}>
       {active ? 'Active' : 'Coming soon'}
     </span>
   </div>
 
-  <!-- Content -->
   <div class="cc-body">
     <div class="cc-head">
       <h3 class="cc-name">{name}</h3>
@@ -55,9 +58,7 @@ const Tag = active && href ? 'a' : 'div';
     box-shadow 0.18s ease,
     transform 0.18s var(--ease-spring);
 }
-.cc-card--active {
-  cursor: pointer;
-}
+.cc-card--active { cursor: pointer; }
 .cc-card--active:hover {
   border-color: rgba(34,211,238,0.5);
   box-shadow: 0 6px 28px rgba(34,211,238,0.10), var(--shadow-md);
@@ -67,21 +68,33 @@ const Tag = active && href ? 'a' : 'div';
 .cc-card--active:focus-visible { outline: 2px solid var(--cyan); outline-offset: 3px; border-radius: 18px; }
 .cc-card--soon { opacity: 0.55; }
 
-/* Visual area */
 .cc-visual {
   position: relative;
   height: 110px;
   overflow: hidden;
 }
-.cc-icon {
+
+.cc-icon-wrap {
   position: absolute;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -56%);
-  font-size: 28px;
-  line-height: 1;
-  filter: drop-shadow(0 2px 6px rgba(0,0,0,0.3));
+  transform: translate(-50%, -58%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  background: rgba(34,211,238,0.10);
+  border: 1px solid rgba(34,211,238,0.18);
+  border-radius: 14px;
+  color: #22D3EE;
+  backdrop-filter: blur(4px);
 }
+
+.cc-icon-svg {
+  color: #22D3EE;
+}
+
 .cc-pill {
   position: absolute;
   top: 10px;
@@ -105,7 +118,6 @@ const Tag = active && href ? 'a' : 'div';
   border: 1px solid rgba(148,163,184,0.25);
 }
 
-/* Content */
 .cc-body {
   padding: 14px 16px 16px;
   flex: 1;
@@ -130,9 +142,5 @@ const Tag = active && href ? 'a' : 'div';
   transition: opacity 0.15s ease, transform 0.15s ease;
 }
 .cc-card--active:hover .cc-arrow { opacity: 1; transform: translateX(3px); }
-.cc-desc {
-  font-size: 12px;
-  color: var(--slate);
-  line-height: 1.55;
-}
+.cc-desc { font-size: 12px; color: var(--slate); line-height: 1.55; }
 </style>

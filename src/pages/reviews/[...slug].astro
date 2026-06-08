@@ -2,6 +2,8 @@
 import Base from '../../layouts/Base.astro';
 import ScoreBadge from '../../components/ScoreBadge.astro';
 import DisclosureBox from '../../components/DisclosureBox.astro';
+import ProductImage from '../../components/ProductImage.astro';
+import CustomerReviewCarousel from '../../components/CustomerReviewCarousel.astro';
 import { getCollection } from 'astro:content';
 
 export async function getStaticPaths() {
@@ -24,6 +26,7 @@ const schema = {
 };
 ---
 <Base title={`${d.title} | PickNotch`} description={d.summary}>
+
   <div class="review-wrap">
 
     <!-- Breadcrumb -->
@@ -37,25 +40,55 @@ const schema = {
       <span>{d.brand}</span>
     </nav>
 
+    <!-- Product image -->
+    <div class="review-image-wrap">
+      <ProductImage
+        src={d.image}
+        alt={d.imageAlt ?? d.product}
+        fallbackLabel={d.product}
+        eager={true}
+        class="review-pi"
+      />
+      {d.score != null && (
+        <div class="review-image-badge">
+          <span class="rib-num">{d.score.toFixed(1)}</span>
+          <span class="rib-label">PickNotch Score</span>
+        </div>
+      )}
+      <div class="review-image-chip">
+        <span class="ric-cat">{d.category}</span>
+        <span class="ric-sep">·</span>
+        <span class="ric-brand">{d.brand}</span>
+      </div>
+    </div>
+
+    <!-- Gallery strip -->
+    {d.gallery && d.gallery.length > 0 && (
+      <div class="gallery-strip">
+        {d.gallery.map(img => (
+          <div class="gallery-thumb">
+            <ProductImage src={img.src} alt={img.alt} fallbackLabel={d.product} />
+          </div>
+        ))}
+      </div>
+    )}
+
     <!-- Review hero -->
     <div class="review-hero">
       <div class="review-hero-left">
         <div class="review-meta">
-          <span class="meta-category">{d.category}</span>
-          <span class="meta-sep">·</span>
-          <span class="meta-brand">{d.brand}</span>
-          {d.updated && <><span class="meta-sep">·</span><span class="meta-updated">Updated {d.updated}</span></>}
+          {d.updated && <span class="meta-updated">Updated {d.updated}</span>}
         </div>
         <h1 class="review-title">{d.title}</h1>
         {d.bestFor && (
           <div class="review-bestfor">
-            <span class="bf-label">Best for:</span>
+            <span class="bf-label">Best for</span>
             <span class="bf-val">{d.bestFor}</span>
           </div>
         )}
         {d.avoidIf && (
           <div class="review-avoid">
-            <span class="avoid-label">Avoid if:</span>
+            <span class="avoid-label">Avoid if</span>
             <span class="avoid-val">{d.avoidIf}</span>
           </div>
         )}
@@ -136,10 +169,27 @@ const schema = {
       <Content />
     </article>
 
-    <!-- Disclosure -->
-    <DisclosureBox />
-
   </div>
+
+  <!-- Customer reviews carousel (full width) -->
+  {d.customerReviews && d.customerReviews.length > 0 && (
+    <section class="owners-section">
+      <div class="owners-head wrap-narrow">
+        <span class="owners-eyebrow">Owner feedback</span>
+        <h2 class="owners-heading">What owners are saying</h2>
+        <p class="owners-sub">Short real-world notes from riders who bought the bike.</p>
+      </div>
+      <div class="owners-carousel-wrap">
+        <CustomerReviewCarousel reviews={d.customerReviews} />
+      </div>
+    </section>
+  )}
+
+  <!-- Disclosure -->
+  <div class="disclosure-wrap wrap-narrow">
+    <DisclosureBox />
+  </div>
+
   <script type="application/ld+json" set:html={JSON.stringify(schema)} />
 </Base>
 
@@ -147,8 +197,9 @@ const schema = {
 .review-wrap {
   max-width: 760px;
   margin: 0 auto;
-  padding: 32px 24px 72px;
+  padding: 32px 24px 48px;
 }
+
 /* Breadcrumb */
 .breadcrumb {
   display: flex;
@@ -156,7 +207,7 @@ const schema = {
   gap: 6px;
   font-size: 13px;
   color: var(--muted);
-  margin-bottom: 28px;
+  margin-bottom: 20px;
   flex-wrap: wrap;
 }
 .breadcrumb a {
@@ -167,37 +218,115 @@ const schema = {
 .breadcrumb a:hover { color: var(--cyan); }
 .breadcrumb span[aria-hidden] { color: var(--line); }
 
+/* Product image */
+.review-image-wrap {
+  position: relative;
+  width: 100%;
+  height: 340px;
+  border-radius: 20px;
+  overflow: hidden;
+  margin-bottom: 12px;
+  background: var(--ink-deep);
+}
+.review-pi {
+  border-radius: 20px;
+}
+.review-image-badge {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  background: rgba(13,21,48,0.82);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(34,211,238,0.2);
+  border-radius: 14px;
+  padding: 10px 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+.rib-num {
+  font-family: 'Sora', sans-serif;
+  font-size: 26px;
+  font-weight: 800;
+  color: #22D3EE;
+  letter-spacing: -0.05em;
+  line-height: 1;
+}
+.rib-label {
+  font-family: 'Sora', sans-serif;
+  font-size: 8px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: rgba(255,255,255,0.4);
+  white-space: nowrap;
+}
+.review-image-chip {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(13,21,48,0.75);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 99px;
+  padding: 4px 12px;
+}
+.ric-cat {
+  font-family: 'Sora', sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #22D3EE;
+}
+.ric-sep { font-size: 12px; color: rgba(255,255,255,0.2); }
+.ric-brand { font-size: 11px; color: rgba(255,255,255,0.55); font-weight: 500; }
+
+/* Gallery */
+.gallery-strip {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 28px;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+.gallery-strip::-webkit-scrollbar { display: none; }
+.gallery-thumb {
+  flex-shrink: 0;
+  width: 80px;
+  height: 60px;
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  background: var(--ink-deep);
+  position: relative;
+}
+
 /* Review hero */
 .review-hero {
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
   gap: 24px;
-  margin-bottom: 28px;
+  margin-bottom: 24px;
+  margin-top: 28px;
 }
 .review-hero-left { flex: 1; min-width: 0; }
 .review-meta {
   display: flex;
   align-items: center;
   gap: 6px;
-  margin-bottom: 10px;
+  margin-bottom: 8px;
   flex-wrap: wrap;
 }
-.meta-category {
-  font-family: 'Sora', sans-serif;
-  font-size: 11px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.07em;
-  color: var(--cyan);
-  background: rgba(34,211,238,0.1);
-  padding: 2px 8px;
-  border-radius: 20px;
-}
-.meta-sep { color: var(--line); font-size: 14px; }
-.meta-brand, .meta-updated { font-size: 13px; color: var(--slate); }
+.meta-updated { font-size: 12px; color: var(--muted); }
 .review-title {
-  font-size: clamp(22px, 3vw, 30px);
+  font-size: clamp(20px, 3vw, 28px);
   font-weight: 700;
   margin: 0 0 12px;
   line-height: 1.2;
@@ -206,23 +335,24 @@ const schema = {
 .review-bestfor, .review-avoid {
   display: flex;
   align-items: flex-start;
-  gap: 7px;
+  gap: 8px;
   font-size: 14px;
   margin-bottom: 6px;
 }
 .bf-label, .avoid-label {
   font-family: 'Sora', sans-serif;
-  font-size: 11px;
-  font-weight: 600;
+  font-size: 10px;
+  font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.06em;
   padding-top: 2px;
   white-space: nowrap;
+  flex-shrink: 0;
 }
 .bf-label { color: #0E7490; }
 .avoid-label { color: #92400E; }
-.bf-val { font-size: 14px; color: var(--ink); font-weight: 500; }
-.avoid-val { font-size: 14px; color: var(--slate); }
+.bf-val { font-size: 14px; color: var(--ink); font-weight: 500; line-height: 1.45; }
+.avoid-val { font-size: 14px; color: var(--slate); line-height: 1.45; }
 .review-disclosure-note {
   font-size: 11px;
   color: var(--muted);
@@ -324,7 +454,7 @@ const schema = {
   margin: 0 0 8px;
 }
 .pc-heading--good { color: var(--green); }
-.pc-heading--bad  { color: var(--red); }
+.pc-heading--bad  { color: var(--red, #DC2626); }
 .pc-list {
   margin: 0;
   padding-left: 18px;
@@ -353,15 +483,13 @@ const schema = {
   color: #334155;
   border: 1px solid var(--line);
 }
-.specs-table tr:first-child th,
-.specs-table tr:first-child td { border-top: 1px solid var(--line); }
 
 /* Review content */
 .review-content {
   font-size: 16px;
   color: #334155;
   line-height: 1.75;
-  margin-bottom: 16px;
+  margin-bottom: 0;
 }
 .review-content h2 {
   font-size: 20px;
@@ -383,10 +511,55 @@ const schema = {
 .review-content li { margin-bottom: 6px; }
 .review-content strong { color: var(--ink); font-weight: 600; }
 
-@media (max-width: 600px) {
-  .review-wrap { padding: 20px 16px 52px; }
-  .review-hero { flex-direction: column-reverse; gap: 16px; }
+/* Owners section */
+.owners-section {
+  background: var(--paper);
+  padding: 72px 0 80px;
+}
+.owners-head {
+  text-align: center;
+  margin-bottom: 44px;
+}
+.owners-eyebrow {
+  display: inline-block;
+  font-family: 'Sora', sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--cyan);
+  margin-bottom: 10px;
+}
+.owners-heading {
+  font-size: clamp(22px, 3vw, 32px);
+  font-weight: 700;
+  color: var(--ink);
+  margin: 0 0 10px;
+  letter-spacing: -0.03em;
+}
+.owners-sub {
+  font-size: 15px;
+  color: var(--slate);
+  line-height: 1.65;
+  margin: 0;
+}
+.owners-carousel-wrap {
+  padding: 0 40px;
+}
+
+/* Disclosure wrap */
+.disclosure-wrap {
+  padding: 40px 28px 64px;
+}
+
+@media (max-width: 640px) {
+  .review-wrap { padding: 20px 16px 40px; }
+  .review-image-wrap { height: 220px; }
+  .review-hero { flex-direction: column-reverse; gap: 16px; margin-top: 20px; }
   .top-row { flex-direction: column; }
   .proscons { flex-direction: column; }
+  .owners-carousel-wrap { padding: 0 16px; }
+  .review-image-badge { padding: 8px 12px; }
+  .rib-num { font-size: 20px; }
 }
 </style>

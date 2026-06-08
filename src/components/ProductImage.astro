@@ -1,0 +1,63 @@
+---
+import PlaceholderVisual from './PlaceholderVisual.astro';
+
+interface Props {
+  src?: string;
+  alt?: string;
+  fallbackLabel?: string;
+  class?: string;
+  eager?: boolean;
+  tint?: 'default' | 'warm' | 'forest' | 'slate';
+}
+
+const { src, alt = '', fallbackLabel, class: cls, eager = false, tint = 'default' } = Astro.props;
+---
+
+<div class:list={['pi-wrap', cls]}>
+  {src && (
+    <img
+      class="pi-img"
+      src={src}
+      alt={alt}
+      loading={eager ? 'eager' : 'lazy'}
+      decoding="async"
+      onerror="this.className+=' pi-broken'"
+    />
+  )}
+  <div class:list={['pi-fallback', src ? 'pi-fallback--hidden' : '']}>
+    <PlaceholderVisual label={fallbackLabel} tint={tint} />
+  </div>
+</div>
+
+<style>
+.pi-wrap {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  display: block;
+}
+.pi-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: opacity 0.2s ease;
+}
+.pi-broken {
+  opacity: 0;
+  pointer-events: none;
+}
+.pi-broken + .pi-fallback--hidden {
+  display: block;
+}
+.pi-fallback {
+  position: absolute;
+  inset: 0;
+}
+.pi-fallback--hidden {
+  display: none;
+}
+</style>

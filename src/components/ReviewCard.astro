@@ -1,6 +1,6 @@
 ---
 import ScoreBadge from './ScoreBadge.astro';
-import PlaceholderVisual from './PlaceholderVisual.astro';
+import ProductImage from './ProductImage.astro';
 
 interface Props {
   title: string;
@@ -12,23 +12,23 @@ interface Props {
   category?: string;
   status?: string;
   tags?: string[];
+  image?: string;
+  imageAlt?: string;
 }
-const { title, brand, score, bestFor, summary, slug, category = 'E-bikes', status, tags } = Astro.props;
+const { title, brand, score, bestFor, summary, slug, category = 'E-bikes', status, tags, image, imageAlt } = Astro.props;
 const isPublished = status === 'published' || (score != null);
 const href = isPublished && slug ? `/reviews/${slug}` : undefined;
 const Tag = href ? 'a' : 'div';
 ---
 
 <Tag class:list={['rc', href ? 'rc--link' : '']} href={href}>
-  <!-- Thumbnail -->
   <div class="rc-thumb">
-    <PlaceholderVisual label={category} />
+    <ProductImage src={image} alt={imageAlt ?? brand} fallbackLabel={category} />
     <div class="rc-score-badge">
       <ScoreBadge score={score ?? null} size="sm" />
     </div>
   </div>
 
-  <!-- Content -->
   <div class="rc-body">
     <div class="rc-meta">
       <span class="rc-category">{category}</span>
@@ -76,11 +76,10 @@ const Tag = href ? 'a' : 'div';
 .rc--link:active { transform: translateY(0); }
 .rc--link:focus-visible { outline: 2px solid var(--cyan); outline-offset: 3px; border-radius: 16px; }
 
-/* Thumbnail */
 .rc-thumb {
   position: relative;
-  width: 88px;
-  height: 88px;
+  width: 96px;
+  height: 96px;
   flex-shrink: 0;
   align-self: stretch;
 }
@@ -90,7 +89,6 @@ const Tag = href ? 'a' : 'div';
   left: 6px;
 }
 
-/* Body */
 .rc-body {
   flex: 1;
   min-width: 0;
@@ -157,7 +155,6 @@ const Tag = href ? 'a' : 'div';
   letter-spacing: 0.05em;
 }
 
-/* Arrow */
 .rc-arrow {
   flex-shrink: 0;
   color: var(--cyan);
@@ -168,7 +165,7 @@ const Tag = href ? 'a' : 'div';
 .rc--link:hover .rc-arrow { opacity: 1; transform: translateX(3px); }
 
 @media (max-width: 480px) {
-  .rc-thumb { width: 72px; height: 72px; }
+  .rc-thumb { width: 80px; height: 80px; }
   .rc-body { padding: 12px 12px; }
 }
 </style>
