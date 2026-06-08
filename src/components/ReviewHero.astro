@@ -1,0 +1,318 @@
+---
+import ProductGallery from './ProductGallery.astro';
+
+interface GalleryImage { src: string; alt: string; }
+interface Props {
+  title: string;
+  brand: string;
+  category: string;
+  categoryHref?: string;
+  score?: number | null;
+  verdict: string;
+  bestFor?: string;
+  avoidIf?: string;
+  price?: string;
+  code?: string;
+  discount?: string;
+  merchantUrl?: string;
+  updated?: string;
+  images: GalleryImage[];
+}
+const {
+  title, brand, category, categoryHref = '/categories/e-bikes',
+  score, verdict, bestFor, avoidIf, price, code, discount, merchantUrl, updated, images,
+} = Astro.props;
+
+function tier(s: number) {
+  if (s >= 9) return 'Outstanding';
+  if (s >= 8) return 'Excellent';
+  if (s >= 7) return 'Very good';
+  if (s >= 5.5) return 'Decent';
+  return 'Weak';
+}
+const scoreTier = score != null ? tier(score) : null;
+---
+
+<section class="rh">
+  <div class="wrap-wide">
+    <nav class="rh-crumb" aria-label="Breadcrumb">
+      <a href="/">Home</a><span aria-hidden="true">›</span>
+      <a href="/reviews">Reviews</a><span aria-hidden="true">›</span>
+      <a href={categoryHref}>{category}</a><span aria-hidden="true">›</span>
+      <span>{brand}</span>
+    </nav>
+
+    <div class="rh-grid">
+      <div class="rh-left">
+        <ProductGallery images={images} productName={title} category={category} brand={brand} />
+      </div>
+
+      <aside class="rh-right">
+        <div class="rh-panel">
+          {updated && <span class="rh-updated">Updated {updated}</span>}
+          <h1 class="rh-title">{title}</h1>
+
+          {score != null && (
+            <div class="rh-score">
+              <div class="rh-score-badge">
+                <span class="rh-score-num">{score.toFixed(1)}</span>
+                <span class="rh-score-den">/10</span>
+              </div>
+              <div class="rh-score-meta">
+                <span class="rh-score-label">PickNotch Score</span>
+                <span class="rh-score-tier">{scoreTier} · {category}</span>
+              </div>
+            </div>
+          )}
+
+          <p class="rh-verdict">{verdict}</p>
+
+          <div class="rh-fit">
+            {bestFor && (
+              <div class="rh-fit-row rh-fit-row--best">
+                <span class="rh-fit-ic" aria-hidden="true">
+                  <svg viewBox="0 0 16 16" fill="none"><path d="M3.5 8.5L7 12l5.5-7" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </span>
+                <div><span class="rh-fit-label">Best for</span><span class="rh-fit-text">{bestFor}</span></div>
+              </div>
+            )}
+            {avoidIf && (
+              <div class="rh-fit-row rh-fit-row--avoid">
+                <span class="rh-fit-ic" aria-hidden="true">
+                  <svg viewBox="0 0 16 16" fill="none"><path d="M8 4.5v4.2" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/><circle cx="8" cy="11.4" r="0.9" fill="currentColor"/></svg>
+                </span>
+                <div><span class="rh-fit-label">Avoid if</span><span class="rh-fit-text">{avoidIf}</span></div>
+              </div>
+            )}
+          </div>
+
+          {merchantUrl && (
+            <div class="rh-deal">
+              {price && (
+                <div class="rh-price-row">
+                  <span class="rh-price">{price}</span>
+                  <span class="rh-price-at">at {brand}</span>
+                </div>
+              )}
+              {code && (
+                <div class="rh-coupon">
+                  <span class="rh-coupon-label">Code</span>
+                  <span class="rh-coupon-code">{code}</span>
+                  {discount && <span class="rh-coupon-save">saves at checkout</span>}
+                </div>
+              )}
+              <a class="rh-cta" href={merchantUrl} rel="nofollow sponsored" target="_blank">
+                Check price
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+                  <path d="M2.5 7h8M7 3l4 4-4 4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </a>
+              <p class="rh-affil">Affiliate-supported · our score stays independent</p>
+            </div>
+          )}
+        </div>
+      </aside>
+    </div>
+  </div>
+</section>
+
+<style>
+.rh { padding: 28px 0 8px; }
+
+.rh-crumb {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 13px;
+  color: var(--muted);
+  margin-bottom: 22px;
+  flex-wrap: wrap;
+}
+.rh-crumb a { color: var(--slate); transition: color 0.13s ease; }
+.rh-crumb a:hover { color: #0E7490; }
+.rh-crumb span[aria-hidden] { color: var(--line); }
+
+.rh-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.32fr) minmax(330px, 1fr);
+  gap: 40px;
+  align-items: start;
+}
+.rh-left, .rh-right { min-width: 0; }
+
+/* Sticky purchase panel */
+.rh-panel {
+  position: sticky;
+  top: 24px;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 22px;
+  padding: 26px 26px 22px;
+  box-shadow: 0 20px 48px rgba(13,21,48,0.10), 0 4px 12px rgba(13,21,48,0.05);
+}
+.rh-panel::before {
+  content: "";
+  display: block;
+  position: absolute;
+  top: 0; left: 26px; right: 26px;
+  height: 3px;
+  background: linear-gradient(90deg, var(--cyan), #0891B2);
+  border-radius: 0 0 3px 3px;
+}
+
+.rh-updated {
+  display: inline-block;
+  font-family: 'Sora', sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--muted);
+  margin-bottom: 10px;
+}
+.rh-title {
+  font-size: clamp(24px, 2.4vw, 30px);
+  font-weight: 800;
+  line-height: 1.12;
+  letter-spacing: -0.03em;
+  color: var(--ink);
+  margin-bottom: 18px;
+}
+
+.rh-score {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 16px;
+  background: linear-gradient(135deg, rgba(34,211,238,0.08), rgba(8,145,178,0.05));
+  border: 1px solid rgba(34,211,238,0.20);
+  border-radius: 14px;
+  margin-bottom: 18px;
+}
+.rh-score-badge {
+  display: flex;
+  align-items: baseline;
+  gap: 2px;
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+.rh-score-num {
+  font-family: 'Sora', sans-serif;
+  font-size: 38px;
+  font-weight: 800;
+  letter-spacing: -0.05em;
+  line-height: 1;
+  color: #0D9488;
+}
+.rh-score-den { font-family: 'Sora', sans-serif; font-size: 14px; font-weight: 700; color: var(--muted); }
+.rh-score-meta { display: flex; flex-direction: column; gap: 3px; }
+.rh-score-label {
+  font-family: 'Sora', sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--slate);
+}
+.rh-score-tier { font-size: 13px; font-weight: 600; color: var(--ink); }
+
+.rh-verdict {
+  font-size: 14.5px;
+  line-height: 1.6;
+  color: #334155;
+  margin-bottom: 16px;
+}
+
+.rh-fit { display: flex; flex-direction: column; gap: 9px; margin-bottom: 20px; }
+.rh-fit-row { display: flex; align-items: flex-start; gap: 10px; }
+.rh-fit-ic {
+  flex-shrink: 0;
+  width: 20px; height: 20px;
+  display: inline-flex; align-items: center; justify-content: center;
+  border-radius: 6px;
+  margin-top: 1px;
+}
+.rh-fit-ic svg { width: 14px; height: 14px; }
+.rh-fit-row--best .rh-fit-ic { background: rgba(15,118,110,0.12); color: #0F766E; }
+.rh-fit-row--avoid .rh-fit-ic { background: rgba(217,119,6,0.13); color: #B45309; }
+.rh-fit-label {
+  display: block;
+  font-family: 'Sora', sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--muted);
+  margin-bottom: 1px;
+}
+.rh-fit-text { font-size: 13px; line-height: 1.45; color: #334155; }
+
+.rh-deal {
+  border-top: 1px solid var(--line);
+  padding-top: 18px;
+}
+.rh-price-row { display: flex; align-items: baseline; gap: 8px; margin-bottom: 12px; }
+.rh-price { font-family: 'Sora', sans-serif; font-size: 30px; font-weight: 800; letter-spacing: -0.03em; color: var(--ink); }
+.rh-price-at { font-size: 13px; color: var(--muted); }
+
+.rh-coupon {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  margin-bottom: 14px;
+  border: 1.5px dashed rgba(34,211,238,0.45);
+  border-radius: 11px;
+  background: rgba(34,211,238,0.05);
+  flex-wrap: wrap;
+}
+.rh-coupon-label {
+  font-family: 'Sora', sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--slate);
+}
+.rh-coupon-code {
+  font-family: 'Sora', sans-serif;
+  font-size: 16px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  color: #0E7490;
+}
+.rh-coupon-save { font-size: 11px; color: var(--muted); margin-left: auto; }
+
+.rh-cta {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  background: var(--cyan);
+  color: #06222E;
+  font-family: 'Sora', sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  padding: 14px;
+  border-radius: 12px;
+  box-shadow: 0 6px 20px rgba(34,211,238,0.30);
+  transition: transform 0.16s var(--ease-spring), box-shadow 0.16s ease;
+  margin-bottom: 10px;
+}
+.rh-cta:hover { transform: translateY(-2px); box-shadow: 0 12px 30px rgba(34,211,238,0.42); }
+.rh-cta:active { transform: translateY(0); }
+.rh-cta:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
+.rh-affil { font-size: 11px; color: var(--muted); text-align: center; margin: 0; }
+
+@media (max-width: 940px) {
+  .rh-grid { grid-template-columns: minmax(0, 1fr); gap: 24px; }
+  .rh-panel { position: static; }
+  .rh-panel::before { left: 26px; right: 26px; }
+}
+@media (max-width: 560px) {
+  .rh-panel { padding: 22px 18px 18px; border-radius: 18px; }
+  .rh-panel::before { left: 18px; right: 18px; }
+  .rh-title { font-size: 23px; }
+}
+</style>

@@ -1,0 +1,101 @@
+---
+interface Props {
+  title: string;
+  body: string;
+  image: string;
+  imageAlt: string;
+  index?: number;
+  reverse?: boolean;
+}
+const { title, body, image, imageAlt, index = 0, reverse = false } = Astro.props;
+const num = String(index + 1).padStart(2, '0');
+---
+
+<div class:list={['fb', reverse ? 'fb--reverse' : '']}>
+  <div class="fb-media">
+    <img src={image} alt={imageAlt} loading="lazy" decoding="async" width="900" height="675" />
+    <div class="fb-media-tint" aria-hidden="true"></div>
+  </div>
+  <div class="fb-text">
+    <span class="fb-index" aria-hidden="true">{num}</span>
+    <h3 class="fb-title">{title}</h3>
+    <p class="fb-body">{body}</p>
+  </div>
+</div>
+
+<style>
+.fb {
+  display: grid;
+  grid-template-columns: 1.05fr 0.95fr;
+  gap: 48px;
+  align-items: center;
+}
+.fb--reverse .fb-media { order: 2; }
+
+.fb-media {
+  position: relative;
+  border-radius: 20px;
+  overflow: hidden;
+  aspect-ratio: 4 / 3;
+  background: #EEF1F6;
+  box-shadow: 0 22px 48px rgba(13,21,48,0.16), 0 6px 14px rgba(13,21,48,0.08);
+}
+.fb-media img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.6s var(--ease-out);
+}
+.fb:hover .fb-media img { transform: scale(1.035); }
+.fb-media-tint {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(180deg, transparent 60%, rgba(13,21,48,0.16) 100%),
+    radial-gradient(120% 90% at 80% 10%, rgba(34,211,238,0.10), transparent 55%);
+}
+
+.fb-text { padding: 8px 0; }
+.fb-index {
+  font-family: 'Sora', sans-serif;
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  color: var(--cyan);
+  display: inline-block;
+  margin-bottom: 12px;
+  position: relative;
+  padding-left: 30px;
+}
+.fb-index::before {
+  content: "";
+  position: absolute;
+  left: 0; top: 50%;
+  width: 22px; height: 2px;
+  background: var(--cyan);
+  transform: translateY(-50%);
+}
+.fb-title {
+  font-size: clamp(22px, 2.4vw, 28px);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  color: var(--ink);
+  margin-bottom: 12px;
+  line-height: 1.15;
+}
+.fb-body {
+  font-size: 16px;
+  line-height: 1.7;
+  color: var(--slate);
+  max-width: 42ch;
+}
+
+@media (max-width: 760px) {
+  .fb { grid-template-columns: 1fr; gap: 20px; }
+  .fb--reverse .fb-media { order: 0; }
+  .fb-body { max-width: none; }
+}
+</style>

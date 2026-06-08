@@ -1,0 +1,155 @@
+---
+interface ScoreItem { label: string; value: number; }
+interface Props {
+  score: number;
+  scores: ScoreItem[];
+  lead?: string;
+}
+const { score, scores, lead } = Astro.props;
+
+function band(v: number) {
+  if (v >= 8.5) return 'high';
+  if (v >= 7.5) return 'good';
+  if (v >= 6) return 'mid';
+  return 'low';
+}
+---
+
+<div class="sb">
+  <div class="sb-aside">
+    <div class="sb-overall">
+      <span class="sb-overall-num">{score.toFixed(1)}</span>
+      <span class="sb-overall-den">/ 10</span>
+    </div>
+    <span class="sb-overall-label">PickNotch Score</span>
+    {lead && <p class="sb-lead">{lead}</p>}
+  </div>
+
+  <div class="sb-bars">
+    {scores.map((s, i) => (
+      <div class="sb-bar">
+        <div class="sb-bar-head">
+          <span class="sb-bar-label">{s.label}</span>
+          <span class:list={['sb-bar-chip', `sb-chip--${band(s.value)}`]}>{s.value.toFixed(1)}</span>
+        </div>
+        <div class="sb-track">
+          <div
+            class:list={['sb-fill', `sb-fill--${band(s.value)}`]}
+            style={`width: ${s.value * 10}%; animation-delay: ${i * 90}ms`}
+          ></div>
+        </div>
+      </div>
+    ))}
+  </div>
+</div>
+
+<style>
+.sb {
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  gap: 36px;
+  align-items: center;
+  background: linear-gradient(135deg, #0D1530 0%, #16223F 100%);
+  border: 1px solid rgba(34,211,238,0.14);
+  border-radius: 22px;
+  padding: 34px 36px;
+  box-shadow: 0 24px 60px rgba(8,16,40,0.30), 0 6px 16px rgba(8,16,40,0.16);
+}
+
+.sb-aside {
+  border-right: 1px solid rgba(255,255,255,0.10);
+  padding-right: 32px;
+}
+.sb-overall { display: flex; align-items: baseline; gap: 6px; }
+.sb-overall-num {
+  font-family: 'Sora', sans-serif;
+  font-size: 60px;
+  font-weight: 800;
+  letter-spacing: -0.05em;
+  line-height: 1;
+  background: linear-gradient(120deg, #5CE6F7, #22D3EE);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.sb-overall-den { font-family: 'Sora', sans-serif; font-size: 18px; font-weight: 700; color: rgba(255,255,255,0.4); }
+.sb-overall-label {
+  display: block;
+  font-family: 'Sora', sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: rgba(34,211,238,0.8);
+  margin-top: 8px;
+}
+.sb-lead {
+  font-size: 13px;
+  line-height: 1.6;
+  color: rgba(255,255,255,0.6);
+  margin-top: 14px;
+}
+
+.sb-bars { display: flex; flex-direction: column; gap: 16px; }
+.sb-bar { display: flex; flex-direction: column; gap: 7px; }
+.sb-bar-head { display: flex; justify-content: space-between; align-items: center; }
+.sb-bar-label { font-size: 13.5px; font-weight: 500; color: rgba(255,255,255,0.82); }
+.sb-bar-chip {
+  font-family: 'Sora', sans-serif;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  padding: 2px 9px;
+  border-radius: 99px;
+}
+.sb-chip--high { color: #0D1530; background: #5CE6F7; }
+.sb-chip--good { color: #0D1530; background: #38BDF8; }
+.sb-chip--mid  { color: #1A1206; background: #FBBF24; }
+.sb-chip--low  { color: #1A1206; background: #FB923C; }
+
+.sb-track {
+  height: 8px;
+  background: rgba(255,255,255,0.08);
+  border-radius: 99px;
+  overflow: hidden;
+}
+.sb-fill {
+  height: 100%;
+  border-radius: 99px;
+  transform-origin: left center;
+  animation: sb-grow 0.9s var(--ease-out) both;
+}
+.sb-fill--high { background: linear-gradient(90deg, #22D3EE, #5CE6F7); }
+.sb-fill--good { background: linear-gradient(90deg, #0891B2, #38BDF8); }
+.sb-fill--mid  { background: linear-gradient(90deg, #D97706, #FBBF24); }
+.sb-fill--low  { background: linear-gradient(90deg, #EA580C, #FB923C); }
+
+@keyframes sb-grow {
+  from { transform: scaleX(0); }
+  to   { transform: scaleX(1); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .sb-fill { animation: none; }
+}
+
+@media (max-width: 720px) {
+  .sb {
+    grid-template-columns: 1fr;
+    gap: 22px;
+    padding: 26px 22px;
+  }
+  .sb-aside {
+    border-right: none;
+    border-bottom: 1px solid rgba(255,255,255,0.10);
+    padding-right: 0;
+    padding-bottom: 20px;
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .sb-overall-num { font-size: 46px; }
+  .sb-overall-label { margin-top: 0; align-self: center; }
+  .sb-lead { width: 100%; margin-top: 4px; }
+}
+</style>

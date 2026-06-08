@@ -10,36 +10,64 @@ priceRange: "$1,999"
 merchantUrl: "https://www.velotricbike.com/products/velotric-discover-3-commuter-ebike?page_source=banner_swiper-wrapper-3d0c167ad3e66ed2%7Cshop_now&ref=ARMAN&utm_campaign=&utm_medium=affiliate&utm_source=goaffpro"
 code: "REF204801"
 discount: "Use code REF204801"
-summary: "A comfort-first commuter e-bike with a 750W motor, 80-mile claimed pedal-assist range, hydraulic brakes, smart security features, and a premium upright ride feel."
-verdict: "The Velotric Discover 3 is one of the strongest comfort commuter e-bikes on paper: powerful, stable, feature-rich, and safety-certified. The catch is weight — at 61lb, it is built for smooth everyday riding, not carrying up stairs."
-bestFor: "Comfort-first commuters, errands, hilly streets, and riders who want upright stability"
-avoidIf: "You need a lightweight e-bike, live up multiple flights of stairs, or want a sporty minimalist ride"
+summary: "A comfort-first commuter e-bike with a 750W motor, 80-mile claimed range, hydraulic brakes, smart security, and a premium upright ride. The catch is weight."
+verdict: "One of the most complete comfort commuters at $1,999 — powerful, well-equipped, and safety-certified. The trade-off is its 61lb weight."
+bestFor: "Comfort-first commuters who ride from ground-level storage and want a complete bike out of the box."
+avoidIf: "You carry your bike up stairs, rely on transit, or want a light, sporty ride."
 updated: "June 2026"
-image: "/images/products/velotric-discover-3/hero.svg"
+image: "/images/products/velotric-discover-3/hero.webp"
 imageAlt: "Velotric Discover 3 comfort commuter e-bike"
-# Gallery appears automatically once 2+ real photos are listed below.
-# Drop .webp files into /public/images/products/velotric-discover-3/ then uncomment:
-# gallery:
-#   - src: "/images/products/velotric-discover-3/side.webp"
-#     alt: "Velotric Discover 3 – side profile"
-#   - src: "/images/products/velotric-discover-3/angle.webp"
-#     alt: "Velotric Discover 3 – three-quarter angle"
-#   - src: "/images/products/velotric-discover-3/cockpit.webp"
-#     alt: "Velotric Discover 3 – display and cockpit"
-#   - src: "/images/products/velotric-discover-3/comfort.webp"
-#     alt: "Velotric Discover 3 – comfort detail"
+gallery:
+  - src: "/images/products/velotric-discover-3/hero.webp"
+    alt: "Velotric Discover 3 side profile"
+  - src: "/images/products/velotric-discover-3/cockpit-display.webp"
+    alt: "Velotric Discover 3 cockpit, display and controls"
+  - src: "/images/products/velotric-discover-3/comfort-ride.webp"
+    alt: "Rider cruising on the Velotric Discover 3 with a dog alongside"
+  - src: "/images/products/velotric-discover-3/power-hills.webp"
+    alt: "Rider climbing a hill on the Velotric Discover 3"
+  - src: "/images/products/velotric-discover-3/gravel-trails.webp"
+    alt: "Velotric Discover 3 ridden on open gravel trails"
+scores:
+  - { label: "Comfort", value: 9.3 }
+  - { label: "Power & range", value: 8.8 }
+  - { label: "Safety & support", value: 8.7 }
+  - { label: "Value", value: 8.3 }
+  - { label: "Portability", value: 6.8 }
+scoreLead: "Comfort and completeness carry the score. Portability is the one real weak spot."
+verdictHeadline: "Strong comfort commuter. Heavy, but seriously complete."
+verdictSub: "The Discover 3 earns 8.5 because it combines comfort, power, safety credentials, and everyday practicality at a competitive price."
+verdictImage: "/images/products/velotric-discover-3/trust-rider.webp"
+verdictImageAlt: "A long-time Velotric owner enjoying a ride"
 pros:
-  - "Upright geometry, suspension seatpost, air fork, adjustable stem, comfort saddle"
-  - "750W motor with 75Nm torque — confident on hills and with loads"
-  - "Up to 80 miles pedal-assist / 65 miles throttle range claimed"
+  - "Upright geometry, suspension seatpost, air fork and comfort saddle"
+  - "750W motor with 75Nm torque — confident on hills and loads"
+  - "Up to 80 miles pedal-assist range from the 730Wh battery"
   - "Hydraulic disc brakes with 180mm rotors front and rear"
-  - "UL 2849 and UL 2271 safety certified"
-  - "Rack, fenders, lights, turn signals, USB-C, NFC unlock, Apple Find My, Google Find Hub"
+  - "UL 2849 + UL 2271 safety certified"
+  - "Rack, fenders, lights, turn signals, NFC unlock, Find My"
 cons:
-  - "61lb — awkward for stairs, small flats, or frequent lifting"
-  - "Real-world range varies with terrain, assist level, and throttle use"
-  - "Upright comfort geometry feels less sporty than lighter city e-bikes"
-  - "Heavy if portability is a priority"
+  - "61lb makes it awkward for stairs or frequent lifting"
+  - "Real-world range varies with terrain and throttle use"
+  - "Upright comfort geometry feels less sporty than lighter bikes"
+  - "Premium price if portability matters most to you"
+features:
+  - title: "Comfort-first commuter"
+    body: "Upright geometry, a suspension seatpost, air fork, adjustable stem, and a wide ergonomic saddle make it built for longer everyday rides."
+    image: "/images/products/velotric-discover-3/comfort-ride.webp"
+    imageAlt: "Rider relaxed and upright on the Velotric Discover 3 with a dog alongside"
+  - title: "Power for everyday hills"
+    body: "A 750W motor and 75Nm of torque give it the punch commuters want for hills, errands, and heavier loads."
+    image: "/images/products/velotric-discover-3/power-hills.webp"
+    imageAlt: "Rider climbing a golden-hour hill on the Discover 3"
+  - title: "Range and practicality"
+    body: "A 730Wh battery, integrated lights, turn signals, rack, fenders, and USB-C make it feel complete straight out of the box."
+    image: "/images/products/velotric-discover-3/cockpit-display.webp"
+    imageAlt: "Cockpit, full-colour display and controls on the Velotric Discover 3"
+  - title: "Confident in every condition"
+    body: "UL safety certification, hydraulic disc brakes, IPX ratings, NFC unlock, Apple Find My, and Google Find Hub back up its premium positioning."
+    image: "/images/products/velotric-discover-3/lifestyle-rider.webp"
+    imageAlt: "Two riders on Velotric e-bikes on a forest trail"
 specs:
   Motor: "48V 750W hub motor, 1100W peak, 75Nm torque"
   Battery: "48V 15.2Ah, 730Wh, IPX7, UL 2271 certified"
@@ -53,7 +81,7 @@ specs:
   Tires: "Kenda 27.5 × 2.4-inch puncture-resistant"
   Drivetrain: "Shimano 8-speed"
   Display: "3.5-inch full-colour, Bluetooth, NFC, adjustable angle"
-  Lights: "500-lumen front, integrated rear with braking indicator and turn signals"
+  Lights: "500-lumen front, integrated rear with turn signals"
   Water resistance: "IPX6 frame, IPX7 battery"
   Bike weight: "61lb (27.7kg)"
   Max load: "440lb (200kg)"
@@ -82,26 +110,4 @@ customerReviews:
     source: "Velotric owner review"
 ---
 
-## Quick verdict
-
-At $1,999, the Velotric Discover 3 packs a 750W motor, 730Wh battery, hydraulic disc brakes, integrated lights and turn signals, smart anti-theft, and dual UL safety certification. PickNotch score: **8.5/10**. The main trade-off is 61lb — a product of its comfort hardware, not a design oversight.
-
-## Who it's for
-
-**Buy it** if you want a complete, comfortable commuter for daily errands, hilly streets, and rides over 20 miles. Everything — rack, fenders, lights, turn signals, suspension, smart features — comes standard with no immediate upgrades needed.
-
-**Skip it** if you carry the bike up stairs regularly, rely on public transit, or prefer a lighter, sportier city ride.
-
-## The 61lb trade-off
-
-The comfort hardware adds up: suspension seatpost, air fork, large integrated battery, rack, fenders, and a robust motor system. Together they make the bike heavy but also deeply practical. It is an excellent bike to *ride* from ground-level storage. It is not an easy bike to carry.
-
-## Where it stands out
-
-The comfort setup is executed well. Upright geometry, suspension seatpost, 80mm air fork, adjustable stem, and an ergonomic saddle make long rides accessible rather than tiring. The 750W motor and 75Nm torque handle hills and loaded cargo without laboring.
-
-The safety and smart features are a real differentiator at this price: UL 2849 and 2271 certified, hydraulic brakes with 180mm rotors, IPX6/7 water resistance, NFC unlock, Apple Find My, Google Find Hub, USB-C charging, and integrated turn signals.
-
-## Final verdict
-
-The Velotric Discover 3 earns 8.5 because the spec sheet is competitive, the comfort focus is executed thoroughly, and the safety features are unusually complete for the price. For riders with ground-level storage, this is a very strong first PickNotch recommendation.
+The Velotric Discover 3 is one of the most complete comfort commuters you can buy at $1,999. It pairs a strong 750W motor and a 730Wh battery with the kind of equipment list — hydraulic brakes, integrated lights, turn signals, smart security — that usually costs more. The honest trade-off is weight: at 61lb it rewards ground-level storage and punishes stairs.

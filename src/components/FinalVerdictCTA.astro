@@ -1,0 +1,212 @@
+---
+interface Props {
+  score?: number | null;
+  headline: string;
+  sub: string;
+  price?: string;
+  code?: string;
+  discount?: string;
+  merchantUrl?: string;
+  brand: string;
+  image?: string;
+  imageAlt?: string;
+}
+const { score, headline, sub, price, code, discount, merchantUrl, brand, image, imageAlt } = Astro.props;
+---
+
+<section class="fv">
+  <div class="fv-glow" aria-hidden="true"></div>
+  <div class="wrap-wide">
+    <div class:list={['fv-grid', !image ? 'fv-grid--solo' : '']}>
+      <div class="fv-main">
+        <span class="fv-eyebrow">The verdict</span>
+        <h2 class="fv-headline">{headline}</h2>
+        <p class="fv-sub">{sub}</p>
+
+        <div class="fv-buy">
+          {score != null && (
+            <div class="fv-score">
+              <span class="fv-score-num">{score.toFixed(1)}</span>
+              <span class="fv-score-den">/10</span>
+            </div>
+          )}
+          <div class="fv-buy-right">
+            {price && (
+              <div class="fv-price-row">
+                <span class="fv-price">{price}</span>
+                <span class="fv-price-at">at {brand}</span>
+              </div>
+            )}
+            {code && (
+              <div class="fv-coupon">
+                <span class="fv-coupon-label">Code</span>
+                <span class="fv-coupon-code">{code}</span>
+              </div>
+            )}
+          </div>
+        </div>
+
+        {merchantUrl && (
+          <a class="fv-cta" href={merchantUrl} rel="nofollow sponsored" target="_blank">
+            Check price at {brand}
+            <svg width="15" height="15" viewBox="0 0 15 15" fill="none" aria-hidden="true">
+              <path d="M3 7.5h8.5M7.5 3l4.5 4.5L7.5 12" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </a>
+        )}
+        <p class="fv-affil">PickNotch may earn a commission from this link. It never changes our score or verdict.</p>
+      </div>
+
+      {image && (
+        <div class="fv-media">
+          <img src={image} alt={imageAlt ?? ''} loading="lazy" decoding="async" width="700" height="690" />
+          <div class="fv-media-ring" aria-hidden="true"></div>
+        </div>
+      )}
+    </div>
+  </div>
+</section>
+
+<style>
+.fv {
+  position: relative;
+  background: var(--ink-deep);
+  overflow: hidden;
+  padding: 84px 0;
+}
+.fv-glow {
+  position: absolute;
+  top: -20%; right: 8%;
+  width: 540px; height: 540px;
+  background: radial-gradient(circle, rgba(34,211,238,0.16) 0%, transparent 66%);
+  pointer-events: none;
+}
+
+.fv-grid {
+  display: grid;
+  grid-template-columns: 1.4fr 0.85fr;
+  gap: 52px;
+  align-items: center;
+  position: relative;
+}
+.fv-grid--solo { grid-template-columns: 1fr; }
+.fv-main { max-width: 600px; }
+
+.fv-eyebrow {
+  display: inline-block;
+  font-family: 'Sora', sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: rgba(34,211,238,0.85);
+  margin-bottom: 14px;
+}
+.fv-headline {
+  font-size: clamp(28px, 4vw, 44px);
+  font-weight: 800;
+  letter-spacing: -0.035em;
+  line-height: 1.08;
+  color: #fff;
+  margin-bottom: 16px;
+}
+.fv-sub {
+  font-size: 16.5px;
+  line-height: 1.65;
+  color: rgba(255,255,255,0.66);
+  margin-bottom: 28px;
+}
+
+.fv-buy {
+  display: flex;
+  align-items: center;
+  gap: 22px;
+  margin-bottom: 22px;
+  flex-wrap: wrap;
+}
+.fv-score {
+  display: flex;
+  align-items: baseline;
+  gap: 3px;
+  padding-right: 22px;
+  border-right: 1px solid rgba(255,255,255,0.14);
+}
+.fv-score-num {
+  font-family: 'Sora', sans-serif;
+  font-size: 44px;
+  font-weight: 800;
+  letter-spacing: -0.05em;
+  line-height: 1;
+  background: linear-gradient(120deg, #5CE6F7, #22D3EE);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.fv-score-den { font-family: 'Sora', sans-serif; font-size: 16px; font-weight: 700; color: rgba(255,255,255,0.4); }
+.fv-buy-right { display: flex; flex-direction: column; gap: 8px; }
+.fv-price-row { display: flex; align-items: baseline; gap: 8px; }
+.fv-price { font-family: 'Sora', sans-serif; font-size: 24px; font-weight: 800; letter-spacing: -0.03em; color: #fff; }
+.fv-price-at { font-size: 12px; color: rgba(255,255,255,0.5); }
+.fv-coupon {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  padding: 6px 12px;
+  border: 1.5px dashed rgba(34,211,238,0.45);
+  border-radius: 9px;
+  background: rgba(34,211,238,0.06);
+  width: fit-content;
+}
+.fv-coupon-label {
+  font-family: 'Sora', sans-serif;
+  font-size: 9px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: rgba(255,255,255,0.5);
+}
+.fv-coupon-code { font-family: 'Sora', sans-serif; font-size: 14px; font-weight: 800; letter-spacing: 0.05em; color: #5CE6F7; }
+
+.fv-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  background: var(--cyan);
+  color: #06222E;
+  font-family: 'Sora', sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  padding: 15px 28px;
+  border-radius: 12px;
+  box-shadow: 0 8px 26px rgba(34,211,238,0.34);
+  transition: transform 0.16s var(--ease-spring), box-shadow 0.16s ease;
+  margin-bottom: 14px;
+}
+.fv-cta:hover { transform: translateY(-2px); box-shadow: 0 14px 36px rgba(34,211,238,0.46); }
+.fv-cta:active { transform: translateY(0); }
+.fv-cta:focus-visible { outline: 2px solid #fff; outline-offset: 3px; }
+.fv-affil { font-size: 12px; color: rgba(255,255,255,0.42); margin: 0; max-width: 46ch; line-height: 1.5; }
+
+.fv-media {
+  position: relative;
+  border-radius: 22px;
+  overflow: hidden;
+  aspect-ratio: 1 / 1;
+  box-shadow: 0 30px 70px rgba(4,10,24,0.5);
+}
+.fv-media img { width: 100%; height: 100%; object-fit: cover; }
+.fv-media-ring {
+  position: absolute;
+  inset: 0;
+  border-radius: 22px;
+  pointer-events: none;
+  box-shadow: inset 0 0 0 1px rgba(34,211,238,0.22);
+  background: linear-gradient(160deg, transparent 55%, rgba(13,21,48,0.35) 100%);
+}
+
+@media (max-width: 860px) {
+  .fv { padding: 64px 0; }
+  .fv-grid { grid-template-columns: 1fr; gap: 32px; }
+  .fv-media { max-width: 360px; }
+}
+</style>

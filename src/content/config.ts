@@ -28,6 +28,22 @@ const reviews = defineCollection({
       src: z.string(),
       alt: z.string(),
     })).optional(),
+    scores: z.array(z.object({
+      label: z.string(),
+      value: z.number(),
+    })).optional(),
+    scoreLead: z.string().optional(),
+    verdictHeadline: z.string().optional(),
+    verdictSub: z.string().optional(),
+    verdictImage: z.string().optional(),
+    verdictImageAlt: z.string().optional(),
+    features: z.array(z.object({
+      eyebrow: z.string().optional(),
+      title: z.string(),
+      body: z.string(),
+      image: z.string(),
+      imageAlt: z.string(),
+    })).optional(),
     customerReviews: z.array(z.object({
       name: z.string(),
       rating: z.number(),

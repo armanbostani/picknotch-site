@@ -1,9 +1,12 @@
 ---
 import Base from '../../layouts/Base.astro';
 import DisclosureBox from '../../components/DisclosureBox.astro';
-import ProductImage from '../../components/ProductImage.astro';
 import CustomerReviewCarousel from '../../components/CustomerReviewCarousel.astro';
 import ProsConsTable from '../../components/ProsConsTable.astro';
+import ReviewHero from '../../components/ReviewHero.astro';
+import ReviewScoreBreakdown from '../../components/ReviewScoreBreakdown.astro';
+import ReviewFeatureBlock from '../../components/ReviewFeatureBlock.astro';
+import FinalVerdictCTA from '../../components/FinalVerdictCTA.astro';
 import { getCollection } from 'astro:content';
 
 export async function getStaticPaths() {
@@ -15,9 +18,13 @@ const { review } = Astro.props;
 const d = review.data;
 const { Content } = await review.render();
 
-// Gallery only appears once there are 2+ real photos to show.
-const gallery = d.gallery ?? [];
-const showGallery = gallery.length >= 2;
+const gallery = d.gallery && d.gallery.length > 0
+  ? d.gallery
+  : (d.image ? [{ src: d.image, alt: d.imageAlt ?? d.product }] : []);
+
+const features = d.features ?? [];
+const verdictHeadline = d.verdictHeadline ?? `Our verdict on the ${d.product}`;
+const verdictSub = d.verdictSub ?? d.verdict ?? d.summary;
 
 const schema = {
   "@context": "https://schema.org",
@@ -31,141 +38,141 @@ const schema = {
 ---
 <Base title={`${d.title} | PickNotch`} description={d.summary}>
 
-  <div class="review-wrap">
+  <!-- 1. Product hero: gallery + purchase panel -->
+  <ReviewHero
+    title={d.title}
+    brand={d.brand}
+    category={d.category}
+    score={d.score}
+    verdict={d.verdict ?? d.summary}
+    bestFor={d.bestFor}
+    avoidIf={d.avoidIf}
+    price={d.price}
+    code={d.code}
+    discount={d.discount}
+    merchantUrl={d.merchantUrl}
+    updated={d.updated}
+    images={gallery}
+  />
 
-    <!-- Breadcrumb -->
-    <nav class="breadcrumb" aria-label="Breadcrumb">
-      <a href="/">Home</a>
-      <span aria-hidden="true">›</span>
-      <a href="/reviews">Reviews</a>
-      <span aria-hidden="true">›</span>
-      <a href="/categories/e-bikes">{d.category}</a>
-      <span aria-hidden="true">›</span>
-      <span>{d.brand}</span>
-    </nav>
-
-    <!-- Product image -->
-    <figure class="review-image-wrap" id="review-hero-image">
-      <ProductImage
-        src={d.image}
-        alt={d.imageAlt ?? d.product}
-        fallbackLabel={d.product}
-        eager={true}
-        class="review-pi"
-      />
-      <div class="review-image-chip">
-        <span class="ric-cat">{d.category}</span>
-        <span class="ric-sep">·</span>
-        <span class="ric-brand">{d.brand}</span>
-      </div>
-      {d.score != null && (
-        <div class="review-image-badge">
-          <span class="rib-num">{d.score.toFixed(1)}</span>
-          <span class="rib-label">PickNotch Score</span>
+  <!-- 2. Score breakdown -->
+  {d.score != null && d.scores && d.scores.length > 0 && (
+    <section class="rv-section">
+      <div class="wrap-wide">
+        <div class="rv-head">
+          <span class="eyebrow">How it scores</span>
+          <h2 class="rv-h2">The verdict, by the numbers</h2>
         </div>
-      )}
-    </figure>
-
-    <!-- Gallery strip (only when real photos exist) -->
-    {showGallery && (
-      <div class="gallery-strip" id="gallery-strip">
-        {gallery.map((img, i) => (
-          <button class:list={['gallery-thumb', i === 0 ? 'gallery-thumb--active' : '']}
-            data-src={img.src} aria-label={img.alt} type="button">
-            <ProductImage src={img.src} alt={img.alt} fallbackLabel={d.product} />
-          </button>
-        ))}
+        <div class="rv-intro"><Content /></div>
+        <ReviewScoreBreakdown
+          score={d.score}
+          scores={d.scores}
+          lead={d.scoreLead}
+        />
       </div>
-    )}
+    </section>
+  )}
 
-    <!-- Review head -->
-    <header class="review-head">
-      {d.updated && <span class="meta-updated">Updated {d.updated}</span>}
-      <h1 class="review-title">{d.title}</h1>
-      <div class="verdict-pills">
-        {d.bestFor && (
-          <div class="vp vp--best">
-            <span class="vp-label">Best for</span>
-            <span class="vp-val">{d.bestFor}</span>
-          </div>
-        )}
-        {d.avoidIf && (
-          <div class="vp vp--avoid">
-            <span class="vp-label">Avoid if</span>
-            <span class="vp-val">{d.avoidIf}</span>
-          </div>
-        )}
+  <!-- 3. Pros / cons -->
+  {(d.pros?.length || d.cons?.length) && (
+    <section class="rv-section rv-section--paper">
+      <div class="wrap-wide">
+        <div class="rv-head">
+          <span class="eyebrow">The balance</span>
+          <h2 class="rv-h2">What works, what to watch</h2>
+        </div>
+        <ProsConsTable pros={d.pros} cons={d.cons} />
       </div>
-      <p class="review-disclosure-note">Independently researched · affiliate supported</p>
-    </header>
+    </section>
+  )}
 
-    <!-- Verdict + Deal row -->
-    <div class="top-row">
-      <div class="verdict-box">
-        <div class="vb-label">The verdict</div>
-        <p class="vb-text">{d.verdict ?? d.summary}</p>
-      </div>
-      {d.merchantUrl && (
-        <aside class="deal-box">
-          <div class="deal-top-label">Best price today</div>
-          {d.price && <div class="deal-price">{d.price} <span class="deal-at">at {d.brand}</span></div>}
-          {d.code && (
-            <div class="deal-coupon">
-              <span class="deal-coupon-label">Code</span>
-              <span class="deal-code">{d.code}</span>
-            </div>
-          )}
-          <a class="deal-cta" href={d.merchantUrl} rel="nofollow sponsored" target="_blank">
-            Check price
-            <svg width="13" height="13" viewBox="0 0 13 13" fill="none" aria-hidden="true">
-              <path d="M2.5 6.5h7M6.5 3l3 3.5-3 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-          </a>
-          <small class="deal-note">We may earn a commission. It never changes our score.</small>
-        </aside>
-      )}
-    </div>
-
-    <!-- Pros / Cons table -->
-    {(d.pros?.length || d.cons?.length) && (
-      <ProsConsTable pros={d.pros} cons={d.cons} />
-    )}
-
-    <!-- Full review content -->
-    <article class="review-content">
-      <Content />
-    </article>
-
-    <!-- Specs grid -->
-    {d.specs && Object.keys(d.specs).length > 0 && (
-      <section class="specs-section">
-        <h2 class="specs-heading">Full specifications</h2>
-        <dl class="specs-grid">
-          {Object.entries(d.specs).map(([key, val]) => (
-            <div class="spec-row">
-              <dt>{key}</dt>
-              <dd>{val}</dd>
-            </div>
+  <!-- 4. Image-led feature story -->
+  {features.length > 0 && (
+    <section class="rv-section">
+      <div class="wrap-wide">
+        <div class="rv-head">
+          <span class="eyebrow">Why it earns 8.5</span>
+          <h2 class="rv-h2">Built around the everyday ride</h2>
+        </div>
+        <div class="rv-features">
+          {features.map((f, i) => (
+            <ReviewFeatureBlock
+              title={f.title}
+              body={f.body}
+              image={f.image}
+              imageAlt={f.imageAlt}
+              index={i}
+              reverse={i % 2 === 1}
+            />
           ))}
-        </dl>
-      </section>
-    )}
+        </div>
 
-  </div>
-
-  <!-- Customer reviews carousel (full width) -->
-  {d.customerReviews && d.customerReviews.length > 0 && (
-    <section class="owners-section">
-      <div class="owners-head wrap-narrow">
-        <span class="owners-eyebrow">Owner feedback</span>
-        <h2 class="owners-heading">What owners are saying</h2>
-        <p class="owners-sub">Short real-world notes from riders who bought the bike.</p>
+        <!-- The catch callout -->
+        <div class="catch">
+          <div class="catch-stat">
+            <span class="catch-num">61</span>
+            <span class="catch-unit">lb</span>
+          </div>
+          <div class="catch-text">
+            <span class="catch-eyebrow">The catch</span>
+            <p class="catch-body">The comfort hardware is also the compromise. This is a bike you ride from ground-level storage — not one you want to carry upstairs every day.</p>
+          </div>
+        </div>
       </div>
-      <div class="owners-carousel-wrap">
+    </section>
+  )}
+
+  <!-- 5. Owner reviews -->
+  {d.customerReviews && d.customerReviews.length > 0 && (
+    <section class="rv-section rv-section--paper owners">
+      <div class="rv-head wrap-wide">
+        <span class="eyebrow">Owner feedback</span>
+        <h2 class="rv-h2">What 150,000+ riders report</h2>
+      </div>
+      <div class="owners-rail">
         <CustomerReviewCarousel reviews={d.customerReviews} />
       </div>
     </section>
   )}
+
+  <!-- 6. Specs (lower priority, collapsible) -->
+  {d.specs && Object.keys(d.specs).length > 0 && (
+    <section class="rv-section rv-section--slim">
+      <div class="wrap">
+        <details class="specs-acc">
+          <summary class="specs-summary">
+            <span class="specs-summary-label">Full specifications</span>
+            <span class="specs-summary-meta">{Object.keys(d.specs).length} details</span>
+            <svg class="specs-chev" width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">
+              <path d="M5 7l4 4 4-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </summary>
+          <dl class="specs-grid">
+            {Object.entries(d.specs).map(([key, val]) => (
+              <div class="spec-row">
+                <dt>{key}</dt>
+                <dd>{val}</dd>
+              </div>
+            ))}
+          </dl>
+        </details>
+      </div>
+    </section>
+  )}
+
+  <!-- 7. Final verdict CTA -->
+  <FinalVerdictCTA
+    score={d.score}
+    headline={verdictHeadline}
+    sub={verdictSub}
+    price={d.price}
+    code={d.code}
+    discount={d.discount}
+    merchantUrl={d.merchantUrl}
+    brand={d.brand}
+    image={d.verdictImage}
+    imageAlt={d.verdictImageAlt}
+  />
 
   <!-- Disclosure -->
   <div class="disclosure-wrap wrap-narrow">
@@ -175,358 +182,125 @@ const schema = {
   <script type="application/ld+json" set:html={JSON.stringify(schema)} />
 </Base>
 
-<script>
-  const strip = document.getElementById('gallery-strip');
-  if (strip) {
-    const heroWrap = document.getElementById('review-hero-image');
-    const heroImg = heroWrap?.querySelector('.pi-img') as HTMLImageElement | null;
-
-    strip.querySelectorAll<HTMLButtonElement>('.gallery-thumb').forEach(thumb => {
-      thumb.addEventListener('click', () => {
-        const src = thumb.dataset.src;
-        if (!src || !heroImg) return;
-        heroImg.src = src;
-        heroImg.classList.remove('pi-broken');
-        strip.querySelectorAll('.gallery-thumb').forEach(t => t.classList.remove('gallery-thumb--active'));
-        thumb.classList.add('gallery-thumb--active');
-      });
-    });
-  }
-</script>
-
 <style>
-.review-wrap {
-  max-width: 760px;
-  margin: 0 auto;
-  padding: 32px 24px 56px;
-}
+.rv-section { padding: 64px 0; }
+.rv-section--slim { padding: 40px 0; }
+.rv-section--paper { background: var(--paper); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
 
-/* Breadcrumb */
-.breadcrumb {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 13px;
-  color: var(--muted);
-  margin-bottom: 22px;
-  flex-wrap: wrap;
-}
-.breadcrumb a {
-  color: var(--slate);
-  text-decoration: none;
-  transition: color 0.13s ease;
-}
-.breadcrumb a:hover { color: #0E7490; }
-.breadcrumb span[aria-hidden] { color: var(--line); }
-
-/* Product image */
-.review-image-wrap {
-  position: relative;
-  width: 100%;
-  height: 380px;
-  border-radius: 22px;
-  overflow: hidden;
-  margin: 0 0 14px;
-  background: var(--ink-deep);
-  box-shadow:
-    0 22px 50px rgba(8,16,40,0.22),
-    0 6px 16px rgba(8,16,40,0.10),
-    inset 0 0 0 1px rgba(34,211,238,0.08);
-}
-.review-pi { border-radius: 22px; }
-
-.review-image-chip {
-  position: absolute;
-  top: 16px;
-  left: 16px;
-  display: flex;
-  align-items: center;
-  gap: 7px;
-  background: rgba(13,21,48,0.66);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255,255,255,0.10);
-  border-radius: 99px;
-  padding: 6px 14px;
-}
-.ric-cat {
-  font-family: 'Sora', sans-serif;
-  font-size: 10px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.09em;
-  color: #5CE6F7;
-}
-.ric-sep { font-size: 12px; color: rgba(255,255,255,0.25); }
-.ric-brand { font-size: 11px; color: rgba(255,255,255,0.62); font-weight: 500; }
-
-.review-image-badge {
-  position: absolute;
-  bottom: 18px;
-  right: 18px;
-  background: rgba(11,18,42,0.78);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(34,211,238,0.28);
-  border-radius: 16px;
-  padding: 12px 18px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 3px;
-  box-shadow: 0 8px 24px rgba(4,10,24,0.40);
-}
-.rib-num {
-  font-family: 'Sora', sans-serif;
-  font-size: 30px;
+.rv-head { margin-bottom: 32px; }
+.rv-h2 {
+  font-size: clamp(24px, 3vw, 34px);
   font-weight: 800;
-  color: #5CE6F7;
-  letter-spacing: -0.05em;
-  line-height: 1;
-}
-.rib-label {
-  font-family: 'Sora', sans-serif;
-  font-size: 8px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.12em;
-  color: rgba(255,255,255,0.45);
-  white-space: nowrap;
-}
-
-/* Gallery */
-.gallery-strip {
-  display: flex;
-  gap: 8px;
-  margin-bottom: 32px;
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
-  scrollbar-width: none;
-  padding: 2px;
-}
-.gallery-strip::-webkit-scrollbar { display: none; }
-.gallery-thumb {
-  flex-shrink: 0;
-  width: 84px;
-  height: 62px;
-  border-radius: 11px;
-  overflow: hidden;
-  border: 2px solid var(--line);
-  background: var(--ink-deep);
-  position: relative;
-  padding: 0;
-  cursor: pointer;
-  transition: border-color 0.15s ease, transform 0.15s var(--ease-spring);
-}
-.gallery-thumb:hover { border-color: rgba(34,211,238,0.5); transform: translateY(-2px); }
-.gallery-thumb:active { transform: translateY(0); }
-.gallery-thumb:focus-visible { outline: 2px solid var(--cyan); outline-offset: 2px; }
-.gallery-thumb--active { border-color: var(--cyan); box-shadow: 0 4px 14px rgba(34,211,238,0.20); }
-
-/* Review head */
-.review-head {
-  margin: 4px 0 28px;
-}
-.meta-updated {
-  display: inline-block;
-  font-family: 'Sora', sans-serif;
-  font-size: 11px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.07em;
-  color: var(--muted);
-  margin-bottom: 10px;
-}
-.review-title {
-  font-size: clamp(26px, 4vw, 38px);
-  font-weight: 800;
-  margin: 0 0 18px;
-  line-height: 1.1;
   letter-spacing: -0.03em;
   color: var(--ink);
+  line-height: 1.1;
 }
 
-.verdict-pills {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  margin-bottom: 14px;
+.rv-intro {
+  max-width: 720px;
+  margin-bottom: 30px;
 }
-.vp {
-  display: flex;
-  align-items: flex-start;
-  gap: 10px;
-  padding: 9px 14px;
-  border-radius: 10px;
-  font-size: 14px;
-  line-height: 1.45;
-}
-.vp--best { background: rgba(34,211,238,0.07); }
-.vp--avoid { background: rgba(245,158,11,0.07); }
-.vp-label {
-  font-family: 'Sora', sans-serif;
-  font-size: 10px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.07em;
-  padding-top: 3px;
-  white-space: nowrap;
-  flex-shrink: 0;
-}
-.vp--best .vp-label { color: #0E7490; }
-.vp--avoid .vp-label { color: #B45309; }
-.vp-val { color: #334155; font-weight: 500; }
-
-.review-disclosure-note {
-  font-size: 11px;
-  color: var(--muted);
-  font-family: 'Sora', sans-serif;
+.rv-intro :global(p) {
+  font-size: 17px;
+  line-height: 1.7;
+  color: var(--slate);
   margin: 0;
 }
 
-/* Top row */
-.top-row {
+.rv-features {
   display: flex;
-  gap: 18px;
-  flex-wrap: wrap;
-  margin-bottom: 36px;
+  flex-direction: column;
+  gap: 64px;
 }
-.verdict-box {
-  flex: 1.5;
-  min-width: 250px;
-  background: var(--paper);
+
+/* The catch callout */
+.catch {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+  margin-top: 56px;
+  padding: 28px 32px;
+  background: linear-gradient(135deg, #16223F 0%, #0D1530 100%);
+  border: 1px solid rgba(217,119,6,0.28);
+  border-radius: 20px;
+  box-shadow: 0 20px 48px rgba(8,16,40,0.26);
+}
+.catch-stat {
+  display: flex;
+  align-items: baseline;
+  gap: 3px;
+  flex-shrink: 0;
+  padding-right: 28px;
+  border-right: 1px solid rgba(255,255,255,0.12);
+}
+.catch-num {
+  font-family: 'Sora', sans-serif;
+  font-size: 64px;
+  font-weight: 800;
+  letter-spacing: -0.05em;
+  line-height: 1;
+  background: linear-gradient(120deg, #FBBF24, #F59E0B);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.catch-unit { font-family: 'Sora', sans-serif; font-size: 22px; font-weight: 700; color: rgba(255,255,255,0.5); }
+.catch-eyebrow {
+  display: inline-block;
+  font-family: 'Sora', sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: #FBBF24;
+  margin-bottom: 6px;
+}
+.catch-body { font-size: 15.5px; line-height: 1.6; color: rgba(255,255,255,0.78); margin: 0; max-width: 60ch; }
+
+/* Owners */
+.owners .rv-head { text-align: center; }
+.owners-rail { padding: 0 12px; }
+
+/* Specs accordion */
+.specs-acc {
   border: 1px solid var(--line);
   border-radius: 16px;
-  padding: 20px 22px;
+  background: #fff;
+  overflow: hidden;
 }
-.vb-label {
-  font-family: 'Sora', sans-serif;
-  font-size: 11px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: var(--muted);
-  margin-bottom: 10px;
-}
-.vb-text { font-size: 15.5px; color: #334155; margin: 0; line-height: 1.65; }
-
-.deal-box {
-  flex: 1;
-  min-width: 230px;
-  background: linear-gradient(165deg, #16223F 0%, #0D1530 100%);
-  color: #C8D8E8;
-  border-radius: 16px;
-  padding: 20px 22px;
-  border: 1px solid rgba(34,211,238,0.12);
-  box-shadow:
-    0 20px 44px rgba(8,16,40,0.30),
-    0 4px 12px rgba(34,211,238,0.06);
-}
-.deal-top-label {
-  font-size: 11px;
-  font-family: 'Sora', sans-serif;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.07em;
-  color: #7A90B0;
-  margin-bottom: 8px;
-}
-.deal-price { font-family: 'Sora', sans-serif; font-size: 27px; font-weight: 800; color: #fff; letter-spacing: -0.03em; margin-bottom: 14px; }
-.deal-at { font-size: 13px; color: #7A90B0; font-weight: 400; letter-spacing: 0; }
-
-.deal-coupon {
+.specs-summary {
   display: flex;
   align-items: center;
-  gap: 10px;
-  padding: 9px 12px;
-  margin-bottom: 14px;
-  border: 1.5px dashed rgba(34,211,238,0.40);
-  border-radius: 10px;
-  background: rgba(34,211,238,0.05);
+  gap: 12px;
+  padding: 18px 22px;
+  cursor: pointer;
+  list-style: none;
+  user-select: none;
+  transition: background 0.14s ease;
 }
-.deal-coupon-label {
-  font-size: 10px;
+.specs-summary::-webkit-details-marker { display: none; }
+.specs-summary:hover { background: var(--paper); }
+.specs-summary:focus-visible { outline: 2px solid var(--cyan); outline-offset: -2px; border-radius: 16px; }
+.specs-summary-label {
   font-family: 'Sora', sans-serif;
+  font-size: 16px;
   font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: #7A90B0;
+  color: var(--ink);
 }
-.deal-code {
-  font-family: 'Sora', sans-serif;
-  font-size: 15px;
-  font-weight: 800;
-  color: #5CE6F7;
-  letter-spacing: 0.06em;
+.specs-summary-meta { font-size: 12px; color: var(--muted); }
+.specs-chev {
+  margin-left: auto;
+  color: var(--slate);
+  transition: transform 0.2s var(--ease-spring);
 }
-.deal-cta {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 7px;
-  background: var(--cyan);
-  color: #06222E;
-  font-family: 'Sora', sans-serif;
-  font-size: 14px;
-  font-weight: 700;
-  padding: 12px;
-  border-radius: 10px;
-  text-decoration: none;
-  margin-bottom: 10px;
-  transition: transform 0.14s var(--ease-spring), box-shadow 0.14s ease;
-}
-.deal-cta:hover { transform: translateY(-2px); box-shadow: 0 10px 26px rgba(34,211,238,0.32); }
-.deal-cta:active { transform: translateY(0); }
-.deal-cta:focus-visible { outline: 2px solid #fff; outline-offset: 2px; border-radius: 10px; }
-.deal-note { font-size: 11px; color: #5A6E8E; display: block; line-height: 1.5; }
+.specs-acc[open] .specs-chev { transform: rotate(180deg); }
 
-/* Review content */
-.review-content {
-  font-size: 16.5px;
-  color: #334155;
-  line-height: 1.78;
-  margin-bottom: 40px;
-}
-.review-content h2 {
-  font-size: 22px;
-  font-weight: 800;
-  color: var(--ink);
-  margin: 40px 0 14px;
-  letter-spacing: -0.025em;
-}
-.review-content h2:first-child { margin-top: 0; }
-.review-content h3 {
-  font-size: 17px;
-  font-weight: 600;
-  color: var(--ink);
-  margin: 26px 0 10px;
-}
-.review-content p { margin: 0 0 17px; }
-.review-content ul, .review-content ol {
-  padding-left: 22px;
-  margin: 0 0 17px;
-}
-.review-content li { margin-bottom: 7px; }
-.review-content strong { color: var(--ink); font-weight: 700; }
-
-/* Specs grid */
-.specs-section {
-  margin-bottom: 8px;
-  padding-top: 8px;
-  border-top: 1px solid var(--line);
-}
-.specs-heading {
-  font-size: 22px;
-  font-weight: 800;
-  margin: 24px 0 16px;
-  color: var(--ink);
-  letter-spacing: -0.025em;
-}
 .specs-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
   column-gap: 36px;
-  margin: 0;
+  padding: 6px 22px 22px;
+  border-top: 1px solid var(--line);
 }
 .spec-row {
   display: grid;
@@ -536,67 +310,16 @@ const schema = {
   padding: 11px 2px;
   border-bottom: 1px solid var(--line);
 }
-.spec-row dt {
-  font-family: 'Sora', sans-serif;
-  font-size: 12.5px;
-  font-weight: 600;
-  color: var(--slate);
-}
-.spec-row dd {
-  margin: 0;
-  font-size: 13.5px;
-  color: var(--ink);
-  line-height: 1.4;
-}
+.spec-row dt { font-family: 'Sora', sans-serif; font-size: 12.5px; font-weight: 600; color: var(--slate); }
+.spec-row dd { margin: 0; font-size: 13.5px; color: var(--ink); line-height: 1.4; }
 
-/* Owners section */
-.owners-section {
-  background: var(--paper);
-  border-top: 1px solid var(--line);
-  padding: 72px 0 80px;
-  margin-top: 48px;
-}
-.owners-head {
-  text-align: center;
-  margin-bottom: 44px;
-}
-.owners-eyebrow {
-  display: inline-block;
-  font-family: 'Sora', sans-serif;
-  font-size: 10px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.12em;
-  color: #0E7490;
-  margin-bottom: 10px;
-}
-.owners-heading {
-  font-size: clamp(22px, 3vw, 32px);
-  font-weight: 800;
-  color: var(--ink);
-  margin: 0 0 10px;
-  letter-spacing: -0.03em;
-}
-.owners-sub {
-  font-size: 15px;
-  color: var(--slate);
-  line-height: 1.65;
-  margin: 0;
-}
-.owners-carousel-wrap { padding: 0 40px; }
+.disclosure-wrap { padding: 48px 28px 72px; }
 
-/* Disclosure */
-.disclosure-wrap { padding: 40px 28px 64px; }
-
-@media (max-width: 640px) {
-  .review-wrap { padding: 20px 16px 40px; }
-  .review-image-wrap { height: 230px; border-radius: 18px; }
-  .review-pi { border-radius: 18px; }
-  .review-image-badge { padding: 9px 13px; bottom: 14px; right: 14px; }
-  .rib-num { font-size: 24px; }
-  .top-row { flex-direction: column; gap: 14px; }
+@media (max-width: 760px) {
+  .rv-section { padding: 48px 0; }
+  .rv-features { gap: 44px; }
+  .catch { flex-direction: column; align-items: flex-start; gap: 16px; padding: 24px; margin-top: 40px; }
+  .catch-stat { padding-right: 0; padding-bottom: 14px; border-right: none; border-bottom: 1px solid rgba(255,255,255,0.12); width: 100%; }
   .specs-grid { grid-template-columns: 1fr; column-gap: 0; }
-  .owners-carousel-wrap { padding: 0 16px; }
-  .owners-section { padding: 56px 0 60px; margin-top: 36px; }
 }
 </style>
