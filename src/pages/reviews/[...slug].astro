@@ -1,39 +1,392 @@
 ---
 import Base from '../../layouts/Base.astro';
+import ScoreBadge from '../../components/ScoreBadge.astro';
+import DisclosureBox from '../../components/DisclosureBox.astro';
 import { getCollection } from 'astro:content';
+
 export async function getStaticPaths() {
   const reviews = await getCollection('reviews');
   return reviews.map((r) => ({ params: { slug: r.slug }, props: { review: r } }));
 }
+
 const { review } = Astro.props;
 const d = review.data;
 const { Content } = await review.render();
+
 const schema = {
-  "@context": "https://schema.org", "@type": "Review",
+  "@context": "https://schema.org",
+  "@type": "Review",
   "itemReviewed": { "@type": "Product", "name": d.product, "brand": { "@type": "Brand", "name": d.brand } },
-  "reviewRating": { "@type": "Rating", "ratingValue": d.score, "bestRating": 10 },
+  "reviewRating": d.score != null ? { "@type": "Rating", "ratingValue": d.score, "bestRating": 10 } : undefined,
   "author": { "@type": "Organization", "name": "PickNotch" },
-  "publisher": { "@type": "Organization", "name": "PickNotch" }
+  "publisher": { "@type": "Organization", "name": "PickNotch" },
+  "datePublished": d.updated,
 };
 ---
 <Base title={`${d.title} | PickNotch`} description={d.summary}>
-  <div class="lead">{d.category} › {d.brand} · Independently researched · affiliate supported · Updated {d.updated}</div>
-  <h1 class="title">{d.title}</h1>
-  <div class="row">
-    <div class="verdict"><div class="k">The verdict</div><div>{d.summary}</div></div>
-    <div class="deal">
-      <div>Best price today</div>
-      <div class="price">{d.price} <span style="font-size:13px;color:#9FB0C4;font-weight:400;">at {d.brand}</span></div>
-      {d.code && <div class="code">code {d.code}{d.discount ? ` · ${d.discount}` : ''}</div>}
-      <a class="cta" href={d.merchantUrl} rel="nofollow sponsored" target="_blank">Check price</a>
-      <small>We may earn a commission. It never changes our score.</small>
+  <div class="review-wrap">
+
+    <!-- Breadcrumb -->
+    <nav class="breadcrumb" aria-label="Breadcrumb">
+      <a href="/">Home</a>
+      <span aria-hidden="true">›</span>
+      <a href="/reviews">Reviews</a>
+      <span aria-hidden="true">›</span>
+      <a href="/categories/e-bikes">{d.category}</a>
+      <span aria-hidden="true">›</span>
+      <span>{d.brand}</span>
+    </nav>
+
+    <!-- Review hero -->
+    <div class="review-hero">
+      <div class="review-hero-left">
+        <div class="review-meta">
+          <span class="meta-category">{d.category}</span>
+          <span class="meta-sep">·</span>
+          <span class="meta-brand">{d.brand}</span>
+          {d.updated && <><span class="meta-sep">·</span><span class="meta-updated">Updated {d.updated}</span></>}
+        </div>
+        <h1 class="review-title">{d.title}</h1>
+        {d.bestFor && (
+          <div class="review-bestfor">
+            <span class="bf-label">Best for:</span>
+            <span class="bf-val">{d.bestFor}</span>
+          </div>
+        )}
+        {d.avoidIf && (
+          <div class="review-avoid">
+            <span class="avoid-label">Avoid if:</span>
+            <span class="avoid-val">{d.avoidIf}</span>
+          </div>
+        )}
+        <p class="review-disclosure-note">Independently researched · affiliate supported</p>
+      </div>
+      <div class="review-hero-right">
+        <ScoreBadge score={d.score ?? null} size="lg" />
+        {d.score != null && <span class="score-out">out of 10</span>}
+      </div>
     </div>
+
+    <!-- Summary + Deal row -->
+    <div class="top-row">
+      <div class="verdict-box">
+        <div class="vb-label">The verdict</div>
+        <p class="vb-text">{d.verdict ?? d.summary}</p>
+      </div>
+      {d.merchantUrl && (
+        <div class="deal-box">
+          <div class="deal-top-label">Best price today</div>
+          {d.price && <div class="deal-price">{d.price} <span class="deal-at">at {d.brand}</span></div>}
+          {d.code && (
+            <div class="deal-code-row">
+              <span class="deal-code-label">Code</span>
+              <span class="deal-code">{d.code}</span>
+              {d.discount && <span class="deal-discount">{d.discount}</span>}
+            </div>
+          )}
+          <a class="deal-cta" href={d.merchantUrl} rel="nofollow sponsored" target="_blank">
+            Check price →
+          </a>
+          <small class="deal-note">We may earn a commission. It never changes our score.</small>
+        </div>
+      )}
+    </div>
+
+    <!-- Pros / Cons -->
+    {(d.pros || d.cons) && (
+      <div class="proscons">
+        {d.pros && d.pros.length > 0 && (
+          <div class="pros">
+            <h3 class="pc-heading pc-heading--good">What's good</h3>
+            <ul class="pc-list">
+              {d.pros.map(p => <li>{p}</li>)}
+            </ul>
+          </div>
+        )}
+        {d.cons && d.cons.length > 0 && (
+          <div class="cons">
+            <h3 class="pc-heading pc-heading--bad">What's not</h3>
+            <ul class="pc-list">
+              {d.cons.map(c => <li>{c}</li>)}
+            </ul>
+          </div>
+        )}
+      </div>
+    )}
+
+    <!-- Specs table -->
+    {d.specs && Object.keys(d.specs).length > 0 && (
+      <div class="specs-section">
+        <h2 class="specs-heading">Specs</h2>
+        <table class="specs-table">
+          <tbody>
+            {Object.entries(d.specs).map(([key, val]) => (
+              <tr>
+                <th>{key}</th>
+                <td>{val}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    )}
+
+    <!-- Full review content -->
+    <article class="review-content">
+      <Content />
+    </article>
+
+    <!-- Disclosure -->
+    <DisclosureBox />
+
   </div>
-  <div class="pc">
-    <div><h3 class="good">What's good</h3><ul>{d.pros.map((p) => (<li>{p}</li>))}</ul></div>
-    <div><h3 class="bad">What's not</h3><ul>{d.cons.map((c) => (<li>{c}</li>))}</ul></div>
-  </div>
-  <article><Content /></article>
-  <div class="disclosure">PickNotch is reader-supported. When you buy through links on our site, we may earn an affiliate commission. We only recommend products we'd buy ourselves, and commissions never affect our scores or rankings.</div>
   <script type="application/ld+json" set:html={JSON.stringify(schema)} />
 </Base>
+
+<style>
+.review-wrap {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 32px 24px 72px;
+}
+/* Breadcrumb */
+.breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: var(--muted);
+  margin-bottom: 28px;
+  flex-wrap: wrap;
+}
+.breadcrumb a {
+  color: var(--slate);
+  text-decoration: none;
+  transition: color 0.13s ease;
+}
+.breadcrumb a:hover { color: var(--cyan); }
+.breadcrumb span[aria-hidden] { color: var(--line); }
+
+/* Review hero */
+.review-hero {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 24px;
+  margin-bottom: 28px;
+}
+.review-hero-left { flex: 1; min-width: 0; }
+.review-meta {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 10px;
+  flex-wrap: wrap;
+}
+.meta-category {
+  font-family: 'Sora', sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--cyan);
+  background: rgba(34,211,238,0.1);
+  padding: 2px 8px;
+  border-radius: 20px;
+}
+.meta-sep { color: var(--line); font-size: 14px; }
+.meta-brand, .meta-updated { font-size: 13px; color: var(--slate); }
+.review-title {
+  font-size: clamp(22px, 3vw, 30px);
+  font-weight: 700;
+  margin: 0 0 12px;
+  line-height: 1.2;
+  color: var(--ink);
+}
+.review-bestfor, .review-avoid {
+  display: flex;
+  align-items: flex-start;
+  gap: 7px;
+  font-size: 14px;
+  margin-bottom: 6px;
+}
+.bf-label, .avoid-label {
+  font-family: 'Sora', sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding-top: 2px;
+  white-space: nowrap;
+}
+.bf-label { color: #0E7490; }
+.avoid-label { color: #92400E; }
+.bf-val { font-size: 14px; color: var(--ink); font-weight: 500; }
+.avoid-val { font-size: 14px; color: var(--slate); }
+.review-disclosure-note {
+  font-size: 11px;
+  color: var(--muted);
+  font-family: 'Sora', sans-serif;
+  margin: 10px 0 0;
+}
+.review-hero-right {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  flex-shrink: 0;
+}
+.score-out {
+  font-size: 11px;
+  color: var(--muted);
+  font-family: 'Sora', sans-serif;
+}
+
+/* Top row */
+.top-row {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 28px;
+}
+.verdict-box {
+  flex: 1.5;
+  min-width: 240px;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: 13px;
+  padding: 18px 20px;
+}
+.vb-label {
+  font-family: 'Sora', sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--muted);
+  margin-bottom: 8px;
+}
+.vb-text { font-size: 15px; color: #334155; margin: 0; line-height: 1.65; }
+.deal-box {
+  flex: 1;
+  min-width: 200px;
+  background: var(--ink);
+  color: #C8D8E8;
+  border-radius: 13px;
+  padding: 18px 20px;
+}
+.deal-top-label { font-size: 11px; font-family: 'Sora', sans-serif; color: #7A90B0; margin-bottom: 6px; }
+.deal-price { font-family: 'Sora', sans-serif; font-size: 24px; font-weight: 700; color: #fff; margin-bottom: 8px; }
+.deal-at { font-size: 12px; color: #7A90B0; font-weight: 400; }
+.deal-code-row { display: flex; align-items: center; gap: 6px; margin-bottom: 10px; flex-wrap: wrap; }
+.deal-code-label { font-size: 11px; font-family: 'Sora', sans-serif; color: #7A90B0; text-transform: uppercase; letter-spacing: 0.06em; }
+.deal-code {
+  font-family: 'Sora', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--cyan);
+  border: 1px dashed rgba(34,211,238,0.4);
+  padding: 2px 9px;
+  border-radius: 6px;
+  letter-spacing: 0.04em;
+}
+.deal-discount { font-size: 12px; color: #7A90B0; }
+.deal-cta {
+  display: block;
+  text-align: center;
+  background: var(--cyan);
+  color: #0C1F30;
+  font-family: 'Sora', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  padding: 11px;
+  border-radius: 8px;
+  text-decoration: none;
+  margin-bottom: 8px;
+  transition: opacity 0.13s ease;
+}
+.deal-cta:hover { opacity: 0.88; }
+.deal-cta:focus-visible { outline: 2px solid #fff; outline-offset: 2px; border-radius: 8px; }
+.deal-note { font-size: 11px; color: #5A6E8E; display: block; line-height: 1.5; }
+
+/* Pros / Cons */
+.proscons {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+  margin-bottom: 28px;
+}
+.pros, .cons { flex: 1; min-width: 200px; }
+.pc-heading {
+  font-size: 13px;
+  font-family: 'Sora', sans-serif;
+  font-weight: 600;
+  margin: 0 0 8px;
+}
+.pc-heading--good { color: var(--green); }
+.pc-heading--bad  { color: var(--red); }
+.pc-list {
+  margin: 0;
+  padding-left: 18px;
+  color: #334155;
+  font-size: 14px;
+  line-height: 1.85;
+}
+
+/* Specs */
+.specs-section { margin-bottom: 28px; }
+.specs-heading { font-size: 18px; font-weight: 700; margin: 0 0 12px; color: var(--ink); }
+.specs-table { width: 100%; border-collapse: collapse; font-size: 14px; }
+.specs-table th {
+  text-align: left;
+  padding: 9px 12px;
+  font-weight: 600;
+  color: var(--slate);
+  background: var(--paper);
+  border: 1px solid var(--line);
+  width: 35%;
+  font-family: 'Sora', sans-serif;
+  font-size: 13px;
+}
+.specs-table td {
+  padding: 9px 12px;
+  color: #334155;
+  border: 1px solid var(--line);
+}
+.specs-table tr:first-child th,
+.specs-table tr:first-child td { border-top: 1px solid var(--line); }
+
+/* Review content */
+.review-content {
+  font-size: 16px;
+  color: #334155;
+  line-height: 1.75;
+  margin-bottom: 16px;
+}
+.review-content h2 {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--ink);
+  margin: 32px 0 12px;
+}
+.review-content h3 {
+  font-size: 17px;
+  font-weight: 600;
+  color: var(--ink);
+  margin: 24px 0 10px;
+}
+.review-content p { margin: 0 0 16px; }
+.review-content ul, .review-content ol {
+  padding-left: 22px;
+  margin: 0 0 16px;
+}
+.review-content li { margin-bottom: 6px; }
+.review-content strong { color: var(--ink); font-weight: 600; }
+
+@media (max-width: 600px) {
+  .review-wrap { padding: 20px 16px 52px; }
+  .review-hero { flex-direction: column-reverse; gap: 16px; }
+  .top-row { flex-direction: column; }
+  .proscons { flex-direction: column; }
+}
+</style>

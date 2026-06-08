@@ -1,0 +1,86 @@
+---
+interface Props {
+  name: string;
+  category?: string;
+  status?: string;
+  focus?: string;
+}
+const { name, category = 'E-bikes', status = 'Review in progress', focus } = Astro.props;
+---
+<div class="ph-card">
+  <div class="ph-score" aria-hidden="true">—</div>
+  <div class="ph-body">
+    <div class="ph-meta">
+      <span class="ph-category">{category}</span>
+      <span class="ph-status">{status}</span>
+    </div>
+    <h3 class="ph-name">{name}</h3>
+    {focus && <p class="ph-focus">{focus}</p>}
+  </div>
+</div>
+
+<style>
+.ph-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 18px;
+  background: var(--paper);
+  border: 1.5px dashed var(--line);
+  border-radius: 14px;
+  padding: 20px;
+}
+.ph-score {
+  flex-shrink: 0;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  border: 2.5px dashed #CBD5E1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Sora', sans-serif;
+  font-size: 20px;
+  font-weight: 700;
+  color: #CBD5E1;
+}
+.ph-body { flex: 1; min-width: 0; }
+.ph-meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 6px;
+  flex-wrap: wrap;
+}
+.ph-category {
+  font-size: 11px;
+  font-weight: 600;
+  font-family: 'Sora', sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--muted);
+}
+.ph-status {
+  font-size: 11px;
+  font-weight: 600;
+  font-family: 'Sora', sans-serif;
+  background: rgba(148,163,184,0.12);
+  color: var(--muted);
+  padding: 2px 8px;
+  border-radius: 20px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.ph-name {
+  font-family: 'Sora', sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  margin: 0 0 5px;
+  color: var(--slate);
+}
+.ph-focus {
+  font-size: 13px;
+  color: var(--muted);
+  margin: 0;
+  line-height: 1.55;
+}
+</style>

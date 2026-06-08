@@ -1,0 +1,70 @@
+---
+import Base from '../layouts/Base.astro';
+const updated = 'June 2026';
+---
+<Base title="Privacy Policy — PickNotch" description="PickNotch privacy policy — how we handle data, cookies, and analytics.">
+
+  <section class="page-hero">
+    <div class="wrap">
+      <p class="eyebrow">Legal</p>
+      <h1>Privacy Policy</h1>
+      <p class="page-sub">Last updated: {updated}</p>
+    </div>
+  </section>
+
+  <div class="privacy-body wrap-narrow">
+
+    {[
+      {
+        h: 'Overview',
+        body: 'PickNotch (picknotch.com) is a product review and comparison website. This policy explains what data we collect, how we use it, and your rights. We have tried to write this in plain language rather than legal boilerplate.',
+      },
+      {
+        h: 'Data we collect',
+        body: 'We collect minimal data. Standard web server logs (IP address, page visited, timestamp, browser type) are retained temporarily for security and performance purposes. If you contact us by email, we retain that correspondence. We do not run user accounts, paywalls, or sign-up forms.',
+      },
+      {
+        h: 'Analytics',
+        body: 'We may use privacy-respecting analytics tools to understand aggregate traffic patterns — which pages are popular, how people find the site, and where they go next. We do not use Google Analytics. If we use a third-party analytics tool, it is listed here.',
+      },
+      {
+        h: 'Affiliate links and third-party tracking',
+        body: 'When you click an affiliate link, you leave PickNotch and enter a third-party retailer\'s website. That retailer may set cookies and collect data according to their own privacy policy. We have no control over third-party data practices. Always check the privacy policy of any retailer before purchasing.',
+      },
+      {
+        h: 'Cookies',
+        body: 'PickNotch itself uses minimal or no first-party cookies. Affiliate links may set cookies on third-party sites. If we add functionality that requires cookies, this policy will be updated and you will be notified via a cookie consent mechanism.',
+      },
+      {
+        h: 'Your rights',
+        body: 'If you are in the EU or UK, you have rights under GDPR, including the right to access, correct, or delete any personal data we hold. Because we collect very little data, most requests will be straightforwardly handled. Contact us for any data-related requests.',
+      },
+      {
+        h: 'Changes to this policy',
+        body: 'If we materially change this policy, we will update the "last updated" date above. Continued use of the site after a policy change constitutes acceptance.',
+      },
+      {
+        h: 'Contact',
+        body: 'Questions about this policy? Contact us via the contact page.',
+      },
+    ].map(({ h, body }) => (
+      <section class="privacy-section">
+        <h2>{h}</h2>
+        <p>{body}</p>
+      </section>
+    ))}
+
+  </div>
+</Base>
+
+<style>
+.page-hero { background: var(--ink); padding: 52px 0 48px; }
+.page-hero .eyebrow { font-family: 'Sora', sans-serif; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; color: var(--cyan); margin: 0 0 8px; }
+.page-hero h1 { font-size: clamp(24px, 3.5vw, 36px); font-weight: 800; color: #fff; margin: 0 0 6px; }
+.page-sub { font-size: 13px; color: #5A6E8E; margin: 0; }
+.privacy-body { padding: 48px 24px 80px; }
+.privacy-section { margin-bottom: 36px; border-bottom: 1px solid var(--line); padding-bottom: 36px; }
+.privacy-section:last-child { border-bottom: none; }
+.privacy-section h2 { font-size: clamp(16px, 2vw, 20px); font-weight: 700; margin: 0 0 10px; color: var(--ink); }
+.privacy-section p { font-size: 15px; color: #334155; line-height: 1.75; margin: 0; }
+</style>

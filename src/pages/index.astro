@@ -1,17 +1,512 @@
 ---
 import Base from '../layouts/Base.astro';
+import TrustStrip from '../components/TrustStrip.astro';
+import CategoryCard from '../components/CategoryCard.astro';
+import ReviewCard from '../components/ReviewCard.astro';
+import PlaceholderCard from '../components/PlaceholderCard.astro';
+import MethodologyPreview from '../components/MethodologyPreview.astro';
 import { getCollection } from 'astro:content';
-const reviews = (await getCollection('reviews')).sort((a, b) => b.data.score - a.data.score);
+
+const allReviews = await getCollection('reviews');
+const published = allReviews
+  .filter(r => r.data.status === 'published' && r.data.score != null)
+  .sort((a, b) => (b.data.score ?? 0) - (a.data.score ?? 0));
 ---
-<Base>
+<Base
+  title="PickNotch — Better picks. Fewer regrets."
+  description="PickNotch helps people find better products with fewer regrets. Independent research, clear verdicts, and honest trade-offs — starting with e-bikes."
+>
+
+  <!-- HERO -->
   <section class="hero">
-    <h1>Honest e-bike reviews, with the codes that actually work.</h1>
-    <p>Independently researched. Affiliate supported. A notch above the usual picks.</p>
+    <div class="wrap">
+      <div class="hero-inner">
+        <div class="hero-left">
+          <p class="hero-eyebrow">
+            <span>Independently researched</span>
+            <span class="sep">·</span>
+            <span>Affiliate supported</span>
+            <span class="sep">·</span>
+            <span>Clear verdicts, not fake hype</span>
+          </p>
+          <h1 class="hero-heading">Better picks.<br />Fewer regrets.</h1>
+          <p class="hero-sub">PickNotch compares specs, prices, trade-offs, and real-world value so you can find products actually worth buying.</p>
+          <div class="hero-actions">
+            <a href="/reviews" class="btn-primary">Browse reviews</a>
+            <a href="/methodology" class="btn-ghost">See how we pick</a>
+          </div>
+        </div>
+
+        <div class="hero-right">
+          <div class="hero-card">
+            <div class="hc-top">
+              <div class="hc-score-block">
+                <div class="hc-score">8.6</div>
+                <div class="hc-score-label">PickNotch Score</div>
+              </div>
+              <div class="hc-product">
+                <span class="hc-category">E-bikes</span>
+                <span class="hc-name">Qronge X1 Spark</span>
+                <span class="hc-brand">by Qronge</span>
+              </div>
+            </div>
+            <div class="hc-divider"></div>
+            <div class="hc-bestfor">
+              <span class="hc-bf-label">Best for</span>
+              <span class="hc-bf-tag">Value-focused commuters</span>
+            </div>
+            <div class="hc-catch">
+              <span class="hc-catch-label">The catch</span>
+              <span class="hc-catch-text">Great specs mean nothing if support is weak — so we factor brand confidence into every score.</span>
+            </div>
+            <a href="/reviews/qronge-x1-spark" class="hc-cta">Read full review →</a>
+          </div>
+        </div>
+      </div>
+    </div>
   </section>
-  {reviews.map((r) => (
-    <a class="card" href={`/reviews/${r.slug}`}>
-      <span class="score">{r.data.score}</span>
-      <span><h2>{r.data.title}</h2><span class="meta">{r.data.brand} · {r.data.category} · Updated {r.data.updated}</span></span>
-    </a>
-  ))}
+
+  <!-- TRUST STRIP -->
+  <TrustStrip />
+
+  <!-- CATEGORIES -->
+  <section class="section">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="eyebrow">Explore</p>
+        <h2>Explore by category</h2>
+        <p class="section-sub">Starting with e-bikes, then expanding into more products where specs, pricing, and trade-offs actually matter.</p>
+      </div>
+      <div class="cat-grid">
+        <CategoryCard name="E-bikes" description="From budget commuters to fat-tyre models. We compare value, real-world usability, and brand confidence." status="active" icon="🚲" href="/categories/e-bikes" />
+        <CategoryCard name="Tech & gadgets" description="Phones, audio, laptops, and accessories where the spec sheet often lies." status="coming-soon" icon="💻" />
+        <CategoryCard name="Home gear" description="Appliances, kitchen tools, and household products worth researching before buying." status="coming-soon" icon="🏠" />
+        <CategoryCard name="Outdoor & mobility" description="Scooters, camping gear, and outdoor equipment with real trade-offs." status="coming-soon" icon="🏕️" />
+        <CategoryCard name="Tools & equipment" description="Power tools, hand tools, and workshop gear where quality genuinely matters." status="coming-soon" icon="🔧" />
+      </div>
+    </div>
+  </section>
+
+  <!-- CURRENT FOCUS: E-BIKES -->
+  <section class="section section--paper">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="eyebrow">Current focus</p>
+        <h2>E-bikes</h2>
+        <p class="section-sub">Our first review library — from budget commuters to fat-tyre models and lightweight urban rides.</p>
+      </div>
+      <div class="ebike-grid">
+        {[
+          { name: 'Budget e-bikes',   desc: 'Under $800. Where to find real value and what corners get cut.',               icon: '💰', status: 'Building' },
+          { name: 'Fat tyre e-bikes', desc: 'Rugged, stable, and fun — but heavier and pricier. We compare the real ones.', icon: '🏔️', status: 'Coming soon' },
+          { name: 'Folding e-bikes',  desc: 'Space-savers for commuters. Trade-offs: wheel size, weight, portability.',     icon: '📦', status: 'Coming soon' },
+          { name: 'Commuter e-bikes', desc: 'Daily riders. We look at range honesty, motor type, and real-world support.',  icon: '🏙️', status: 'Coming soon' },
+        ].map(({ name, desc, icon, status }) => (
+          <div class="ebike-card">
+            <span class="ebike-icon">{icon}</span>
+            <div>
+              <h3 class="ebike-name">{name}</h3>
+              <p class="ebike-desc">{desc}</p>
+              <span class="ebike-pill">{status}</span>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- LATEST REVIEWS -->
+  <section class="section">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="eyebrow">Latest</p>
+        <h2>Latest picks and reviews</h2>
+        <p class="section-sub">Published reviews alongside what we're currently researching.</p>
+      </div>
+      <div class="reviews-list">
+        {published.map(r => (
+          <ReviewCard
+            title={r.data.title}
+            brand={r.data.brand}
+            score={r.data.score}
+            bestFor={r.data.bestFor}
+            summary={r.data.summary}
+            slug={r.slug}
+            category={r.data.category}
+            status={r.data.status}
+          />
+        ))}
+        <PlaceholderCard name="Happyrunsport E-bike" category="E-bikes" status="Review in progress" focus="Early focus: value, motor/battery spec, brand support, ride use case." />
+        <PlaceholderCard name="Urtopia Carbon One"   category="E-bikes" status="Researching"        focus="Early focus: lightweight design, smart features, price/value trade-off." />
+      </div>
+      <div class="list-cta">
+        <a href="/reviews" class="btn-outline">Browse all reviews →</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- METHODOLOGY PREVIEW -->
+  <MethodologyPreview />
+
+  <!-- THE CATCH -->
+  <section class="section catch-section">
+    <div class="wrap">
+      <div class="catch-inner">
+        <div class="catch-left">
+          <p class="eyebrow">Our philosophy</p>
+          <h2>We always look for the catch.</h2>
+          <p class="catch-body">Most product pages tell you why to buy. PickNotch also tells you why not to. Every serious review explains the trade-offs, the weak points, and who should avoid the product.</p>
+        </div>
+        <div class="catch-right">
+          {[
+            { q: 'Great specs, weak support?',       body: 'High performance means nothing if the brand disappears after 6 months.' },
+            { q: 'Cheap price, hidden compromises?', body: 'We find what corners got cut — and whether they matter for your use case.' },
+            { q: 'Premium design, poor value?',      body: "Paying more doesn't always buy you more. We score value independently." },
+          ].map(({ q, body }) => (
+            <div class="catch-card">
+              <span class="catch-q">{q}</span>
+              <p class="catch-p">{body}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- COMPARE PREVIEW -->
+  <section class="section section--paper">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="eyebrow">Compare</p>
+        <h2>Compare before you buy</h2>
+        <p class="section-sub">Side-by-side comparisons so you can see exactly where each product wins and loses.</p>
+      </div>
+      <div class="compare-grid">
+        {[
+          { title: 'Qronge vs Happyrunsport',      desc: 'Two budget commuter e-bikes at similar prices. Which one wins on value?' },
+          { title: 'Budget vs premium e-bikes',    desc: "Is it worth spending 3× more? We break down what you actually gain." },
+          { title: 'Fat tyre vs commuter e-bikes', desc: 'Different use cases, different trade-offs. Which style suits you?' },
+        ].map(({ title, desc }) => (
+          <div class="compare-card">
+            <span class="vs-tag">VS</span>
+            <h3 class="compare-title">{title}</h3>
+            <p class="compare-desc">{desc}</p>
+            <span class="soon-pill">Coming soon</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- DISCLOSURE -->
+  <section class="section section--slim">
+    <div class="wrap-narrow">
+      <div class="disclosure-block">
+        <h3>Independently researched. Affiliate supported.</h3>
+        <p>Some links on PickNotch may earn us a commission. That doesn't change our verdicts, scores, or the catches we call out.</p>
+        <a href="/affiliate-disclosure" class="disclosure-link">Read our disclosure →</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- UPDATE CTA -->
+  <section class="section section--slim">
+    <div class="wrap-narrow">
+      <div class="update-cta">
+        <h3>New picks, fewer bad buys.</h3>
+        <p>Newsletter coming soon. In the meantime, want a product compared?</p>
+        <a href="/contact" class="btn-outline">Contact us →</a>
+      </div>
+    </div>
+  </section>
+
 </Base>
+
+<style>
+/* Hero */
+.hero {
+  background: var(--ink);
+  padding: 76px 0 84px;
+  position: relative;
+  overflow: hidden;
+}
+.hero::before {
+  content: '';
+  position: absolute;
+  top: -30%;
+  right: -5%;
+  width: 560px;
+  height: 560px;
+  background: radial-gradient(circle, rgba(34,211,238,0.07) 0%, transparent 68%);
+  pointer-events: none;
+}
+.hero::after {
+  content: '';
+  position: absolute;
+  bottom: -20%;
+  left: 10%;
+  width: 360px;
+  height: 360px;
+  background: radial-gradient(circle, rgba(34,211,238,0.04) 0%, transparent 70%);
+  pointer-events: none;
+}
+.hero-inner {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 64px;
+  align-items: center;
+}
+.hero-eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 12px;
+  font-family: 'Sora', sans-serif;
+  font-weight: 500;
+  color: #5A6E90;
+  margin: 0 0 22px;
+  flex-wrap: wrap;
+}
+.sep { color: #2E3D5C; }
+.hero-heading {
+  font-size: clamp(38px, 5vw, 58px);
+  font-weight: 800;
+  color: #fff;
+  margin: 0 0 18px;
+  line-height: 1.05;
+  letter-spacing: -0.04em;
+}
+.hero-sub {
+  font-size: 17px;
+  color: #7A90B0;
+  line-height: 1.7;
+  margin: 0 0 32px;
+  max-width: 420px;
+}
+.hero-actions { display: flex; gap: 11px; flex-wrap: wrap; }
+.btn-primary {
+  display: inline-block;
+  background: var(--cyan);
+  color: #0C1F30;
+  font-family: 'Sora', sans-serif;
+  font-weight: 700;
+  font-size: 14px;
+  padding: 12px 24px;
+  border-radius: 9px;
+  text-decoration: none;
+  transition: transform 0.13s ease, box-shadow 0.13s ease;
+  box-shadow: 0 4px 16px rgba(34,211,238,0.28);
+}
+.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 6px 22px rgba(34,211,238,0.38); }
+.btn-primary:active { transform: translateY(0); }
+.btn-primary:focus-visible { outline: 2px solid #fff; outline-offset: 3px; border-radius: 9px; }
+.btn-ghost {
+  display: inline-block;
+  background: rgba(255,255,255,0.07);
+  color: #C8D8E8;
+  font-family: 'Sora', sans-serif;
+  font-weight: 600;
+  font-size: 14px;
+  padding: 12px 24px;
+  border-radius: 9px;
+  border: 1px solid rgba(255,255,255,0.1);
+  text-decoration: none;
+  transition: background 0.13s ease, transform 0.13s ease;
+}
+.btn-ghost:hover { background: rgba(255,255,255,0.12); transform: translateY(-1px); }
+.btn-ghost:active { transform: translateY(0); }
+.btn-ghost:focus-visible { outline: 2px solid var(--cyan); outline-offset: 3px; border-radius: 9px; }
+/* Hero card */
+.hero-right { display: flex; justify-content: flex-end; }
+.hero-card {
+  background: #fff;
+  border-radius: 20px;
+  padding: 26px;
+  width: 100%;
+  max-width: 320px;
+  box-shadow: 0 28px 72px rgba(0,0,0,0.35), 0 4px 14px rgba(0,0,0,0.18);
+}
+.hc-top { display: flex; gap: 14px; align-items: flex-start; margin-bottom: 18px; }
+.hc-score-block { text-align: center; flex-shrink: 0; }
+.hc-score {
+  font-family: 'Sora', sans-serif;
+  font-size: 38px;
+  font-weight: 800;
+  line-height: 1;
+  background: linear-gradient(130deg, #1C2540 20%, #0E7490);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.hc-score-label {
+  font-family: 'Sora', sans-serif;
+  font-size: 9px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--muted);
+  margin-top: 2px;
+  white-space: nowrap;
+}
+.hc-product { display: flex; flex-direction: column; gap: 2px; padding-top: 5px; }
+.hc-category {
+  font-size: 10px;
+  font-weight: 600;
+  font-family: 'Sora', sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--muted);
+}
+.hc-name { font-family: 'Sora', sans-serif; font-size: 15px; font-weight: 700; color: var(--ink); line-height: 1.2; }
+.hc-brand { font-size: 12px; color: var(--slate); }
+.hc-divider { height: 1px; background: var(--line); margin: 0 0 14px; }
+.hc-bestfor { display: flex; align-items: center; gap: 7px; margin-bottom: 12px; }
+.hc-bf-label {
+  font-size: 10px;
+  font-weight: 600;
+  font-family: 'Sora', sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--muted);
+  white-space: nowrap;
+}
+.hc-bf-tag {
+  font-size: 12px;
+  background: rgba(34,211,238,0.1);
+  color: #0E7490;
+  padding: 2px 9px;
+  border-radius: 20px;
+  font-weight: 500;
+}
+.hc-catch {
+  background: #FFFBEB;
+  border: 1px solid #FDE68A;
+  border-radius: 9px;
+  padding: 11px 13px;
+  margin-bottom: 14px;
+}
+.hc-catch-label {
+  display: block;
+  font-size: 9px;
+  font-weight: 700;
+  font-family: 'Sora', sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.09em;
+  color: #92400E;
+  margin-bottom: 3px;
+}
+.hc-catch-text { font-size: 12px; color: #78350F; line-height: 1.5; }
+.hc-cta {
+  display: block;
+  text-align: center;
+  background: var(--ink);
+  color: #fff;
+  font-family: 'Sora', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 10px;
+  border-radius: 8px;
+  text-decoration: none;
+  transition: background 0.13s ease;
+}
+.hc-cta:hover { background: #263357; }
+.hc-cta:focus-visible { outline: 2px solid var(--cyan); outline-offset: 2px; border-radius: 8px; }
+/* Sections */
+.section { padding: 76px 0; }
+.section--paper { background: var(--paper); }
+.section--slim { padding: 28px 0; }
+.section-head { text-align: center; margin-bottom: 40px; }
+.eyebrow {
+  font-family: 'Sora', sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--cyan);
+  margin: 0 0 8px;
+}
+.section-head h2 { font-size: clamp(22px, 3vw, 32px); font-weight: 700; margin: 0 0 10px; color: var(--ink); }
+.section-sub { font-size: 16px; color: var(--slate); margin: 0 auto; max-width: 520px; line-height: 1.65; }
+/* Category grid */
+.cat-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(270px, 1fr)); gap: 14px; }
+/* E-bike grid */
+.ebike-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 14px; }
+.ebike-card { background: #fff; border: 1px solid var(--line); border-radius: 13px; padding: 18px 20px; display: flex; gap: 13px; align-items: flex-start; }
+.ebike-icon { font-size: 22px; flex-shrink: 0; margin-top: 1px; }
+.ebike-name { font-family: 'Sora', sans-serif; font-size: 15px; font-weight: 600; margin: 0 0 5px; color: var(--ink); }
+.ebike-desc { font-size: 13px; color: var(--slate); margin: 0 0 9px; line-height: 1.5; }
+.ebike-pill {
+  display: inline-block;
+  font-size: 10px; font-weight: 600;
+  font-family: 'Sora', sans-serif;
+  background: var(--paper); color: var(--muted);
+  padding: 2px 8px; border-radius: 20px;
+  text-transform: uppercase; letter-spacing: 0.05em;
+  border: 1px solid var(--line);
+}
+/* Reviews list */
+.reviews-list { display: flex; flex-direction: column; gap: 11px; margin-bottom: 24px; }
+.list-cta { text-align: center; }
+.btn-outline {
+  display: inline-block;
+  border: 1.5px solid var(--ink);
+  color: var(--ink);
+  font-family: 'Sora', sans-serif;
+  font-weight: 600;
+  font-size: 14px;
+  padding: 10px 22px;
+  border-radius: 8px;
+  text-decoration: none;
+  transition: background 0.13s ease, color 0.13s ease;
+}
+.btn-outline:hover { background: var(--ink); color: #fff; }
+.btn-outline:focus-visible { outline: 2px solid var(--cyan); outline-offset: 2px; border-radius: 8px; }
+/* The Catch */
+.catch-section { background: #fff; }
+.catch-inner { display: grid; grid-template-columns: 1fr 1fr; gap: 72px; align-items: start; }
+.catch-left h2 { font-size: clamp(22px, 2.8vw, 30px); font-weight: 700; margin: 0 0 14px; color: var(--ink); }
+.catch-body { font-size: 16px; color: var(--slate); line-height: 1.7; margin: 0; }
+.catch-right { display: flex; flex-direction: column; gap: 11px; }
+.catch-card { background: var(--paper); border: 1px solid var(--line); border-left: 3px solid var(--cyan); border-radius: 0 11px 11px 0; padding: 15px 17px; }
+.catch-q { display: block; font-family: 'Sora', sans-serif; font-size: 14px; font-weight: 600; color: var(--ink); margin-bottom: 4px; }
+.catch-p { font-size: 13px; color: var(--slate); margin: 0; line-height: 1.55; }
+/* Compare */
+.compare-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 14px; }
+.compare-card { background: #fff; border: 1px solid var(--line); border-radius: 13px; padding: 22px; }
+.vs-tag {
+  display: inline-block; font-family: 'Sora', sans-serif;
+  font-size: 10px; font-weight: 700; letter-spacing: 0.1em;
+  color: var(--cyan); background: rgba(34,211,238,0.1);
+  padding: 3px 8px; border-radius: 20px; margin-bottom: 10px;
+}
+.compare-title { font-family: 'Sora', sans-serif; font-size: 15px; font-weight: 600; margin: 0 0 7px; color: var(--ink); }
+.compare-desc { font-size: 13px; color: var(--slate); margin: 0 0 13px; line-height: 1.5; }
+.soon-pill {
+  display: inline-block; font-size: 10px; font-weight: 600;
+  font-family: 'Sora', sans-serif; background: var(--paper);
+  color: var(--muted); padding: 2px 8px; border-radius: 20px;
+  text-transform: uppercase; letter-spacing: 0.05em; border: 1px solid var(--line);
+}
+/* Disclosure block */
+.disclosure-block { background: var(--paper); border: 1px solid var(--line); border-radius: 13px; padding: 26px 30px; text-align: center; }
+.disclosure-block h3 { font-size: 17px; font-weight: 700; margin: 0 0 8px; color: var(--ink); }
+.disclosure-block p { font-size: 14px; color: var(--slate); margin: 0 0 14px; line-height: 1.6; }
+.disclosure-link { font-family: 'Sora', sans-serif; font-size: 13px; font-weight: 600; color: var(--cyan); text-decoration: none; transition: opacity 0.13s ease; }
+.disclosure-link:hover { opacity: 0.75; }
+/* Update CTA */
+.update-cta { text-align: center; padding: 8px 0; }
+.update-cta h3 { font-size: 20px; font-weight: 700; margin: 0 0 7px; color: var(--ink); }
+.update-cta p { font-size: 15px; color: var(--slate); margin: 0 0 20px; }
+/* Responsive */
+@media (max-width: 880px) {
+  .hero-inner { grid-template-columns: 1fr; gap: 48px; }
+  .hero-right { justify-content: center; order: -1; }
+  .hero-card { max-width: 380px; }
+  .catch-inner { grid-template-columns: 1fr; gap: 40px; }
+}
+@media (max-width: 600px) {
+  .hero { padding: 52px 0 60px; }
+  .section { padding: 52px 0; }
+  .hero-sub { font-size: 16px; }
+}
+</style>

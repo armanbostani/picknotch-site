@@ -1,0 +1,63 @@
+---
+import Base from '../../layouts/Base.astro';
+import CategoryCard from '../../components/CategoryCard.astro';
+---
+<Base title="Categories — PickNotch" description="PickNotch focuses on products where research actually matters — categories with confusing specs, wide price ranges, and real trade-offs.">
+
+  <section class="page-hero">
+    <div class="wrap">
+      <p class="eyebrow">Browse</p>
+      <h1>Categories</h1>
+      <p class="page-sub">PickNotch focuses on products where research actually matters — categories with confusing specs, wide price ranges, and real trade-offs.</p>
+    </div>
+  </section>
+
+  <section class="cats-section">
+    <div class="wrap">
+      <div class="cats-grid">
+        <CategoryCard name="E-bikes" description="From budget commuters to fat-tyre models. Motor type, battery, range claims, support — we compare it all." status="active" icon="🚲" href="/categories/e-bikes" />
+        <CategoryCard name="Tech & gadgets" description="Phones, audio, laptops, and accessories where the spec sheet often tells only half the story." status="coming-soon" icon="💻" />
+        <CategoryCard name="Home gear" description="Appliances, kitchen tools, and household products where brand trust and build quality vary wildly." status="coming-soon" icon="🏠" />
+        <CategoryCard name="Outdoor & mobility" description="Scooters, camping gear, and outdoor equipment with meaningful trade-offs between price and quality." status="coming-soon" icon="🏕️" />
+        <CategoryCard name="Tools & equipment" description="Power tools and hand tools where durability, safety, and value for money genuinely matter." status="coming-soon" icon="🔧" />
+      </div>
+
+      <div class="cat-promise">
+        <h2>What each category page will include</h2>
+        <div class="promise-grid">
+          {[
+            { icon: '★', title: 'Best overall pick', desc: 'Our top recommendation for most buyers.' },
+            { icon: '💰', title: 'Best budget pick', desc: 'The best value at the lower end of the price range.' },
+            { icon: '◈', title: 'Best premium pick', desc: 'Worth paying more for — and here\'s why.' },
+            { icon: '📋', title: 'Latest reviews', desc: 'All published reviews, sorted by score.' },
+            { icon: '📖', title: 'Buying guides', desc: 'What to look for, what to ignore, and what the spec sheet doesn\'t tell you.' },
+            { icon: '⚡', title: 'Common mistakes', desc: 'What most buyers get wrong in this category.' },
+          ].map(({ icon, title, desc }) => (
+            <div class="promise-card">
+              <span class="promise-icon">{icon}</span>
+              <h3 class="promise-title">{title}</h3>
+              <p class="promise-desc">{desc}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  </section>
+
+</Base>
+
+<style>
+.page-hero { background: var(--ink); padding: 52px 0 48px; }
+.page-hero .eyebrow { font-family: 'Sora', sans-serif; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; color: var(--cyan); margin: 0 0 8px; }
+.page-hero h1 { font-size: clamp(28px, 4vw, 40px); font-weight: 800; color: #fff; margin: 0 0 10px; }
+.page-sub { font-size: 16px; color: #7A90B0; margin: 0; max-width: 520px; line-height: 1.65; }
+.cats-section { padding: 52px 0 80px; }
+.cats-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(270px, 1fr)); gap: 14px; margin-bottom: 60px; }
+.cat-promise { }
+.cat-promise h2 { font-size: clamp(20px, 2.5vw, 26px); font-weight: 700; margin: 0 0 24px; color: var(--ink); }
+.promise-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 14px; }
+.promise-card { background: var(--paper); border: 1px solid var(--line); border-radius: 12px; padding: 18px 20px; }
+.promise-icon { display: block; font-size: 20px; margin-bottom: 10px; }
+.promise-title { font-family: 'Sora', sans-serif; font-size: 14px; font-weight: 600; margin: 0 0 5px; color: var(--ink); }
+.promise-desc { font-size: 13px; color: var(--slate); margin: 0; line-height: 1.55; }
+</style>

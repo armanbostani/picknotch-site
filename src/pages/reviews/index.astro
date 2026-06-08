@@ -1,0 +1,168 @@
+---
+import Base from '../../layouts/Base.astro';
+import ReviewCard from '../../components/ReviewCard.astro';
+import PlaceholderCard from '../../components/PlaceholderCard.astro';
+import { getCollection } from 'astro:content';
+
+const allReviews = await getCollection('reviews');
+const published = allReviews
+  .filter(r => r.data.status === 'published' && r.data.score != null)
+  .sort((a, b) => (b.data.score ?? 0) - (a.data.score ?? 0));
+---
+<Base title="Reviews — PickNotch" description="Browse PickNotch reviews across active and upcoming product categories.">
+
+  <section class="page-hero">
+    <div class="wrap">
+      <p class="eyebrow">All reviews</p>
+      <h1>Reviews</h1>
+      <p class="page-sub">Browse PickNotch reviews across active and upcoming product categories.</p>
+    </div>
+  </section>
+
+  <section class="reviews-section">
+    <div class="wrap">
+
+      <div class="filter-row">
+        <div class="filter-group">
+          <span class="filter-label">Category</span>
+          <div class="filter-chips">
+            <button class="chip chip--active" aria-pressed="true">All</button>
+            <button class="chip" aria-pressed="false">E-bikes</button>
+            <button class="chip chip--disabled" disabled>Tech</button>
+            <button class="chip chip--disabled" disabled>Home</button>
+            <button class="chip chip--disabled" disabled>Outdoor</button>
+          </div>
+        </div>
+        <div class="filter-group">
+          <span class="filter-label">Sort</span>
+          <div class="filter-chips">
+            <button class="chip chip--active" aria-pressed="true">Highest score</button>
+            <button class="chip" aria-pressed="false">Latest</button>
+            <button class="chip" aria-pressed="false">Best value</button>
+          </div>
+        </div>
+      </div>
+
+      {published.length > 0 && (
+        <div class="reviews-section-block">
+          <h2 class="block-heading">Published reviews</h2>
+          <div class="reviews-list">
+            {published.map(r => (
+              <ReviewCard
+                title={r.data.title}
+                brand={r.data.brand}
+                score={r.data.score}
+                bestFor={r.data.bestFor}
+                summary={r.data.summary}
+                slug={r.slug}
+                category={r.data.category}
+                status={r.data.status}
+              />
+            ))}
+          </div>
+        </div>
+      )}
+
+      <div class="reviews-section-block">
+        <h2 class="block-heading">Research in progress</h2>
+        <div class="reviews-list">
+          <PlaceholderCard name="Happyrunsport E-bike" category="E-bikes" status="Review in progress" focus="Focus: value, motor/battery spec, brand support, ride use case." />
+          <PlaceholderCard name="Urtopia Carbon One" category="E-bikes" status="Researching" focus="Focus: lightweight design, smart features, price/value trade-off." />
+          <PlaceholderCard name="Lectric XP 3.0" category="E-bikes" status="Coming soon" focus="Budget folding e-bike. Focus: portability, build quality, real-world range." />
+        </div>
+      </div>
+
+      <div class="coming-soon-note">
+        <span class="cs-icon">◎</span>
+        <p>More categories coming soon — tech, home, outdoor, and tools. <a href="/contact">Suggest a product →</a></p>
+      </div>
+
+    </div>
+  </section>
+
+</Base>
+
+<style>
+.page-hero {
+  background: var(--ink);
+  padding: 52px 0 48px;
+}
+.page-hero .eyebrow {
+  font-family: 'Sora', sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--cyan);
+  margin: 0 0 8px;
+}
+.page-hero h1 {
+  font-size: clamp(28px, 4vw, 40px);
+  font-weight: 800;
+  color: #fff;
+  margin: 0 0 10px;
+}
+.page-sub { font-size: 16px; color: #7A90B0; margin: 0; max-width: 480px; line-height: 1.65; }
+.reviews-section { padding: 52px 0 80px; }
+.filter-row {
+  display: flex;
+  gap: 24px;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  margin-bottom: 36px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid var(--line);
+}
+.filter-group { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.filter-label {
+  font-family: 'Sora', sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  white-space: nowrap;
+}
+.filter-chips { display: flex; gap: 6px; flex-wrap: wrap; }
+.chip {
+  font-family: 'Sora', sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  padding: 6px 13px;
+  border-radius: 20px;
+  border: 1.5px solid var(--line);
+  background: #fff;
+  color: var(--slate);
+  cursor: pointer;
+  transition: border-color 0.13s ease, color 0.13s ease, background 0.13s ease;
+}
+.chip:hover { border-color: var(--ink); color: var(--ink); }
+.chip:focus-visible { outline: 2px solid var(--cyan); outline-offset: 2px; }
+.chip--active { background: var(--ink); color: #fff; border-color: var(--ink); }
+.chip--disabled { opacity: 0.4; cursor: not-allowed; }
+.reviews-section-block { margin-bottom: 40px; }
+.block-heading {
+  font-family: 'Sora', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--slate);
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  margin: 0 0 14px;
+}
+.reviews-list { display: flex; flex-direction: column; gap: 11px; }
+.coming-soon-note {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 16px 18px;
+  margin-top: 8px;
+}
+.cs-icon { color: var(--cyan); font-size: 14px; flex-shrink: 0; margin-top: 1px; }
+.coming-soon-note p { font-size: 14px; color: var(--slate); margin: 0; }
+.coming-soon-note a { color: var(--cyan); font-weight: 500; text-decoration: none; }
+.coming-soon-note a:hover { opacity: 0.75; }
+</style>

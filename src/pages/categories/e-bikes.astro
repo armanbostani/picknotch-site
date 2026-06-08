@@ -1,0 +1,167 @@
+---
+import Base from '../../layouts/Base.astro';
+import ReviewCard from '../../components/ReviewCard.astro';
+import PlaceholderCard from '../../components/PlaceholderCard.astro';
+import DisclosureBox from '../../components/DisclosureBox.astro';
+import { getCollection } from 'astro:content';
+
+const allReviews = await getCollection('reviews');
+const ebikeReviews = allReviews
+  .filter(r => r.data.category?.toLowerCase().includes('bike') && r.data.status === 'published' && r.data.score != null)
+  .sort((a, b) => (b.data.score ?? 0) - (a.data.score ?? 0));
+---
+<Base title="E-bike Reviews & Buying Guides — PickNotch" description="PickNotch compares e-bikes by value, real-world usability, support confidence, and the compromises hidden behind the spec sheet.">
+
+  <!-- Hero -->
+  <section class="cat-hero">
+    <div class="wrap">
+      <nav class="breadcrumb" aria-label="Breadcrumb">
+        <a href="/">Home</a><span>›</span>
+        <a href="/categories">Categories</a><span>›</span>
+        <span>E-bikes</span>
+      </nav>
+      <p class="eyebrow">Category</p>
+      <h1>E-bike reviews and buying guides</h1>
+      <p class="cat-sub">We compare e-bikes by value, real-world usability, support confidence, comfort, and the compromises hidden behind the spec sheet.</p>
+      <div class="cat-tags">
+        <span class="cat-tag">250W–750W motors</span>
+        <span class="cat-tag">Torque vs cadence sensors</span>
+        <span class="cat-tag">Battery capacity</span>
+        <span class="cat-tag">Range honesty</span>
+        <span class="cat-tag">Brand support</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Subcategories -->
+  <section class="section">
+    <div class="wrap">
+      <h2 class="section-h2">Browse by type</h2>
+      <div class="subcat-grid">
+        {[
+          { name: 'Budget e-bikes',   desc: 'Under $800. Where to find real value and what corners get cut.',               icon: '💰', status: 'Building' },
+          { name: 'Fat tyre e-bikes', desc: 'Rugged, stable, and fun — but heavier and pricier. Real comparisons.',         icon: '🏔️', status: 'Coming soon' },
+          { name: 'Folding e-bikes',  desc: 'Space-savers for commuters. Wheel size, weight, portability trade-offs.',      icon: '📦', status: 'Coming soon' },
+          { name: 'Commuter e-bikes', desc: 'Daily riders. Range honesty, motor type, and long-term support.',              icon: '🏙️', status: 'Coming soon' },
+        ].map(({ name, desc, icon, status }) => (
+          <div class="subcat-card">
+            <span class="sc-icon">{icon}</span>
+            <div>
+              <h3 class="sc-name">{name}</h3>
+              <p class="sc-desc">{desc}</p>
+              <span class="sc-pill">{status}</span>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Reviews -->
+  <section class="section section--paper">
+    <div class="wrap">
+      <h2 class="section-h2">Latest e-bike reviews</h2>
+      <div class="reviews-list">
+        {ebikeReviews.map(r => (
+          <ReviewCard
+            title={r.data.title}
+            brand={r.data.brand}
+            score={r.data.score}
+            bestFor={r.data.bestFor}
+            summary={r.data.summary}
+            slug={r.slug}
+            category={r.data.category}
+            status={r.data.status}
+          />
+        ))}
+        <PlaceholderCard name="Happyrunsport E-bike" category="E-bikes" status="Review in progress" focus="Motor spec, battery life, value vs price, brand support confidence." />
+        <PlaceholderCard name="Urtopia Carbon One"   category="E-bikes" status="Researching"        focus="Lightweight design, smart features, real-world weight, value." />
+        <PlaceholderCard name="Lectric XP 3.0"       category="E-bikes" status="Coming soon"        focus="Folding commuter. Range, build, portability vs weight." />
+      </div>
+    </div>
+  </section>
+
+  <!-- Common mistakes -->
+  <section class="section">
+    <div class="wrap">
+      <h2 class="section-h2">Common e-bike buying mistakes</h2>
+      <div class="mistakes-grid">
+        {[
+          { title: 'Trusting range claims',      body: 'Most range figures assume flat terrain, low assist, no headwind. Real range is often 30–40% lower.' },
+          { title: 'Ignoring sensor type',       body: 'Cadence sensors feel like a jolt; torque sensors feel like real cycling. Most cheap bikes use cadence.' },
+          { title: 'Skipping brand research',    body: 'A great spec sheet means nothing if the brand has no service network, weak warranty, or disappears.' },
+          { title: 'Over-buying on motor watt',  body: '250W is legal in the EU and plenty for commuting. Higher wattage often just drains the battery faster.' },
+          { title: 'Ignoring weight',            body: 'A 30kg e-bike is unmanageable without motor assist. If the battery dies mid-ride, you feel every kg.' },
+          { title: 'Forgetting total cost',      body: 'Add accessories, service, battery replacement, and insurance. The cheapest upfront option often isn\'t cheapest long-term.' },
+        ].map(({ title, body }) => (
+          <div class="mistake-card">
+            <span class="mistake-icon">⚑</span>
+            <div>
+              <h3 class="mistake-title">{title}</h3>
+              <p class="mistake-body">{body}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Glossary -->
+  <section class="section section--paper">
+    <div class="wrap">
+      <h2 class="section-h2">Key terms explained</h2>
+      <div class="glossary-grid">
+        {[
+          { term: 'Torque sensor',       def: 'Reads how hard you push and adjusts motor assist proportionally. Feels natural. Mostly found on pricier bikes.' },
+          { term: 'Cadence sensor',      def: 'Detects pedalling motion (not effort) and delivers a fixed boost. Common on budget bikes. Feels jerkier.' },
+          { term: 'Wh (watt-hours)',     def: 'Battery capacity. More Wh = more potential range. A 374Wh battery typically covers 40–60km in real conditions.' },
+          { term: 'Claimed range',       def: 'Always inflated. Assume 60–70% of the stated figure for mixed real-world use (hills, wind, full assist).' },
+          { term: 'Hydraulic brakes',    def: 'Self-adjusting, consistent feel, more stopping power. Worth prioritising on heavier e-bikes.' },
+          { term: 'IP rating',           def: 'Water and dust resistance. IPX4 means splash-resistant. IP65 means dust-tight and water-jet resistant.' },
+        ].map(({ term, def }) => (
+          <div class="gloss-card">
+            <h3 class="gloss-term">{term}</h3>
+            <p class="gloss-def">{def}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <div class="wrap" style="padding-bottom: 72px;">
+    <DisclosureBox />
+  </div>
+
+</Base>
+
+<style>
+.cat-hero { background: var(--ink); padding: 52px 0 52px; }
+.breadcrumb { display: flex; align-items: center; gap: 7px; font-size: 13px; color: #5A6E8E; margin-bottom: 20px; flex-wrap: wrap; }
+.breadcrumb a { color: #7A90B0; text-decoration: none; transition: color 0.13s ease; }
+.breadcrumb a:hover { color: var(--cyan); }
+.breadcrumb span { color: #2E3D5C; }
+.cat-hero .eyebrow { font-family: 'Sora', sans-serif; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; color: var(--cyan); margin: 0 0 8px; }
+.cat-hero h1 { font-size: clamp(24px, 3.5vw, 36px); font-weight: 800; color: #fff; margin: 0 0 12px; }
+.cat-sub { font-size: 16px; color: #7A90B0; margin: 0 0 20px; max-width: 560px; line-height: 1.65; }
+.cat-tags { display: flex; gap: 8px; flex-wrap: wrap; }
+.cat-tag { font-family: 'Sora', sans-serif; font-size: 12px; font-weight: 500; color: #7A90B0; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); padding: 4px 10px; border-radius: 20px; }
+.section { padding: 52px 0; }
+.section--paper { background: var(--paper); }
+.section-h2 { font-size: clamp(18px, 2.5vw, 24px); font-weight: 700; margin: 0 0 20px; color: var(--ink); }
+.subcat-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 14px; }
+.subcat-card { background: #fff; border: 1px solid var(--line); border-radius: 13px; padding: 18px 20px; display: flex; gap: 13px; align-items: flex-start; }
+.sc-icon { font-size: 22px; flex-shrink: 0; }
+.sc-name { font-family: 'Sora', sans-serif; font-size: 15px; font-weight: 600; margin: 0 0 5px; color: var(--ink); }
+.sc-desc { font-size: 13px; color: var(--slate); margin: 0 0 9px; line-height: 1.5; }
+.sc-pill { display: inline-block; font-size: 10px; font-weight: 600; font-family: 'Sora', sans-serif; background: var(--paper); color: var(--muted); padding: 2px 8px; border-radius: 20px; text-transform: uppercase; letter-spacing: 0.05em; border: 1px solid var(--line); }
+.reviews-list { display: flex; flex-direction: column; gap: 11px; }
+.mistakes-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 14px; }
+.mistake-card { display: flex; gap: 12px; align-items: flex-start; background: var(--paper); border: 1px solid var(--line); border-radius: 12px; padding: 16px 18px; }
+.mistake-icon { color: var(--cyan); font-size: 14px; flex-shrink: 0; margin-top: 2px; }
+.mistake-title { font-family: 'Sora', sans-serif; font-size: 14px; font-weight: 600; margin: 0 0 5px; color: var(--ink); }
+.mistake-body { font-size: 13px; color: var(--slate); margin: 0; line-height: 1.55; }
+.glossary-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 14px; }
+.gloss-card { background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 16px 18px; }
+.gloss-term { font-family: 'Sora', sans-serif; font-size: 14px; font-weight: 600; margin: 0 0 5px; color: var(--ink); }
+.gloss-def { font-size: 13px; color: var(--slate); margin: 0; line-height: 1.55; }
+</style>

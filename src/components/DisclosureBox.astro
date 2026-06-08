@@ -1,0 +1,63 @@
+---
+interface Props {
+  compact?: boolean;
+}
+const { compact = false } = Astro.props;
+---
+<div class:list={['disclosure-box', compact ? 'disclosure-box--compact' : '']}>
+  <span class="disclosure-icon" aria-hidden="true">◎</span>
+  <div class="disclosure-text">
+    <strong>Independently researched. Affiliate supported.</strong>
+    <p>
+      Some links on PickNotch may earn us a commission — at no extra cost to you. That doesn't change our verdicts, scores, or the catches we call out.{' '}
+      <a href="/affiliate-disclosure">Read our full disclosure →</a>
+    </p>
+  </div>
+</div>
+
+<style>
+.disclosure-box {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  border-top: 1px solid var(--line);
+  padding-top: 22px;
+  margin-top: 40px;
+}
+.disclosure-box--compact {
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 14px 16px;
+  margin-top: 0;
+  background: var(--paper);
+}
+.disclosure-icon {
+  color: var(--cyan);
+  font-size: 14px;
+  flex-shrink: 0;
+  margin-top: 1px;
+  line-height: 1.6;
+}
+.disclosure-text strong {
+  display: block;
+  font-size: 12px;
+  font-family: 'Sora', sans-serif;
+  font-weight: 600;
+  color: var(--ink);
+  margin-bottom: 3px;
+  letter-spacing: -0.01em;
+}
+.disclosure-text p {
+  font-size: 12px;
+  color: var(--slate);
+  margin: 0;
+  line-height: 1.6;
+}
+.disclosure-text a {
+  color: var(--cyan);
+  font-weight: 500;
+  text-decoration: none;
+  transition: opacity 0.13s ease;
+}
+.disclosure-text a:hover { opacity: 0.75; }
+</style>

@@ -1,0 +1,82 @@
+---
+import Base from '../layouts/Base.astro';
+---
+<Base title="Affiliate Disclosure — PickNotch" description="How affiliate links work on PickNotch, and what that means for our editorial independence.">
+
+  <section class="page-hero">
+    <div class="wrap">
+      <p class="eyebrow">Transparency</p>
+      <h1>Affiliate Disclosure</h1>
+    </div>
+  </section>
+
+  <div class="disclosure-body wrap-narrow">
+
+    <section class="d-section">
+      <h2>The short version</h2>
+      <div class="summary-box">
+        <p>PickNotch uses affiliate links. When you click a link and buy a product, we may earn a small commission from the retailer. This comes at no extra cost to you. Our scores, verdicts, and editorial decisions are not influenced by affiliate commission rates.</p>
+      </div>
+    </section>
+
+    <section class="d-section">
+      <h2>How affiliate links work</h2>
+      <p>An affiliate link is a tracked URL that tells a retailer we referred you. If you make a purchase through that link within a set time window (usually 24 hours to 30 days, depending on the retailer), we earn a percentage of the sale price.</p>
+      <p>Affiliate links look identical to normal links. We do not hide them or disguise them as non-commercial links.</p>
+    </section>
+
+    <section class="d-section">
+      <h2>What this means for our reviews</h2>
+      <div class="rule-list">
+        {[
+          { rule: 'Affiliate relationships do not guarantee positive coverage', detail: 'We cover products regardless of affiliate availability. A product without an affiliate link may still be reviewed.' },
+          { rule: 'Commission rates do not affect scores', detail: 'A product with a 3% commission rate is scored the same way as a product with a 10% rate. The score reflects the product, not the margin.' },
+          { rule: 'We will not inflate a score for a brand that pays better', detail: 'If a product scores 6.5, it scores 6.5. We do not round up to make it more appealing or to protect a commercial relationship.' },
+          { rule: 'Negative reviews stay published', detail: 'If we cover a product and then lose the affiliate relationship, the review remains. We do not remove coverage based on commercial changes.' },
+          { rule: 'Prices and codes can change', detail: 'Affiliate pricing and discount codes are subject to change by the retailer at any time. Always verify the current price and terms before purchasing.' },
+        ].map(({ rule, detail }) => (
+          <div class="rule-item">
+            <span class="rule-check">◎</span>
+            <div>
+              <strong class="rule-title">{rule}</strong>
+              <p class="rule-detail">{detail}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <section class="d-section">
+      <h2>Why we use affiliate links</h2>
+      <p>Independent product research takes time. Affiliate commissions are how PickNotch funds that work without charging readers or accepting paid placements. We believe this is a fair model: you get free, honest research; we earn a small cut when you buy something we recommended.</p>
+      <p>We earn less money from honest reviews than from fake glowing ones. We do it anyway.</p>
+    </section>
+
+    <section class="d-section">
+      <h2>Questions?</h2>
+      <p>If you have questions about our editorial process or affiliate relationships, <a href="/contact">contact us</a>. We will respond.</p>
+    </section>
+
+  </div>
+</Base>
+
+<style>
+.page-hero { background: var(--ink); padding: 52px 0 48px; }
+.page-hero .eyebrow { font-family: 'Sora', sans-serif; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; color: var(--cyan); margin: 0 0 8px; }
+.page-hero h1 { font-size: clamp(24px, 3.5vw, 36px); font-weight: 800; color: #fff; margin: 0; }
+.disclosure-body { padding: 52px 24px 80px; }
+.d-section { margin-bottom: 44px; border-bottom: 1px solid var(--line); padding-bottom: 44px; }
+.d-section:last-child { border-bottom: none; }
+.d-section h2 { font-size: clamp(18px, 2.5vw, 22px); font-weight: 700; margin: 0 0 14px; color: var(--ink); }
+.d-section p { font-size: 16px; color: #334155; line-height: 1.75; margin: 0 0 14px; }
+.d-section p:last-child { margin-bottom: 0; }
+.d-section a { color: var(--cyan); text-decoration: none; font-weight: 500; }
+.d-section a:hover { opacity: 0.75; }
+.summary-box { background: rgba(34,211,238,0.06); border: 1px solid rgba(34,211,238,0.2); border-radius: 12px; padding: 20px 22px; }
+.summary-box p { font-size: 16px; color: var(--ink); margin: 0; line-height: 1.7; font-weight: 500; }
+.rule-list { display: flex; flex-direction: column; gap: 14px; }
+.rule-item { display: flex; gap: 13px; align-items: flex-start; }
+.rule-check { color: var(--cyan); font-size: 14px; flex-shrink: 0; margin-top: 2px; }
+.rule-title { display: block; font-family: 'Sora', sans-serif; font-size: 14px; font-weight: 600; color: var(--ink); margin-bottom: 3px; }
+.rule-detail { font-size: 14px; color: var(--slate); margin: 0; line-height: 1.6; }
+</style>

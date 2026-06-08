@@ -1,0 +1,113 @@
+---
+interface Props {
+  name: string;
+  description: string;
+  status: 'active' | 'coming-soon';
+  icon: string;
+  href?: string;
+}
+const { name, description, status, icon, href } = Astro.props;
+const active = status === 'active';
+const Tag = active && href ? 'a' : 'div';
+---
+<Tag
+  class:list={['cat-card', active ? 'cat-card--active' : 'cat-card--soon']}
+  href={active && href ? href : undefined}
+>
+  <div class="cat-icon">{icon}</div>
+  <div class="cat-body">
+    <div class="cat-head">
+      <h3 class="cat-name">{name}</h3>
+      <span class:list={['cat-pill', active ? 'pill-active' : 'pill-soon']}>
+        {active ? 'Active' : 'Coming soon'}
+      </span>
+    </div>
+    <p class="cat-desc">{description}</p>
+  </div>
+  {active && href && (
+    <svg class="cat-arrow" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+      <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  )}
+</Tag>
+
+<style>
+.cat-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 18px 20px;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease, transform 0.15s ease;
+  text-decoration: none;
+}
+.cat-card--active {
+  cursor: pointer;
+}
+.cat-card--active:hover {
+  border-color: #93E6F8;
+  box-shadow: 0 4px 20px rgba(34,211,238,0.1), 0 2px 4px rgba(28,37,64,0.04);
+  transform: translateY(-2px);
+}
+.cat-card--active:active { transform: translateY(0); }
+.cat-card--active:focus-visible {
+  outline: 2px solid var(--cyan);
+  outline-offset: 2px;
+  border-radius: 14px;
+}
+.cat-card--soon { opacity: 0.6; }
+.cat-icon {
+  font-size: 22px;
+  flex-shrink: 0;
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--paper);
+  border-radius: 10px;
+}
+.cat-body { flex: 1; min-width: 0; }
+.cat-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 5px;
+  flex-wrap: wrap;
+}
+.cat-name {
+  font-family: 'Sora', sans-serif;
+  font-size: 15px;
+  font-weight: 600;
+  margin: 0;
+  color: var(--ink);
+}
+.cat-desc {
+  font-size: 13px;
+  color: var(--slate);
+  margin: 0;
+  line-height: 1.55;
+}
+.cat-pill {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: 600;
+  font-family: 'Sora', sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  padding: 2px 7px;
+  border-radius: 20px;
+}
+.pill-active { background: rgba(34,211,238,0.12); color: #0E7490; }
+.pill-soon   { background: var(--paper); color: var(--muted); border: 1px solid var(--line); }
+.cat-arrow {
+  color: var(--cyan);
+  flex-shrink: 0;
+  margin-top: 2px;
+  opacity: 0;
+  transition: opacity 0.15s ease, transform 0.15s ease;
+}
+.cat-card--active:hover .cat-arrow { opacity: 1; transform: translateX(2px); }
+</style>

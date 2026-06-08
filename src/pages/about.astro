@@ -1,0 +1,102 @@
+---
+import Base from '../layouts/Base.astro';
+---
+<Base title="About PickNotch" description="PickNotch exists because product research is annoying. We make the decision clearer.">
+
+  <section class="page-hero">
+    <div class="wrap">
+      <p class="eyebrow">Who we are</p>
+      <h1>About PickNotch</h1>
+    </div>
+  </section>
+
+  <div class="about-body wrap-narrow">
+
+    <section class="about-section about-section--lead">
+      <h2>Why PickNotch exists</h2>
+      <p class="lead-text">Product research is annoying. Spec sheets are messy. Most reviews are either fake-positive or uselessly vague. Buying guides pretend every product is amazing. PickNotch tries to make the decision clearer.</p>
+    </section>
+
+    <section class="about-section">
+      <h2>What makes us different</h2>
+      <div class="diff-grid">
+        {[
+          { title: 'We always call out the catch', body: 'Every review includes a mandatory "The catch" section. We find the weakness and tell you whether it matters.' },
+          { title: 'We score independently', body: 'Affiliate commission rates do not affect scores. A lower-commission product can outrank a higher-commission one.' },
+          { title: "We're transparent about research basis", body: "We don't claim hands-on testing unless we actually tested it. We're clear about what our reviews are based on." },
+          { title: 'We avoid fake optimism', body: 'PickNotch does not hype every product. If a product is average, we say so. If the value is poor, we say so.' },
+        ].map(({ title, body }) => (
+          <div class="diff-card">
+            <span class="diff-check">✓</span>
+            <div>
+              <h3>{title}</h3>
+              <p>{body}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <section class="about-section">
+      <h2>Current focus</h2>
+      <p>PickNotch is starting with e-bikes — a category with confusing specs, wide price ranges, and a lot of marketing noise. E-bikes are where we're building our initial review library.</p>
+      <p>After e-bikes, we plan to expand into tech & gadgets, home gear, outdoor & mobility, and tools — categories where independent research genuinely helps buyers make better decisions.</p>
+      <p>The brand is category-flexible. The name PickNotch refers to our goal — a pick that's a notch above the usual — not a specific product type.</p>
+    </section>
+
+    <section class="about-section">
+      <h2>How the site makes money</h2>
+      <p>PickNotch uses affiliate links. When you click a product link and buy something, we may earn a small commission from the retailer. This is how most independent review sites operate.</p>
+      <p>We are transparent about this. Affiliate relationships do not determine coverage, order, or scores. <a href="/affiliate-disclosure">Full disclosure here.</a></p>
+    </section>
+
+    <section class="about-section about-section--links">
+      <a href="/methodology" class="about-link">How we score products →</a>
+      <a href="/contact" class="about-link">Contact us →</a>
+      <a href="/affiliate-disclosure" class="about-link">Affiliate disclosure →</a>
+    </section>
+
+  </div>
+</Base>
+
+<style>
+.page-hero { background: var(--ink); padding: 52px 0 48px; }
+.page-hero .eyebrow { font-family: 'Sora', sans-serif; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; color: var(--cyan); margin: 0 0 8px; }
+.page-hero h1 { font-size: clamp(24px, 3.5vw, 36px); font-weight: 800; color: #fff; margin: 0; }
+.about-body { padding: 52px 24px 80px; }
+.about-section { margin-bottom: 48px; border-bottom: 1px solid var(--line); padding-bottom: 48px; }
+.about-section:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+.about-section h2 { font-size: clamp(18px, 2.5vw, 24px); font-weight: 700; margin: 0 0 14px; color: var(--ink); }
+.about-section p { font-size: 16px; color: #334155; line-height: 1.75; margin: 0 0 14px; }
+.about-section p:last-child { margin-bottom: 0; }
+.about-section a { color: var(--cyan); text-decoration: none; font-weight: 500; }
+.about-section a:hover { opacity: 0.75; }
+.about-section--lead .lead-text {
+  font-size: 18px;
+  color: var(--ink);
+  line-height: 1.7;
+  font-weight: 500;
+}
+.diff-grid { display: flex; flex-direction: column; gap: 14px; }
+.diff-card { display: flex; gap: 14px; align-items: flex-start; background: var(--paper); border: 1px solid var(--line); border-radius: 12px; padding: 16px 18px; }
+.diff-check { color: #0D9488; font-size: 16px; font-weight: 700; flex-shrink: 0; margin-top: 1px; }
+.diff-card h3 { font-family: 'Sora', sans-serif; font-size: 15px; font-weight: 600; margin: 0 0 5px; color: var(--ink); }
+.diff-card p { font-size: 14px; color: var(--slate); margin: 0; line-height: 1.55; }
+.about-section--links { display: flex; flex-direction: column; gap: 10px; border-bottom: none; }
+.about-link {
+  display: inline-flex;
+  align-items: center;
+  font-family: 'Sora', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ink);
+  text-decoration: none;
+  padding: 12px 16px;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  transition: border-color 0.13s ease, color 0.13s ease;
+}
+.about-link:hover { border-color: var(--cyan); color: var(--cyan); }
+.about-link:focus-visible { outline: 2px solid var(--cyan); outline-offset: 2px; }
+</style>

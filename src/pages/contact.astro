@@ -1,0 +1,83 @@
+---
+import Base from '../layouts/Base.astro';
+---
+<Base title="Contact — PickNotch" description="Get in touch with PickNotch — suggest a product, report an error, or ask about partnerships.">
+
+  <section class="page-hero">
+    <div class="wrap">
+      <p class="eyebrow">Get in touch</p>
+      <h1>Contact</h1>
+    </div>
+  </section>
+
+  <div class="contact-body wrap-narrow">
+
+    <p class="contact-intro">We're a small, independent operation. We read every message and respond when we can.</p>
+
+    <div class="contact-reasons">
+      <h2>Reasons to get in touch</h2>
+      <div class="reasons-grid">
+        {[
+          { icon: '🔍', title: 'Suggest a product',       body: 'Want us to review or compare something? Tell us the product and what you want to know.' },
+          { icon: '⚑',  title: 'Report outdated info',    body: 'Prices change. Products get updated. If something in a review is wrong or stale, let us know.' },
+          { icon: '✉',  title: 'Correction request',      body: 'If we got something factually wrong, tell us. We will correct it and update the review.' },
+          { icon: '◈',  title: 'Brand or partnership enquiry', body: 'We consider partnerships that don\'t compromise editorial independence. No paid placements or inflated scores.' },
+        ].map(({ icon, title, body }) => (
+          <div class="reason-card">
+            <span class="reason-icon">{icon}</span>
+            <div>
+              <h3 class="reason-title">{title}</h3>
+              <p class="reason-body">{body}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+
+    <div class="contact-email">
+      <h2>How to reach us</h2>
+      <p>Email is the best way to contact PickNotch. Contact method coming soon — we're setting up a dedicated inbox.</p>
+      <div class="contact-soon">
+        <span class="cs-icon">◎</span>
+        <span>Contact email coming soon</span>
+      </div>
+      <p class="contact-note">In the meantime, if you have an urgent correction or a time-sensitive enquiry, check back shortly — we'll have a contact address live very soon.</p>
+    </div>
+
+  </div>
+</Base>
+
+<style>
+.page-hero { background: var(--ink); padding: 52px 0 48px; }
+.page-hero .eyebrow { font-family: 'Sora', sans-serif; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; color: var(--cyan); margin: 0 0 8px; }
+.page-hero h1 { font-size: clamp(24px, 3.5vw, 36px); font-weight: 800; color: #fff; margin: 0; }
+.contact-body { padding: 52px 24px 80px; }
+.contact-intro { font-size: 17px; color: #334155; line-height: 1.7; margin: 0 0 40px; }
+.contact-reasons { margin-bottom: 44px; border-bottom: 1px solid var(--line); padding-bottom: 44px; }
+.contact-reasons h2, .contact-email h2 { font-size: clamp(18px, 2.5vw, 22px); font-weight: 700; margin: 0 0 20px; color: var(--ink); }
+.reasons-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.reason-card { display: flex; gap: 13px; align-items: flex-start; background: var(--paper); border: 1px solid var(--line); border-radius: 12px; padding: 16px 18px; }
+.reason-icon { font-size: 20px; flex-shrink: 0; }
+.reason-title { font-family: 'Sora', sans-serif; font-size: 14px; font-weight: 600; margin: 0 0 5px; color: var(--ink); }
+.reason-body { font-size: 13px; color: var(--slate); margin: 0; line-height: 1.55; }
+.contact-email p { font-size: 16px; color: #334155; line-height: 1.75; margin: 0 0 16px; }
+.contact-soon {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  background: var(--paper);
+  border: 1px dashed var(--line);
+  border-radius: 9px;
+  padding: 12px 16px;
+  font-family: 'Sora', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--muted);
+  margin-bottom: 16px;
+}
+.cs-icon { color: var(--cyan); }
+.contact-note { font-size: 14px; color: var(--muted); margin: 0; }
+@media (max-width: 560px) {
+  .reasons-grid { grid-template-columns: 1fr; }
+}
+</style>
