@@ -17,15 +17,17 @@ avoidIf: "You need a lightweight e-bike, live up multiple flights of stairs, or 
 updated: "June 2026"
 image: "/images/products/velotric-discover-3/hero.svg"
 imageAlt: "Velotric Discover 3 comfort commuter e-bike"
-gallery:
-  - src: "/images/products/velotric-discover-3/hero.svg"
-    alt: "Velotric Discover 3 – main view"
-  - src: "/images/products/velotric-discover-3/side.webp"
-    alt: "Velotric Discover 3 – side profile"
-  - src: "/images/products/velotric-discover-3/angle.webp"
-    alt: "Velotric Discover 3 – three-quarter angle"
-  - src: "/images/products/velotric-discover-3/cockpit.webp"
-    alt: "Velotric Discover 3 – display and cockpit"
+# Gallery appears automatically once 2+ real photos are listed below.
+# Drop .webp files into /public/images/products/velotric-discover-3/ then uncomment:
+# gallery:
+#   - src: "/images/products/velotric-discover-3/side.webp"
+#     alt: "Velotric Discover 3 – side profile"
+#   - src: "/images/products/velotric-discover-3/angle.webp"
+#     alt: "Velotric Discover 3 – three-quarter angle"
+#   - src: "/images/products/velotric-discover-3/cockpit.webp"
+#     alt: "Velotric Discover 3 – display and cockpit"
+#   - src: "/images/products/velotric-discover-3/comfort.webp"
+#     alt: "Velotric Discover 3 – comfort detail"
 pros:
   - "Upright geometry, suspension seatpost, air fork, adjustable stem, comfort saddle"
   - "750W motor with 75Nm torque — confident on hills and with loads"

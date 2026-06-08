@@ -1,129 +1,115 @@
 <?xml version="1.0" encoding="utf-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450" width="800" height="450">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 500" width="1000" height="500" role="img" aria-label="Velotric Discover 3 illustration">
   <defs>
     <linearGradient id="vd3-bg" x1="0" y1="0" x2="1" y2="1">
       <stop offset="0%" stop-color="#0B1B36"/>
+      <stop offset="55%" stop-color="#0A2E47"/>
       <stop offset="100%" stop-color="#0A3D55"/>
     </linearGradient>
-    <radialGradient id="vd3-glow1" cx="70%" cy="30%" r="55%">
-      <stop offset="0%" stop-color="#22D3EE" stop-opacity="0.18"/>
+    <radialGradient id="vd3-glow1" cx="72%" cy="26%" r="58%">
+      <stop offset="0%" stop-color="#22D3EE" stop-opacity="0.20"/>
       <stop offset="100%" stop-color="#22D3EE" stop-opacity="0"/>
     </radialGradient>
-    <radialGradient id="vd3-glow2" cx="20%" cy="75%" r="40%">
-      <stop offset="0%" stop-color="#0891B2" stop-opacity="0.10"/>
+    <radialGradient id="vd3-glow2" cx="22%" cy="82%" r="46%">
+      <stop offset="0%" stop-color="#0891B2" stop-opacity="0.14"/>
       <stop offset="100%" stop-color="#0891B2" stop-opacity="0"/>
     </radialGradient>
+    <radialGradient id="vd3-podium" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#22D3EE" stop-opacity="0.12"/>
+      <stop offset="100%" stop-color="#22D3EE" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="vd3-stroke" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#5CE6F7"/>
+      <stop offset="100%" stop-color="#22D3EE"/>
+    </linearGradient>
   </defs>
 
   <!-- Background -->
-  <rect width="800" height="450" fill="url(#vd3-bg)"/>
-  <rect width="800" height="450" fill="url(#vd3-glow1)"/>
-  <rect width="800" height="450" fill="url(#vd3-glow2)"/>
+  <rect width="1000" height="500" fill="url(#vd3-bg)"/>
+  <rect width="1000" height="500" fill="url(#vd3-glow1)"/>
+  <rect width="1000" height="500" fill="url(#vd3-glow2)"/>
 
-  <!-- Subtle grid -->
-  <g stroke="#22D3EE" stroke-opacity="0.04" stroke-width="1">
-    <line x1="0" y1="90" x2="800" y2="90"/>
-    <line x1="0" y1="180" x2="800" y2="180"/>
-    <line x1="0" y1="270" x2="800" y2="270"/>
-    <line x1="0" y1="360" x2="800" y2="360"/>
-    <line x1="160" y1="0" x2="160" y2="450"/>
-    <line x1="320" y1="0" x2="320" y2="450"/>
-    <line x1="480" y1="0" x2="480" y2="450"/>
-    <line x1="640" y1="0" x2="640" y2="450"/>
+  <!-- Faint grid -->
+  <g stroke="#22D3EE" stroke-opacity="0.045" stroke-width="1">
+    <line x1="0" y1="100" x2="1000" y2="100"/>
+    <line x1="0" y1="200" x2="1000" y2="200"/>
+    <line x1="0" y1="300" x2="1000" y2="300"/>
+    <line x1="0" y1="400" x2="1000" y2="400"/>
+    <line x1="200" y1="0" x2="200" y2="500"/>
+    <line x1="400" y1="0" x2="400" y2="500"/>
+    <line x1="600" y1="0" x2="600" y2="500"/>
+    <line x1="800" y1="0" x2="800" y2="500"/>
   </g>
 
+  <!-- Notch brand mark: a clean bar dropping from top center -->
+  <path d="M496 0 h8 v30 a4 4 0 0 1 -4 4 a4 4 0 0 1 -4 -4 z" fill="#22D3EE" opacity="0.7"/>
+  <rect x="496" y="0" width="8" height="13" fill="#5CE6F7" opacity="0.9"/>
+
+  <!-- Soft podium glow under the bike -->
+  <ellipse cx="500" cy="340" rx="360" ry="150" fill="url(#vd3-podium)"/>
+  <ellipse cx="500" cy="430" rx="250" ry="26" fill="#22D3EE" fill-opacity="0.05"/>
+
+  <!-- ===== E-bike line illustration (centered, crop-safe) ===== -->
   <!-- Rear wheel -->
-  <circle cx="195" cy="305" r="100" fill="none" stroke="#22D3EE" stroke-width="2" stroke-opacity="0.25"/>
-  <circle cx="195" cy="305" r="78" fill="none" stroke="#22D3EE" stroke-width="1" stroke-opacity="0.10"/>
-  <circle cx="195" cy="305" r="14" fill="none" stroke="#22D3EE" stroke-width="2" stroke-opacity="0.30"/>
-  <!-- Rear spokes (4) -->
-  <g stroke="#22D3EE" stroke-opacity="0.12" stroke-width="1">
-    <line x1="195" y1="205" x2="195" y2="405"/>
-    <line x1="95" y1="305" x2="295" y2="305"/>
-    <line x1="124" y1="234" x2="266" y2="376"/>
-    <line x1="266" y1="234" x2="124" y2="376"/>
+  <circle cx="360" cy="330" r="92" fill="none" stroke="url(#vd3-stroke)" stroke-width="2.5" stroke-opacity="0.55"/>
+  <circle cx="360" cy="330" r="70" fill="none" stroke="#22D3EE" stroke-width="1" stroke-opacity="0.14"/>
+  <circle cx="360" cy="330" r="15" fill="none" stroke="#22D3EE" stroke-width="2.5" stroke-opacity="0.5"/>
+  <circle cx="360" cy="330" r="6" fill="#22D3EE" fill-opacity="0.35"/>
+  <g stroke="#22D3EE" stroke-opacity="0.13" stroke-width="1">
+    <line x1="360" y1="238" x2="360" y2="422"/>
+    <line x1="268" y1="330" x2="452" y2="330"/>
+    <line x1="295" y1="265" x2="425" y2="395"/>
+    <line x1="425" y1="265" x2="295" y2="395"/>
   </g>
 
   <!-- Front wheel -->
-  <circle cx="410" cy="305" r="100" fill="none" stroke="#22D3EE" stroke-width="2" stroke-opacity="0.25"/>
-  <circle cx="410" cy="305" r="78" fill="none" stroke="#22D3EE" stroke-width="1" stroke-opacity="0.10"/>
-  <circle cx="410" cy="305" r="14" fill="none" stroke="#22D3EE" stroke-width="2" stroke-opacity="0.30"/>
-  <!-- Front spokes (4) -->
-  <g stroke="#22D3EE" stroke-opacity="0.12" stroke-width="1">
-    <line x1="410" y1="205" x2="410" y2="405"/>
-    <line x1="310" y1="305" x2="510" y2="305"/>
-    <line x1="339" y1="234" x2="481" y2="376"/>
-    <line x1="481" y1="234" x2="339" y2="376"/>
+  <circle cx="640" cy="330" r="92" fill="none" stroke="url(#vd3-stroke)" stroke-width="2.5" stroke-opacity="0.55"/>
+  <circle cx="640" cy="330" r="70" fill="none" stroke="#22D3EE" stroke-width="1" stroke-opacity="0.14"/>
+  <circle cx="640" cy="330" r="15" fill="none" stroke="#22D3EE" stroke-width="2.5" stroke-opacity="0.5"/>
+  <circle cx="640" cy="330" r="6" fill="#22D3EE" fill-opacity="0.35"/>
+  <g stroke="#22D3EE" stroke-opacity="0.13" stroke-width="1">
+    <line x1="640" y1="238" x2="640" y2="422"/>
+    <line x1="548" y1="330" x2="732" y2="330"/>
+    <line x1="575" y1="265" x2="705" y2="395"/>
+    <line x1="705" y1="265" x2="575" y2="395"/>
   </g>
 
-  <!-- Bike frame (simplified diamond) -->
-  <g stroke="#22D3EE" stroke-opacity="0.55" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
-    <!-- Chain stay: rear axle to BB -->
-    <line x1="195" y1="305" x2="300" y2="305"/>
-    <!-- Seat tube: BB to seat post top -->
-    <line x1="300" y1="305" x2="285" y2="195"/>
-    <!-- Top tube: seat post to head tube -->
-    <line x1="285" y1="195" x2="390" y2="200"/>
-    <!-- Down tube: head tube to BB -->
-    <line x1="390" y1="200" x2="300" y2="305"/>
-    <!-- Seat stay: rear axle to seat post top -->
-    <line x1="285" y1="195" x2="195" y2="305"/>
-    <!-- Fork: head tube to front axle -->
-    <line x1="390" y1="200" x2="410" y2="305"/>
+  <!-- Frame -->
+  <g stroke="url(#vd3-stroke)" stroke-opacity="0.85" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <!-- chain stay: rear hub -> bottom bracket -->
+    <line x1="360" y1="330" x2="500" y2="330"/>
+    <!-- seat tube -->
+    <line x1="500" y1="330" x2="468" y2="205"/>
+    <!-- top tube -->
+    <line x1="468" y1="205" x2="610" y2="212"/>
+    <!-- down tube -->
+    <line x1="610" y1="212" x2="500" y2="330"/>
+    <!-- seat stay -->
+    <line x1="468" y1="205" x2="360" y2="330"/>
+    <!-- fork -->
+    <line x1="610" y1="212" x2="640" y2="330"/>
   </g>
 
-  <!-- Seat post and saddle -->
-  <g stroke="#22D3EE" stroke-opacity="0.5" stroke-width="2" stroke-linecap="round">
-    <line x1="285" y1="195" x2="278" y2="178"/>
-    <line x1="265" y1="175" x2="298" y2="175"/>
+  <!-- Seat post + saddle -->
+  <g stroke="url(#vd3-stroke)" stroke-opacity="0.8" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <line x1="468" y1="205" x2="458" y2="180"/>
+    <path d="M432 178 Q450 170 484 176" />
   </g>
 
-  <!-- Handlebar and stem -->
-  <g stroke="#22D3EE" stroke-opacity="0.5" stroke-width="2" stroke-linecap="round">
-    <line x1="390" y1="200" x2="390" y2="183"/>
-    <line x1="375" y1="183" x2="410" y2="183"/>
+  <!-- Stem + handlebar -->
+  <g stroke="url(#vd3-stroke)" stroke-opacity="0.8" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <line x1="610" y1="212" x2="612" y2="185"/>
+    <path d="M596 180 Q620 178 640 188" />
   </g>
 
-  <!-- Battery pack (mid-frame decoration) -->
-  <rect x="316" y="232" width="30" height="14" rx="3" fill="rgba(34,211,238,0.15)" stroke="#22D3EE" stroke-width="1" stroke-opacity="0.4"/>
-  <rect x="318" y="234" width="22" height="10" rx="2" fill="rgba(34,211,238,0.35)"/>
+  <!-- Crank -->
+  <circle cx="500" cy="330" r="20" fill="none" stroke="#22D3EE" stroke-width="2" stroke-opacity="0.45"/>
+  <line x1="500" y1="330" x2="512" y2="356" stroke="#22D3EE" stroke-width="3" stroke-opacity="0.6" stroke-linecap="round"/>
 
-  <!-- Notch bar at top -->
-  <rect x="397" y="0" width="5" height="30" fill="#22D3EE" rx="0 0 2 2" opacity="0.65"/>
+  <!-- Integrated battery (down tube) -->
+  <rect x="516" y="252" width="64" height="20" rx="5" transform="rotate(-47 548 262)"
+        fill="rgba(34,211,238,0.16)" stroke="#22D3EE" stroke-width="1.5" stroke-opacity="0.45"/>
 
-  <!-- Vertical separator -->
-  <line x1="500" y1="50" x2="500" y2="400" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
-
-  <!-- Right panel: Category chip -->
-  <rect x="520" y="88" width="68" height="20" rx="10" fill="rgba(34,211,238,0.12)" stroke="rgba(34,211,238,0.30)" stroke-width="1"/>
-  <text x="554" y="102" font-family="system-ui,sans-serif" font-size="9" font-weight="700" fill="#22D3EE" text-anchor="middle" letter-spacing="1.5">E-BIKES</text>
-
-  <!-- Brand name -->
-  <text x="520" y="143" font-family="system-ui,sans-serif" font-size="12" font-weight="600" fill="rgba(255,255,255,0.38)" letter-spacing="2.5">VELOTRIC</text>
-
-  <!-- Product name -->
-  <text x="520" y="184" font-family="system-ui,sans-serif" font-size="32" font-weight="800" fill="white" letter-spacing="-0.5">Discover 3</text>
-
-  <!-- Divider -->
-  <line x1="520" y1="202" x2="775" y2="202" stroke="rgba(255,255,255,0.07)" stroke-width="1"/>
-
-  <!-- Score label -->
-  <text x="520" y="228" font-family="system-ui,sans-serif" font-size="10" fill="rgba(255,255,255,0.30)" letter-spacing="1">PICKNOTCH SCORE</text>
-
-  <!-- Score number -->
-  <text x="520" y="282" font-family="system-ui,sans-serif" font-size="60" font-weight="800" fill="#22D3EE" letter-spacing="-2">8.5</text>
-  <text x="596" y="272" font-family="system-ui,sans-serif" font-size="22" fill="rgba(255,255,255,0.22)">/10</text>
-
-  <!-- Divider -->
-  <line x1="520" y1="300" x2="775" y2="300" stroke="rgba(255,255,255,0.07)" stroke-width="1"/>
-
-  <!-- Best for -->
-  <text x="520" y="326" font-family="system-ui,sans-serif" font-size="10" fill="rgba(255,255,255,0.28)" letter-spacing="1">BEST FOR</text>
-  <text x="520" y="350" font-family="system-ui,sans-serif" font-size="14" fill="rgba(255,255,255,0.68)">Comfort-first commuters</text>
-
-  <!-- Key specs -->
-  <text x="520" y="380" font-family="system-ui,sans-serif" font-size="12" fill="rgba(255,255,255,0.32)">750W · 80mi range · Hydraulic brakes</text>
-
-  <!-- Watermark -->
-  <text x="520" y="420" font-family="system-ui,sans-serif" font-size="10" font-weight="700" fill="rgba(255,255,255,0.12)" letter-spacing="1.5">PICKNOTCH.COM</text>
+  <!-- Front light -->
+  <circle cx="636" cy="196" r="5" fill="#22D3EE" fill-opacity="0.5"/>
 </svg>

@@ -1,6 +1,5 @@
 ---
 import Base from '../../layouts/Base.astro';
-import ScoreBadge from '../../components/ScoreBadge.astro';
 import DisclosureBox from '../../components/DisclosureBox.astro';
 import ProductImage from '../../components/ProductImage.astro';
 import CustomerReviewCarousel from '../../components/CustomerReviewCarousel.astro';
@@ -15,6 +14,10 @@ export async function getStaticPaths() {
 const { review } = Astro.props;
 const d = review.data;
 const { Content } = await review.render();
+
+// Gallery only appears once there are 2+ real photos to show.
+const gallery = d.gallery ?? [];
+const showGallery = gallery.length >= 2;
 
 const schema = {
   "@context": "https://schema.org",
@@ -42,7 +45,7 @@ const schema = {
     </nav>
 
     <!-- Product image -->
-    <div class="review-image-wrap" id="review-hero-image">
+    <figure class="review-image-wrap" id="review-hero-image">
       <ProductImage
         src={d.image}
         alt={d.imageAlt ?? d.product}
@@ -50,23 +53,23 @@ const schema = {
         eager={true}
         class="review-pi"
       />
+      <div class="review-image-chip">
+        <span class="ric-cat">{d.category}</span>
+        <span class="ric-sep">·</span>
+        <span class="ric-brand">{d.brand}</span>
+      </div>
       {d.score != null && (
         <div class="review-image-badge">
           <span class="rib-num">{d.score.toFixed(1)}</span>
           <span class="rib-label">PickNotch Score</span>
         </div>
       )}
-      <div class="review-image-chip">
-        <span class="ric-cat">{d.category}</span>
-        <span class="ric-sep">·</span>
-        <span class="ric-brand">{d.brand}</span>
-      </div>
-    </div>
+    </figure>
 
-    <!-- Gallery strip -->
-    {d.gallery && d.gallery.length > 0 && (
+    <!-- Gallery strip (only when real photos exist) -->
+    {showGallery && (
       <div class="gallery-strip" id="gallery-strip">
-        {d.gallery.map((img, i) => (
+        {gallery.map((img, i) => (
           <button class:list={['gallery-thumb', i === 0 ? 'gallery-thumb--active' : '']}
             data-src={img.src} aria-label={img.alt} type="button">
             <ProductImage src={img.src} alt={img.alt} fallbackLabel={d.product} />
@@ -75,54 +78,51 @@ const schema = {
       </div>
     )}
 
-    <!-- Review hero -->
-    <div class="review-hero">
-      <div class="review-hero-left">
-        <div class="review-meta">
-          {d.updated && <span class="meta-updated">Updated {d.updated}</span>}
-        </div>
-        <h1 class="review-title">{d.title}</h1>
+    <!-- Review head -->
+    <header class="review-head">
+      {d.updated && <span class="meta-updated">Updated {d.updated}</span>}
+      <h1 class="review-title">{d.title}</h1>
+      <div class="verdict-pills">
         {d.bestFor && (
-          <div class="review-bestfor">
-            <span class="bf-label">Best for</span>
-            <span class="bf-val">{d.bestFor}</span>
+          <div class="vp vp--best">
+            <span class="vp-label">Best for</span>
+            <span class="vp-val">{d.bestFor}</span>
           </div>
         )}
         {d.avoidIf && (
-          <div class="review-avoid">
-            <span class="avoid-label">Avoid if</span>
-            <span class="avoid-val">{d.avoidIf}</span>
+          <div class="vp vp--avoid">
+            <span class="vp-label">Avoid if</span>
+            <span class="vp-val">{d.avoidIf}</span>
           </div>
         )}
-        <p class="review-disclosure-note">Independently researched · affiliate supported</p>
       </div>
-      <div class="review-hero-right">
-        <ScoreBadge score={d.score ?? null} size="lg" />
-        {d.score != null && <span class="score-out">out of 10</span>}
-      </div>
-    </div>
+      <p class="review-disclosure-note">Independently researched · affiliate supported</p>
+    </header>
 
-    <!-- Summary + Deal row -->
+    <!-- Verdict + Deal row -->
     <div class="top-row">
       <div class="verdict-box">
         <div class="vb-label">The verdict</div>
         <p class="vb-text">{d.verdict ?? d.summary}</p>
       </div>
       {d.merchantUrl && (
-        <div class="deal-box">
+        <aside class="deal-box">
           <div class="deal-top-label">Best price today</div>
           {d.price && <div class="deal-price">{d.price} <span class="deal-at">at {d.brand}</span></div>}
           {d.code && (
-            <div class="deal-code-row">
-              <span class="deal-code-label">Code</span>
+            <div class="deal-coupon">
+              <span class="deal-coupon-label">Code</span>
               <span class="deal-code">{d.code}</span>
             </div>
           )}
           <a class="deal-cta" href={d.merchantUrl} rel="nofollow sponsored" target="_blank">
-            Check price →
+            Check price
+            <svg width="13" height="13" viewBox="0 0 13 13" fill="none" aria-hidden="true">
+              <path d="M2.5 6.5h7M6.5 3l3 3.5-3 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
           </a>
           <small class="deal-note">We may earn a commission. It never changes our score.</small>
-        </div>
+        </aside>
       )}
     </div>
 
@@ -131,27 +131,25 @@ const schema = {
       <ProsConsTable pros={d.pros} cons={d.cons} />
     )}
 
-    <!-- Specs table -->
-    {d.specs && Object.keys(d.specs).length > 0 && (
-      <div class="specs-section">
-        <h2 class="specs-heading">Specs</h2>
-        <table class="specs-table">
-          <tbody>
-            {Object.entries(d.specs).map(([key, val]) => (
-              <tr>
-                <th>{key}</th>
-                <td>{val}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-    )}
-
     <!-- Full review content -->
     <article class="review-content">
       <Content />
     </article>
+
+    <!-- Specs grid -->
+    {d.specs && Object.keys(d.specs).length > 0 && (
+      <section class="specs-section">
+        <h2 class="specs-heading">Full specifications</h2>
+        <dl class="specs-grid">
+          {Object.entries(d.specs).map(([key, val]) => (
+            <div class="spec-row">
+              <dt>{key}</dt>
+              <dd>{val}</dd>
+            </div>
+          ))}
+        </dl>
+      </section>
+    )}
 
   </div>
 
@@ -210,7 +208,7 @@ const schema = {
   gap: 6px;
   font-size: 13px;
   color: var(--muted);
-  margin-bottom: 24px;
+  margin-bottom: 22px;
   flex-wrap: wrap;
 }
 .breadcrumb a {
@@ -218,40 +216,71 @@ const schema = {
   text-decoration: none;
   transition: color 0.13s ease;
 }
-.breadcrumb a:hover { color: var(--cyan); }
+.breadcrumb a:hover { color: #0E7490; }
 .breadcrumb span[aria-hidden] { color: var(--line); }
 
 /* Product image */
 .review-image-wrap {
   position: relative;
   width: 100%;
-  height: 360px;
-  border-radius: 20px;
+  height: 380px;
+  border-radius: 22px;
   overflow: hidden;
-  margin-bottom: 10px;
+  margin: 0 0 14px;
   background: var(--ink-deep);
+  box-shadow:
+    0 22px 50px rgba(8,16,40,0.22),
+    0 6px 16px rgba(8,16,40,0.10),
+    inset 0 0 0 1px rgba(34,211,238,0.08);
 }
-.review-pi { border-radius: 20px; }
+.review-pi { border-radius: 22px; }
+
+.review-image-chip {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  background: rgba(13,21,48,0.66);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255,255,255,0.10);
+  border-radius: 99px;
+  padding: 6px 14px;
+}
+.ric-cat {
+  font-family: 'Sora', sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.09em;
+  color: #5CE6F7;
+}
+.ric-sep { font-size: 12px; color: rgba(255,255,255,0.25); }
+.ric-brand { font-size: 11px; color: rgba(255,255,255,0.62); font-weight: 500; }
 
 .review-image-badge {
   position: absolute;
-  bottom: 20px;
-  right: 20px;
-  background: rgba(13,21,48,0.84);
-  backdrop-filter: blur(14px);
-  border: 1px solid rgba(34,211,238,0.22);
-  border-radius: 14px;
-  padding: 10px 16px;
+  bottom: 18px;
+  right: 18px;
+  background: rgba(11,18,42,0.78);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(34,211,238,0.28);
+  border-radius: 16px;
+  padding: 12px 18px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 2px;
+  gap: 3px;
+  box-shadow: 0 8px 24px rgba(4,10,24,0.40);
 }
 .rib-num {
   font-family: 'Sora', sans-serif;
-  font-size: 26px;
+  font-size: 30px;
   font-weight: 800;
-  color: #22D3EE;
+  color: #5CE6F7;
   letter-spacing: -0.05em;
   line-height: 1;
 }
@@ -260,34 +289,10 @@ const schema = {
   font-size: 8px;
   font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.1em;
-  color: rgba(255,255,255,0.38);
+  letter-spacing: 0.12em;
+  color: rgba(255,255,255,0.45);
   white-space: nowrap;
 }
-
-.review-image-chip {
-  position: absolute;
-  top: 16px;
-  left: 16px;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  background: rgba(13,21,48,0.78);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255,255,255,0.08);
-  border-radius: 99px;
-  padding: 5px 13px;
-}
-.ric-cat {
-  font-family: 'Sora', sans-serif;
-  font-size: 10px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: #22D3EE;
-}
-.ric-sep { font-size: 12px; color: rgba(255,255,255,0.2); }
-.ric-brand { font-size: 11px; color: rgba(255,255,255,0.55); font-weight: 500; }
 
 /* Gallery */
 .gallery-strip {
@@ -302,9 +307,9 @@ const schema = {
 .gallery-strip::-webkit-scrollbar { display: none; }
 .gallery-thumb {
   flex-shrink: 0;
-  width: 80px;
-  height: 60px;
-  border-radius: 10px;
+  width: 84px;
+  height: 62px;
+  border-radius: 11px;
   overflow: hidden;
   border: 2px solid var(--line);
   background: var(--ink-deep);
@@ -313,214 +318,243 @@ const schema = {
   cursor: pointer;
   transition: border-color 0.15s ease, transform 0.15s var(--ease-spring);
 }
-.gallery-thumb:hover { border-color: rgba(34,211,238,0.45); transform: translateY(-1px); }
+.gallery-thumb:hover { border-color: rgba(34,211,238,0.5); transform: translateY(-2px); }
 .gallery-thumb:active { transform: translateY(0); }
 .gallery-thumb:focus-visible { outline: 2px solid var(--cyan); outline-offset: 2px; }
-.gallery-thumb--active { border-color: var(--cyan); }
+.gallery-thumb--active { border-color: var(--cyan); box-shadow: 0 4px 14px rgba(34,211,238,0.20); }
 
-/* Review hero */
-.review-hero {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 24px;
-  margin-bottom: 28px;
-  margin-top: 8px;
+/* Review head */
+.review-head {
+  margin: 4px 0 28px;
 }
-.review-hero-left { flex: 1; min-width: 0; }
-.review-meta {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  margin-bottom: 8px;
-  flex-wrap: wrap;
-}
-.meta-updated { font-size: 12px; color: var(--muted); }
-.review-title {
-  font-size: clamp(20px, 3vw, 28px);
-  font-weight: 700;
-  margin: 0 0 14px;
-  line-height: 1.2;
-  color: var(--ink);
-}
-.review-bestfor, .review-avoid {
-  display: flex;
-  align-items: flex-start;
-  gap: 8px;
-  font-size: 14px;
-  margin-bottom: 7px;
-}
-.bf-label, .avoid-label {
-  font-family: 'Sora', sans-serif;
-  font-size: 10px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  padding-top: 2px;
-  white-space: nowrap;
-  flex-shrink: 0;
-}
-.bf-label { color: #0E7490; }
-.avoid-label { color: #92400E; }
-.bf-val { font-size: 14px; color: var(--ink); font-weight: 500; line-height: 1.45; }
-.avoid-val { font-size: 14px; color: var(--slate); line-height: 1.45; }
-.review-disclosure-note {
-  font-size: 11px;
-  color: var(--muted);
-  font-family: 'Sora', sans-serif;
-  margin: 12px 0 0;
-}
-.review-hero-right {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 4px;
-  flex-shrink: 0;
-  padding-top: 4px;
-}
-.score-out {
-  font-size: 11px;
-  color: var(--muted);
-  font-family: 'Sora', sans-serif;
-}
-
-/* Top row */
-.top-row {
-  display: flex;
-  gap: 16px;
-  flex-wrap: wrap;
-  margin-bottom: 28px;
-}
-.verdict-box {
-  flex: 1.5;
-  min-width: 240px;
-  background: var(--paper);
-  border: 1px solid var(--line);
-  border-radius: 13px;
-  padding: 18px 20px;
-}
-.vb-label {
+.meta-updated {
+  display: inline-block;
   font-family: 'Sora', sans-serif;
   font-size: 11px;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.07em;
   color: var(--muted);
-  margin-bottom: 8px;
+  margin-bottom: 10px;
 }
-.vb-text { font-size: 15px; color: #334155; margin: 0; line-height: 1.65; }
+.review-title {
+  font-size: clamp(26px, 4vw, 38px);
+  font-weight: 800;
+  margin: 0 0 18px;
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+  color: var(--ink);
+}
+
+.verdict-pills {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+.vp {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 9px 14px;
+  border-radius: 10px;
+  font-size: 14px;
+  line-height: 1.45;
+}
+.vp--best { background: rgba(34,211,238,0.07); }
+.vp--avoid { background: rgba(245,158,11,0.07); }
+.vp-label {
+  font-family: 'Sora', sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  padding-top: 3px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.vp--best .vp-label { color: #0E7490; }
+.vp--avoid .vp-label { color: #B45309; }
+.vp-val { color: #334155; font-weight: 500; }
+
+.review-disclosure-note {
+  font-size: 11px;
+  color: var(--muted);
+  font-family: 'Sora', sans-serif;
+  margin: 0;
+}
+
+/* Top row */
+.top-row {
+  display: flex;
+  gap: 18px;
+  flex-wrap: wrap;
+  margin-bottom: 36px;
+}
+.verdict-box {
+  flex: 1.5;
+  min-width: 250px;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 20px 22px;
+}
+.vb-label {
+  font-family: 'Sora', sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--muted);
+  margin-bottom: 10px;
+}
+.vb-text { font-size: 15.5px; color: #334155; margin: 0; line-height: 1.65; }
 
 .deal-box {
   flex: 1;
-  min-width: 200px;
-  background: var(--ink);
+  min-width: 230px;
+  background: linear-gradient(165deg, #16223F 0%, #0D1530 100%);
   color: #C8D8E8;
-  border-radius: 13px;
-  padding: 18px 20px;
+  border-radius: 16px;
+  padding: 20px 22px;
+  border: 1px solid rgba(34,211,238,0.12);
+  box-shadow:
+    0 20px 44px rgba(8,16,40,0.30),
+    0 4px 12px rgba(34,211,238,0.06);
 }
-.deal-top-label { font-size: 11px; font-family: 'Sora', sans-serif; color: #7A90B0; margin-bottom: 6px; }
-.deal-price { font-family: 'Sora', sans-serif; font-size: 24px; font-weight: 700; color: #fff; margin-bottom: 10px; }
-.deal-at { font-size: 12px; color: #7A90B0; font-weight: 400; }
-.deal-code-row { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; flex-wrap: wrap; }
-.deal-code-label { font-size: 11px; font-family: 'Sora', sans-serif; color: #7A90B0; text-transform: uppercase; letter-spacing: 0.06em; }
+.deal-top-label {
+  font-size: 11px;
+  font-family: 'Sora', sans-serif;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: #7A90B0;
+  margin-bottom: 8px;
+}
+.deal-price { font-family: 'Sora', sans-serif; font-size: 27px; font-weight: 800; color: #fff; letter-spacing: -0.03em; margin-bottom: 14px; }
+.deal-at { font-size: 13px; color: #7A90B0; font-weight: 400; letter-spacing: 0; }
+
+.deal-coupon {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 12px;
+  margin-bottom: 14px;
+  border: 1.5px dashed rgba(34,211,238,0.40);
+  border-radius: 10px;
+  background: rgba(34,211,238,0.05);
+}
+.deal-coupon-label {
+  font-size: 10px;
+  font-family: 'Sora', sans-serif;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #7A90B0;
+}
 .deal-code {
   font-family: 'Sora', sans-serif;
-  font-size: 13px;
-  font-weight: 700;
-  color: var(--cyan);
-  border: 1px dashed rgba(34,211,238,0.4);
-  padding: 3px 10px;
-  border-radius: 6px;
+  font-size: 15px;
+  font-weight: 800;
+  color: #5CE6F7;
   letter-spacing: 0.06em;
 }
 .deal-cta {
-  display: block;
-  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
   background: var(--cyan);
-  color: #0C1F30;
+  color: #06222E;
   font-family: 'Sora', sans-serif;
   font-size: 14px;
   font-weight: 700;
-  padding: 11px;
-  border-radius: 8px;
+  padding: 12px;
+  border-radius: 10px;
   text-decoration: none;
-  margin-bottom: 8px;
-  transition: opacity 0.13s ease;
+  margin-bottom: 10px;
+  transition: transform 0.14s var(--ease-spring), box-shadow 0.14s ease;
 }
-.deal-cta:hover { opacity: 0.88; }
-.deal-cta:focus-visible { outline: 2px solid #fff; outline-offset: 2px; border-radius: 8px; }
+.deal-cta:hover { transform: translateY(-2px); box-shadow: 0 10px 26px rgba(34,211,238,0.32); }
+.deal-cta:active { transform: translateY(0); }
+.deal-cta:focus-visible { outline: 2px solid #fff; outline-offset: 2px; border-radius: 10px; }
 .deal-note { font-size: 11px; color: #5A6E8E; display: block; line-height: 1.5; }
-
-/* Specs */
-.specs-section { margin-bottom: 32px; }
-.specs-heading { font-size: 18px; font-weight: 700; margin: 0 0 12px; color: var(--ink); }
-.specs-table { width: 100%; border-collapse: collapse; font-size: 14px; }
-.specs-table th {
-  text-align: left;
-  padding: 9px 12px;
-  font-weight: 600;
-  color: var(--slate);
-  background: var(--paper);
-  border: 1px solid var(--line);
-  width: 35%;
-  font-family: 'Sora', sans-serif;
-  font-size: 13px;
-}
-.specs-table td {
-  padding: 9px 12px;
-  color: #334155;
-  border: 1px solid var(--line);
-}
 
 /* Review content */
 .review-content {
-  font-size: 16px;
+  font-size: 16.5px;
   color: #334155;
-  line-height: 1.75;
+  line-height: 1.78;
+  margin-bottom: 40px;
 }
 .review-content h2 {
-  font-size: 20px;
-  font-weight: 700;
+  font-size: 22px;
+  font-weight: 800;
   color: var(--ink);
-  margin: 36px 0 12px;
-  letter-spacing: -0.02em;
+  margin: 40px 0 14px;
+  letter-spacing: -0.025em;
 }
+.review-content h2:first-child { margin-top: 0; }
 .review-content h3 {
   font-size: 17px;
   font-weight: 600;
   color: var(--ink);
-  margin: 24px 0 10px;
+  margin: 26px 0 10px;
 }
-.review-content p { margin: 0 0 16px; }
+.review-content p { margin: 0 0 17px; }
 .review-content ul, .review-content ol {
   padding-left: 22px;
-  margin: 0 0 16px;
+  margin: 0 0 17px;
 }
-.review-content li { margin-bottom: 6px; }
-.review-content strong { color: var(--ink); font-weight: 600; }
-.review-content table {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: 14px;
-  margin: 0 0 20px;
+.review-content li { margin-bottom: 7px; }
+.review-content strong { color: var(--ink); font-weight: 700; }
+
+/* Specs grid */
+.specs-section {
+  margin-bottom: 8px;
+  padding-top: 8px;
+  border-top: 1px solid var(--line);
 }
-.review-content th, .review-content td {
-  padding: 8px 12px;
-  border: 1px solid var(--line);
-  text-align: left;
+.specs-heading {
+  font-size: 22px;
+  font-weight: 800;
+  margin: 24px 0 16px;
+  color: var(--ink);
+  letter-spacing: -0.025em;
 }
-.review-content th {
-  background: var(--paper);
+.specs-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  column-gap: 36px;
+  margin: 0;
+}
+.spec-row {
+  display: grid;
+  grid-template-columns: minmax(108px, 44%) 1fr;
+  gap: 14px;
+  align-items: baseline;
+  padding: 11px 2px;
+  border-bottom: 1px solid var(--line);
+}
+.spec-row dt {
   font-family: 'Sora', sans-serif;
-  font-size: 12px;
+  font-size: 12.5px;
   font-weight: 600;
   color: var(--slate);
+}
+.spec-row dd {
+  margin: 0;
+  font-size: 13.5px;
+  color: var(--ink);
+  line-height: 1.4;
 }
 
 /* Owners section */
 .owners-section {
   background: var(--paper);
+  border-top: 1px solid var(--line);
   padding: 72px 0 80px;
+  margin-top: 48px;
 }
 .owners-head {
   text-align: center;
@@ -533,12 +567,12 @@ const schema = {
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.12em;
-  color: var(--cyan);
+  color: #0E7490;
   margin-bottom: 10px;
 }
 .owners-heading {
   font-size: clamp(22px, 3vw, 32px);
-  font-weight: 700;
+  font-weight: 800;
   color: var(--ink);
   margin: 0 0 10px;
   letter-spacing: -0.03em;
@@ -556,11 +590,13 @@ const schema = {
 
 @media (max-width: 640px) {
   .review-wrap { padding: 20px 16px 40px; }
-  .review-image-wrap { height: 240px; }
-  .review-hero { flex-direction: column-reverse; gap: 12px; margin-top: 4px; }
-  .top-row { flex-direction: column; }
+  .review-image-wrap { height: 230px; border-radius: 18px; }
+  .review-pi { border-radius: 18px; }
+  .review-image-badge { padding: 9px 13px; bottom: 14px; right: 14px; }
+  .rib-num { font-size: 24px; }
+  .top-row { flex-direction: column; gap: 14px; }
+  .specs-grid { grid-template-columns: 1fr; column-gap: 0; }
   .owners-carousel-wrap { padding: 0 16px; }
-  .review-image-badge { padding: 8px 12px; }
-  .rib-num { font-size: 20px; }
+  .owners-section { padding: 56px 0 60px; margin-top: 36px; }
 }
 </style>
