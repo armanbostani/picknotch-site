@@ -4,6 +4,7 @@ import ScoreBadge from '../../components/ScoreBadge.astro';
 import DisclosureBox from '../../components/DisclosureBox.astro';
 import ProductImage from '../../components/ProductImage.astro';
 import CustomerReviewCarousel from '../../components/CustomerReviewCarousel.astro';
+import ProsConsTable from '../../components/ProsConsTable.astro';
 import { getCollection } from 'astro:content';
 
 export async function getStaticPaths() {
@@ -41,7 +42,7 @@ const schema = {
     </nav>
 
     <!-- Product image -->
-    <div class="review-image-wrap">
+    <div class="review-image-wrap" id="review-hero-image">
       <ProductImage
         src={d.image}
         alt={d.imageAlt ?? d.product}
@@ -64,11 +65,12 @@ const schema = {
 
     <!-- Gallery strip -->
     {d.gallery && d.gallery.length > 0 && (
-      <div class="gallery-strip">
-        {d.gallery.map(img => (
-          <div class="gallery-thumb">
+      <div class="gallery-strip" id="gallery-strip">
+        {d.gallery.map((img, i) => (
+          <button class:list={['gallery-thumb', i === 0 ? 'gallery-thumb--active' : '']}
+            data-src={img.src} aria-label={img.alt} type="button">
             <ProductImage src={img.src} alt={img.alt} fallbackLabel={d.product} />
-          </div>
+          </button>
         ))}
       </div>
     )}
@@ -114,7 +116,6 @@ const schema = {
             <div class="deal-code-row">
               <span class="deal-code-label">Code</span>
               <span class="deal-code">{d.code}</span>
-              {d.discount && <span class="deal-discount">{d.discount}</span>}
             </div>
           )}
           <a class="deal-cta" href={d.merchantUrl} rel="nofollow sponsored" target="_blank">
@@ -125,26 +126,9 @@ const schema = {
       )}
     </div>
 
-    <!-- Pros / Cons -->
-    {(d.pros || d.cons) && (
-      <div class="proscons">
-        {d.pros && d.pros.length > 0 && (
-          <div class="pros">
-            <h3 class="pc-heading pc-heading--good">What's good</h3>
-            <ul class="pc-list">
-              {d.pros.map(p => <li>{p}</li>)}
-            </ul>
-          </div>
-        )}
-        {d.cons && d.cons.length > 0 && (
-          <div class="cons">
-            <h3 class="pc-heading pc-heading--bad">What's not</h3>
-            <ul class="pc-list">
-              {d.cons.map(c => <li>{c}</li>)}
-            </ul>
-          </div>
-        )}
-      </div>
+    <!-- Pros / Cons table -->
+    {(d.pros?.length || d.cons?.length) && (
+      <ProsConsTable pros={d.pros} cons={d.cons} />
     )}
 
     <!-- Specs table -->
@@ -193,11 +177,30 @@ const schema = {
   <script type="application/ld+json" set:html={JSON.stringify(schema)} />
 </Base>
 
+<script>
+  const strip = document.getElementById('gallery-strip');
+  if (strip) {
+    const heroWrap = document.getElementById('review-hero-image');
+    const heroImg = heroWrap?.querySelector('.pi-img') as HTMLImageElement | null;
+
+    strip.querySelectorAll<HTMLButtonElement>('.gallery-thumb').forEach(thumb => {
+      thumb.addEventListener('click', () => {
+        const src = thumb.dataset.src;
+        if (!src || !heroImg) return;
+        heroImg.src = src;
+        heroImg.classList.remove('pi-broken');
+        strip.querySelectorAll('.gallery-thumb').forEach(t => t.classList.remove('gallery-thumb--active'));
+        thumb.classList.add('gallery-thumb--active');
+      });
+    });
+  }
+</script>
+
 <style>
 .review-wrap {
   max-width: 760px;
   margin: 0 auto;
-  padding: 32px 24px 48px;
+  padding: 32px 24px 56px;
 }
 
 /* Breadcrumb */
@@ -207,7 +210,7 @@ const schema = {
   gap: 6px;
   font-size: 13px;
   color: var(--muted);
-  margin-bottom: 20px;
+  margin-bottom: 24px;
   flex-wrap: wrap;
 }
 .breadcrumb a {
@@ -222,22 +225,21 @@ const schema = {
 .review-image-wrap {
   position: relative;
   width: 100%;
-  height: 340px;
+  height: 360px;
   border-radius: 20px;
   overflow: hidden;
-  margin-bottom: 12px;
+  margin-bottom: 10px;
   background: var(--ink-deep);
 }
-.review-pi {
-  border-radius: 20px;
-}
+.review-pi { border-radius: 20px; }
+
 .review-image-badge {
   position: absolute;
   bottom: 20px;
   right: 20px;
-  background: rgba(13,21,48,0.82);
-  backdrop-filter: blur(12px);
-  border: 1px solid rgba(34,211,238,0.2);
+  background: rgba(13,21,48,0.84);
+  backdrop-filter: blur(14px);
+  border: 1px solid rgba(34,211,238,0.22);
   border-radius: 14px;
   padding: 10px 16px;
   display: flex;
@@ -259,9 +261,10 @@ const schema = {
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.1em;
-  color: rgba(255,255,255,0.4);
+  color: rgba(255,255,255,0.38);
   white-space: nowrap;
 }
+
 .review-image-chip {
   position: absolute;
   top: 16px;
@@ -269,11 +272,11 @@ const schema = {
   display: flex;
   align-items: center;
   gap: 6px;
-  background: rgba(13,21,48,0.75);
+  background: rgba(13,21,48,0.78);
   backdrop-filter: blur(10px);
   border: 1px solid rgba(255,255,255,0.08);
   border-radius: 99px;
-  padding: 4px 12px;
+  padding: 5px 13px;
 }
 .ric-cat {
   font-family: 'Sora', sans-serif;
@@ -290,10 +293,11 @@ const schema = {
 .gallery-strip {
   display: flex;
   gap: 8px;
-  margin-bottom: 28px;
+  margin-bottom: 32px;
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
   scrollbar-width: none;
+  padding: 2px;
 }
 .gallery-strip::-webkit-scrollbar { display: none; }
 .gallery-thumb {
@@ -302,10 +306,17 @@ const schema = {
   height: 60px;
   border-radius: 10px;
   overflow: hidden;
-  border: 1px solid var(--line);
+  border: 2px solid var(--line);
   background: var(--ink-deep);
   position: relative;
+  padding: 0;
+  cursor: pointer;
+  transition: border-color 0.15s ease, transform 0.15s var(--ease-spring);
 }
+.gallery-thumb:hover { border-color: rgba(34,211,238,0.45); transform: translateY(-1px); }
+.gallery-thumb:active { transform: translateY(0); }
+.gallery-thumb:focus-visible { outline: 2px solid var(--cyan); outline-offset: 2px; }
+.gallery-thumb--active { border-color: var(--cyan); }
 
 /* Review hero */
 .review-hero {
@@ -313,8 +324,8 @@ const schema = {
   align-items: flex-start;
   justify-content: space-between;
   gap: 24px;
-  margin-bottom: 24px;
-  margin-top: 28px;
+  margin-bottom: 28px;
+  margin-top: 8px;
 }
 .review-hero-left { flex: 1; min-width: 0; }
 .review-meta {
@@ -328,7 +339,7 @@ const schema = {
 .review-title {
   font-size: clamp(20px, 3vw, 28px);
   font-weight: 700;
-  margin: 0 0 12px;
+  margin: 0 0 14px;
   line-height: 1.2;
   color: var(--ink);
 }
@@ -337,7 +348,7 @@ const schema = {
   align-items: flex-start;
   gap: 8px;
   font-size: 14px;
-  margin-bottom: 6px;
+  margin-bottom: 7px;
 }
 .bf-label, .avoid-label {
   font-family: 'Sora', sans-serif;
@@ -357,7 +368,7 @@ const schema = {
   font-size: 11px;
   color: var(--muted);
   font-family: 'Sora', sans-serif;
-  margin: 10px 0 0;
+  margin: 12px 0 0;
 }
 .review-hero-right {
   display: flex;
@@ -365,6 +376,7 @@ const schema = {
   align-items: center;
   gap: 4px;
   flex-shrink: 0;
+  padding-top: 4px;
 }
 .score-out {
   font-size: 11px;
@@ -397,6 +409,7 @@ const schema = {
   margin-bottom: 8px;
 }
 .vb-text { font-size: 15px; color: #334155; margin: 0; line-height: 1.65; }
+
 .deal-box {
   flex: 1;
   min-width: 200px;
@@ -406,21 +419,20 @@ const schema = {
   padding: 18px 20px;
 }
 .deal-top-label { font-size: 11px; font-family: 'Sora', sans-serif; color: #7A90B0; margin-bottom: 6px; }
-.deal-price { font-family: 'Sora', sans-serif; font-size: 24px; font-weight: 700; color: #fff; margin-bottom: 8px; }
+.deal-price { font-family: 'Sora', sans-serif; font-size: 24px; font-weight: 700; color: #fff; margin-bottom: 10px; }
 .deal-at { font-size: 12px; color: #7A90B0; font-weight: 400; }
-.deal-code-row { display: flex; align-items: center; gap: 6px; margin-bottom: 10px; flex-wrap: wrap; }
+.deal-code-row { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; flex-wrap: wrap; }
 .deal-code-label { font-size: 11px; font-family: 'Sora', sans-serif; color: #7A90B0; text-transform: uppercase; letter-spacing: 0.06em; }
 .deal-code {
   font-family: 'Sora', sans-serif;
   font-size: 13px;
-  font-weight: 600;
+  font-weight: 700;
   color: var(--cyan);
   border: 1px dashed rgba(34,211,238,0.4);
-  padding: 2px 9px;
+  padding: 3px 10px;
   border-radius: 6px;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.06em;
 }
-.deal-discount { font-size: 12px; color: #7A90B0; }
 .deal-cta {
   display: block;
   text-align: center;
@@ -439,32 +451,8 @@ const schema = {
 .deal-cta:focus-visible { outline: 2px solid #fff; outline-offset: 2px; border-radius: 8px; }
 .deal-note { font-size: 11px; color: #5A6E8E; display: block; line-height: 1.5; }
 
-/* Pros / Cons */
-.proscons {
-  display: flex;
-  gap: 20px;
-  flex-wrap: wrap;
-  margin-bottom: 28px;
-}
-.pros, .cons { flex: 1; min-width: 200px; }
-.pc-heading {
-  font-size: 13px;
-  font-family: 'Sora', sans-serif;
-  font-weight: 600;
-  margin: 0 0 8px;
-}
-.pc-heading--good { color: var(--green); }
-.pc-heading--bad  { color: var(--red, #DC2626); }
-.pc-list {
-  margin: 0;
-  padding-left: 18px;
-  color: #334155;
-  font-size: 14px;
-  line-height: 1.85;
-}
-
 /* Specs */
-.specs-section { margin-bottom: 28px; }
+.specs-section { margin-bottom: 32px; }
 .specs-heading { font-size: 18px; font-weight: 700; margin: 0 0 12px; color: var(--ink); }
 .specs-table { width: 100%; border-collapse: collapse; font-size: 14px; }
 .specs-table th {
@@ -489,13 +477,13 @@ const schema = {
   font-size: 16px;
   color: #334155;
   line-height: 1.75;
-  margin-bottom: 0;
 }
 .review-content h2 {
   font-size: 20px;
   font-weight: 700;
   color: var(--ink);
-  margin: 32px 0 12px;
+  margin: 36px 0 12px;
+  letter-spacing: -0.02em;
 }
 .review-content h3 {
   font-size: 17px;
@@ -510,6 +498,24 @@ const schema = {
 }
 .review-content li { margin-bottom: 6px; }
 .review-content strong { color: var(--ink); font-weight: 600; }
+.review-content table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+  margin: 0 0 20px;
+}
+.review-content th, .review-content td {
+  padding: 8px 12px;
+  border: 1px solid var(--line);
+  text-align: left;
+}
+.review-content th {
+  background: var(--paper);
+  font-family: 'Sora', sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--slate);
+}
 
 /* Owners section */
 .owners-section {
@@ -543,21 +549,16 @@ const schema = {
   line-height: 1.65;
   margin: 0;
 }
-.owners-carousel-wrap {
-  padding: 0 40px;
-}
+.owners-carousel-wrap { padding: 0 40px; }
 
-/* Disclosure wrap */
-.disclosure-wrap {
-  padding: 40px 28px 64px;
-}
+/* Disclosure */
+.disclosure-wrap { padding: 40px 28px 64px; }
 
 @media (max-width: 640px) {
   .review-wrap { padding: 20px 16px 40px; }
-  .review-image-wrap { height: 220px; }
-  .review-hero { flex-direction: column-reverse; gap: 16px; margin-top: 20px; }
+  .review-image-wrap { height: 240px; }
+  .review-hero { flex-direction: column-reverse; gap: 12px; margin-top: 4px; }
   .top-row { flex-direction: column; }
-  .proscons { flex-direction: column; }
   .owners-carousel-wrap { padding: 0 16px; }
   .review-image-badge { padding: 8px 12px; }
   .rib-num { font-size: 20px; }

@@ -7,7 +7,9 @@ status: "published"
 score: 8.5
 price: "$1,999"
 priceRange: "$1,999"
-merchantUrl: "https://www.velotricbike.com/products/velotric-discover-3-commuter-ebike"
+merchantUrl: "https://www.velotricbike.com/products/velotric-discover-3-commuter-ebike?page_source=banner_swiper-wrapper-3d0c167ad3e66ed2%7Cshop_now&ref=ARMAN&utm_campaign=&utm_medium=affiliate&utm_source=goaffpro"
+code: "REF204801"
+discount: "Use code REF204801"
 summary: "A comfort-first commuter e-bike with a 750W motor, 80-mile claimed pedal-assist range, hydraulic brakes, smart security features, and a premium upright ride feel."
 verdict: "The Velotric Discover 3 is one of the strongest comfort commuter e-bikes on paper: powerful, stable, feature-rich, and safety-certified. The catch is weight — at 61lb, it is built for smooth everyday riding, not carrying up stairs."
 bestFor: "Comfort-first commuters, errands, hilly streets, and riders who want upright stability"
@@ -15,18 +17,27 @@ avoidIf: "You need a lightweight e-bike, live up multiple flights of stairs, or 
 updated: "June 2026"
 image: "/images/products/velotric-discover-3/hero.svg"
 imageAlt: "Velotric Discover 3 comfort commuter e-bike"
+gallery:
+  - src: "/images/products/velotric-discover-3/hero.svg"
+    alt: "Velotric Discover 3 – main view"
+  - src: "/images/products/velotric-discover-3/side.webp"
+    alt: "Velotric Discover 3 – side profile"
+  - src: "/images/products/velotric-discover-3/angle.webp"
+    alt: "Velotric Discover 3 – three-quarter angle"
+  - src: "/images/products/velotric-discover-3/cockpit.webp"
+    alt: "Velotric Discover 3 – display and cockpit"
 pros:
-  - "Very strong comfort setup — upright posture, suspension seatpost, air fork, adjustable stem, comfort saddle"
-  - "750W motor with 75Nm torque gives proper hill and city power"
-  - "Up to 80 miles pedal-assist range and 65 miles throttle range claimed"
+  - "Upright geometry, suspension seatpost, air fork, adjustable stem, comfort saddle"
+  - "750W motor with 75Nm torque — confident on hills and with loads"
+  - "Up to 80 miles pedal-assist / 65 miles throttle range claimed"
   - "Hydraulic disc brakes with 180mm rotors front and rear"
-  - "UL 2849 and UL 2271 safety certification"
-  - "Strong everyday practicality: rack, fenders, lights, turn signals, USB-C, app, NFC unlock, Apple Find My and Google Find Hub"
+  - "UL 2849 and UL 2271 safety certified"
+  - "Rack, fenders, lights, turn signals, USB-C, NFC unlock, Apple Find My, Google Find Hub"
 cons:
-  - "61lb weight makes it awkward for stairs, small flats, or frequent lifting"
-  - "Not the cheapest commuter e-bike on the market"
-  - "Real-world range depends heavily on terrain, assist mode, and throttle use"
-  - "Upright comfort geometry may feel less sporty than lighter city e-bikes"
+  - "61lb — awkward for stairs, small flats, or frequent lifting"
+  - "Real-world range varies with terrain, assist level, and throttle use"
+  - "Upright comfort geometry feels less sporty than lighter city e-bikes"
+  - "Heavy if portability is a priority"
 specs:
   Motor: "48V 750W hub motor, 1100W peak, 75Nm torque"
   Battery: "48V 15.2Ah, 730Wh, IPX7, UL 2271 certified"
@@ -71,54 +82,24 @@ customerReviews:
 
 ## Quick verdict
 
-The Velotric Discover 3 is a comfort-first commuter e-bike built for people who want a stable, upright, powerful ride rather than a lightweight minimalist bike.
+At $1,999, the Velotric Discover 3 packs a 750W motor, 730Wh battery, hydraulic disc brakes, integrated lights and turn signals, smart anti-theft, and dual UL safety certification. PickNotch score: **8.5/10**. The main trade-off is 61lb — a product of its comfort hardware, not a design oversight.
 
-At $1,999, it combines a 750W hub motor, 75Nm torque, 730Wh battery, hydraulic disc brakes, integrated lights, turn signals, smart anti-theft features, and UL safety certification. The PickNotch score is 8.5/10. The main limitation is weight: at 61lb, it is not ideal if you carry your bike upstairs regularly.
+## Who it's for
 
-## Who should buy it
+**Buy it** if you want a complete, comfortable commuter for daily errands, hilly streets, and rides over 20 miles. Everything — rack, fenders, lights, turn signals, suspension, smart features — comes standard with no immediate upgrades needed.
 
-Buy the Velotric Discover 3 if you want a comfortable commuter that handles daily errands, hilly roads, longer rides, and heavier everyday use.
+**Skip it** if you carry the bike up stairs regularly, rely on public transit, or prefer a lighter, sportier city ride.
 
-It makes most sense for riders who care about upright posture, a quality saddle, suspension, range, hydraulic brakes, lights, rack and fenders, and smart features. This is also a strong choice if you want a commuter that feels complete out of the box without immediate upgrades.
+## The 61lb trade-off
 
-## Who should avoid it
+The comfort hardware adds up: suspension seatpost, air fork, large integrated battery, rack, fenders, and a robust motor system. Together they make the bike heavy but also deeply practical. It is an excellent bike to *ride* from ground-level storage. It is not an easy bike to carry.
 
-Avoid it if you need a lightweight e-bike for stairs, trains, flats, or compact storage.
+## Where it stands out
 
-It is also not the best match if you want a sporty, stripped-back city bike. The Discover 3 is built around comfort, stability, and practicality — not minimal weight.
+The comfort setup is executed well. Upright geometry, suspension seatpost, 80mm air fork, adjustable stem, and an ergonomic saddle make long rides accessible rather than tiring. The 750W motor and 75Nm torque handle hills and loaded cargo without laboring.
 
-## The catch
-
-The catch is simple: the Discover 3 is comfortable because it is substantial.
-
-The suspension seatpost, upright frame, air fork, rack, fenders, heavy-duty battery, integrated lights, and motor hardware all make the bike more useful day-to-day — but together they add up to 61lb. That is a brilliant weight for riding, but awkward for lifting.
-
-## Where it wins
-
-The Discover 3 wins on comfort and completeness.
-
-The upright ride position, suspension seatpost, air fork, ergonomic saddle, adjustable stem, and swept-back setup make it far more approachable than a sporty city bike. The 750W motor and 75Nm torque make it well-suited for hills and commutes with heavier loads.
-
-It also scores well for safety and support: hydraulic brakes, 180mm rotors, UL certifications, IPX ratings, smart unlock, anti-theft, and a wide claimed retail network all help it feel more serious than most at this price.
-
-## Where it struggles
-
-The main weakness is portability. If you live in a small flat, need to lift your bike into a car often, or rely on public transport, a lighter city e-bike suits you better.
-
-Range is also worth noting. The 80-mile pedal-assist figure is a claimed maximum, not a guarantee for every ride. Terrain, rider weight, assist level, and throttle use will all change the real number.
-
-## Score breakdown
-
-- Comfort: 9.3/10 — suspension seatpost, air fork, upright posture, ergonomic saddle, adjustable stem
-- Power and range: 8.8/10 — 750W motor, 75Nm, 730Wh battery, 80mi claimed PA range
-- Safety and support: 8.7/10 — UL certified, hydraulic brakes, IPX ratings, smart features
-- Value: 8.3/10 — strong spec sheet at $1,999 for a comfort commuter
-- Portability: 6.8/10 — 61lb is heavy; not ideal for stairs or frequent lifting
+The safety and smart features are a real differentiator at this price: UL 2849 and 2271 certified, hydraulic brakes with 180mm rotors, IPX6/7 water resistance, NFC unlock, Apple Find My, Google Find Hub, USB-C charging, and integrated turn signals.
 
 ## Final verdict
 
-The Velotric Discover 3 is one of the most complete comfort commuter e-bikes in its price range.
-
-It is powerful, comfortable, practical, and safety-certified. Hydraulic brakes, rack, fenders, lights, turn signals, strong motor, a big battery, smart anti-theft, and a comfort-focused frame all come standard.
-
-It does not score higher than 8.5 because of weight and category fit. For the right rider — someone who rides from a garage, ground-floor storage, or shed — this is a very strong first PickNotch recommendation.
+The Velotric Discover 3 earns 8.5 because the spec sheet is competitive, the comfort focus is executed thoroughly, and the safety features are unusually complete for the price. For riders with ground-level storage, this is a very strong first PickNotch recommendation.
