@@ -1,0 +1,369 @@
+---
+const score = 8.6;
+const r = 40;
+const circumference = 2 * Math.PI * r;
+const offset = circumference * (1 - score / 10);
+
+const bars = [
+  { label: 'Value for money',  pct: 92 },
+  { label: 'Build quality',    pct: 84 },
+  { label: 'Real-world use',   pct: 76 },
+  { label: 'Brand & support',  pct: 72 },
+];
+---
+
+<div class="hv-wrap" aria-hidden="true">
+  <!-- Ambient glow layers -->
+  <div class="hv-glow-a"></div>
+  <div class="hv-glow-b"></div>
+
+  <!-- Main floating card -->
+  <div class="hv-card">
+    <!-- Notch accent bar at top -->
+    <div class="hv-notch"></div>
+
+    <!-- Product header -->
+    <div class="hv-header">
+      <span class="hv-chip">E-bikes</span>
+      <div class="hv-product-name">Qronge X1 Spark</div>
+      <div class="hv-product-brand">by Qronge</div>
+    </div>
+
+    <!-- Score ring + breakdown bars -->
+    <div class="hv-body">
+      <!-- Circular score ring -->
+      <div class="hv-ring-area">
+        <div class="hv-ring-wrap">
+          <svg class="hv-ring-svg" viewBox="0 0 96 96">
+            <defs>
+              <linearGradient id="hv-ring-grad" x1="1" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#22D3EE"/>
+                <stop offset="100%" stop-color="#0891B2"/>
+              </linearGradient>
+            </defs>
+            <circle cx="48" cy="48" r={r}
+              fill="none"
+              stroke="rgba(26,36,66,0.07)"
+              stroke-width="6"
+            />
+            <circle cx="48" cy="48" r={r}
+              fill="none"
+              stroke="url(#hv-ring-grad)"
+              stroke-width="6"
+              stroke-linecap="round"
+              stroke-dasharray={circumference}
+              stroke-dashoffset={offset}
+              transform="rotate(-90 48 48)"
+            />
+          </svg>
+          <div class="hv-ring-center">
+            <span class="hv-score-num">{score}</span>
+            <span class="hv-score-denom">/10</span>
+          </div>
+        </div>
+        <p class="hv-score-label">PickNotch Score</p>
+      </div>
+
+      <!-- Factor bars -->
+      <div class="hv-bars">
+        {bars.map(({ label, pct }) => (
+          <div class="hv-bar-item">
+            <div class="hv-bar-meta">
+              <span class="hv-bar-label">{label}</span>
+              <span class="hv-bar-val">{(pct / 10).toFixed(1)}</span>
+            </div>
+            <div class="hv-bar-track">
+              <div class="hv-bar-fill" style={`width: ${pct}%`}></div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+
+    <!-- Verdict tags -->
+    <div class="hv-tags">
+      <span class="hv-tag hv-tag--best">
+        <svg width="7" height="7" viewBox="0 0 7 7" aria-hidden="true">
+          <circle cx="3.5" cy="3.5" r="3.5" fill="#22D3EE"/>
+        </svg>
+        Best for urban commuters
+      </span>
+      <span class="hv-tag hv-tag--catch">
+        <svg width="8" height="7" viewBox="0 0 8 7" aria-hidden="true">
+          <path d="M4 0L8 7H0L4 0Z" fill="#F59E0B"/>
+        </svg>
+        Weak app &amp; connectivity support
+      </span>
+    </div>
+
+    <a href="/reviews/qronge-x1-spark" class="hv-cta">
+      Read full review
+      <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+        <path d="M2 6h8M6 2l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </a>
+  </div>
+
+  <!-- Floating accent badge -->
+  <div class="hv-badge">
+    <span class="hv-badge-num">8.6</span>
+    <span class="hv-badge-label">Top score</span>
+  </div>
+</div>
+
+<style>
+.hv-wrap {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 48px 24px 48px 48px;
+}
+
+/* Ambient glow */
+.hv-glow-a {
+  position: absolute;
+  top: 0; right: 0;
+  width: 380px; height: 380px;
+  background: radial-gradient(circle at 70% 30%, rgba(34,211,238,0.18) 0%, transparent 68%);
+  pointer-events: none;
+}
+.hv-glow-b {
+  position: absolute;
+  bottom: 0; left: 10%;
+  width: 260px; height: 260px;
+  background: radial-gradient(circle, rgba(34,211,238,0.08) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+/* Main card */
+.hv-card {
+  position: relative;
+  background: #fff;
+  border-radius: 24px;
+  padding: 22px;
+  width: 100%;
+  max-width: 300px;
+  box-shadow: var(--shadow-hero);
+  animation: hv-float 5s ease-in-out infinite;
+  z-index: 1;
+}
+@keyframes hv-float {
+  0%, 100% { transform: translateY(0px); }
+  50%       { transform: translateY(-10px); }
+}
+
+/* Notch top accent */
+.hv-notch {
+  position: absolute;
+  top: 0; right: 22px;
+  width: 3px; height: 26px;
+  background: var(--cyan);
+  border-radius: 0 0 3px 3px;
+}
+
+/* Product header */
+.hv-header {
+  padding-bottom: 14px;
+  border-bottom: 1px solid rgba(26,36,66,0.07);
+  margin-bottom: 16px;
+}
+.hv-chip {
+  display: inline-block;
+  font-family: 'Sora', sans-serif;
+  font-size: 9px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: #0E7490;
+  background: rgba(34,211,238,0.10);
+  padding: 2px 8px;
+  border-radius: 99px;
+  margin-bottom: 7px;
+}
+.hv-product-name {
+  font-family: 'Sora', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  color: #1A2442;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  margin-bottom: 2px;
+}
+.hv-product-brand { font-size: 11px; color: #94A3B8; }
+
+/* Ring + bars layout */
+.hv-body {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 16px;
+  align-items: start;
+  margin-bottom: 14px;
+}
+
+/* Score ring */
+.hv-ring-area {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+.hv-ring-wrap {
+  position: relative;
+  width: 84px;
+  height: 84px;
+  flex-shrink: 0;
+}
+.hv-ring-svg {
+  width: 84px;
+  height: 84px;
+  display: block;
+}
+.hv-ring-center {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1px;
+  line-height: 1;
+}
+.hv-score-num {
+  font-family: 'Sora', sans-serif;
+  font-size: 22px;
+  font-weight: 800;
+  color: #1A2442;
+  letter-spacing: -0.05em;
+}
+.hv-score-denom {
+  font-family: 'Sora', sans-serif;
+  font-size: 9px;
+  font-weight: 600;
+  color: #94A3B8;
+}
+.hv-score-label {
+  font-family: 'Sora', sans-serif;
+  font-size: 7.5px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.09em;
+  color: #94A3B8;
+  text-align: center;
+  white-space: nowrap;
+}
+
+/* Factor bars */
+.hv-bars {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-top: 3px;
+}
+.hv-bar-item { display: flex; flex-direction: column; gap: 3px; }
+.hv-bar-meta { display: flex; justify-content: space-between; align-items: baseline; }
+.hv-bar-label { font-size: 10px; color: #64748B; }
+.hv-bar-val {
+  font-family: 'Sora', sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  color: #1A2442;
+}
+.hv-bar-track {
+  height: 4px;
+  background: rgba(26,36,66,0.06);
+  border-radius: 99px;
+  overflow: hidden;
+}
+.hv-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #22D3EE 0%, #0891B2 100%);
+  border-radius: 99px;
+}
+
+/* Verdict tags */
+.hv-tags {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  padding: 12px 0;
+  border-top: 1px solid rgba(26,36,66,0.07);
+  border-bottom: 1px solid rgba(26,36,66,0.07);
+  margin-bottom: 12px;
+}
+.hv-tag {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 11px;
+  font-weight: 500;
+  padding: 5px 9px;
+  border-radius: 7px;
+}
+.hv-tag--best { background: rgba(34,211,238,0.07); color: #0D6E87; }
+.hv-tag--catch { background: rgba(245,158,11,0.08); color: #8A3A00; }
+
+/* CTA link */
+.hv-cta {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  background: #1A2442;
+  color: #fff;
+  font-family: 'Sora', sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 9px 14px;
+  border-radius: 9px;
+  text-decoration: none;
+  letter-spacing: 0.01em;
+  transition: background 0.15s ease, transform 0.15s var(--ease-spring);
+}
+.hv-cta:hover { background: #243060; transform: translateY(-1px); }
+.hv-cta:focus-visible { outline: 2px solid var(--cyan); outline-offset: 2px; border-radius: 9px; }
+
+/* Floating accent badge */
+.hv-badge {
+  position: absolute;
+  top: 36px;
+  left: 16px;
+  background: #0D1530;
+  border: 1px solid rgba(34,211,238,0.15);
+  border-radius: 12px;
+  padding: 8px 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1px;
+  box-shadow: 0 8px 28px rgba(4,10,24,0.45);
+  animation: hv-float-badge 5s ease-in-out 1.5s infinite;
+  z-index: 2;
+}
+@keyframes hv-float-badge {
+  0%, 100% { transform: translateY(0) rotate(-2deg); }
+  50%       { transform: translateY(-7px) rotate(-2deg); }
+}
+.hv-badge-num {
+  font-family: 'Sora', sans-serif;
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--cyan);
+  letter-spacing: -0.05em;
+  line-height: 1;
+}
+.hv-badge-label {
+  font-family: 'Sora', sans-serif;
+  font-size: 7px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.09em;
+  color: #6B84A8;
+}
+
+@media (max-width: 880px) {
+  .hv-wrap { padding: 24px 16px; }
+  .hv-card { max-width: 340px; }
+  .hv-badge { display: none; }
+}
+</style>

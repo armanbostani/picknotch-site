@@ -1,0 +1,76 @@
+---
+interface Props {
+  label?: string;
+  tint?: 'default' | 'warm' | 'forest' | 'slate';
+  class?: string;
+}
+const { label, tint = 'default' } = Astro.props;
+
+const gradients: Record<string, [string, string]> = {
+  default: ['#0B1B36', '#0A3D55'],
+  warm:    ['#0F1520', '#2A1C08'],
+  forest:  ['#0B1B1B', '#0B2E22'],
+  slate:   ['#111824', '#1C2B3E'],
+};
+const [from, to] = gradients[tint] ?? gradients.default;
+---
+
+<div class="pv-outer">
+  <div class="pv-bg" style={`background: linear-gradient(145deg, ${from} 0%, ${to} 100%)`}>
+    <!-- Grid overlay -->
+    <svg class="pv-grid" viewBox="0 0 200 150" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+      <line x1="40"  y1="0"   x2="40"  y2="150" stroke="rgba(34,211,238,0.06)" stroke-width="1"/>
+      <line x1="80"  y1="0"   x2="80"  y2="150" stroke="rgba(34,211,238,0.06)" stroke-width="1"/>
+      <line x1="120" y1="0"   x2="120" y2="150" stroke="rgba(34,211,238,0.06)" stroke-width="1"/>
+      <line x1="160" y1="0"   x2="160" y2="150" stroke="rgba(34,211,238,0.06)" stroke-width="1"/>
+      <line x1="0"   y1="37"  x2="200" y2="37"  stroke="rgba(34,211,238,0.06)" stroke-width="1"/>
+      <line x1="0"   y1="75"  x2="200" y2="75"  stroke="rgba(34,211,238,0.06)" stroke-width="1"/>
+      <line x1="0"   y1="113" x2="200" y2="113" stroke="rgba(34,211,238,0.06)" stroke-width="1"/>
+
+      <!-- Notch motif -->
+      <rect x="80" y="52" width="40" height="46" rx="7" fill="none" stroke="rgba(34,211,238,0.22)" stroke-width="1.5"/>
+      <path d="M88 62 L100 52 L112 62" fill="none" stroke="rgba(34,211,238,0.32)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+
+      <!-- Subtle center glow -->
+      <ellipse cx="100" cy="75" rx="52" ry="38" fill="rgba(34,211,238,0.06)"/>
+    </svg>
+  </div>
+
+  {label && (
+    <span class="pv-label">{label}</span>
+  )}
+</div>
+
+<style>
+.pv-outer {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  display: block;
+}
+.pv-bg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+.pv-grid {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+.pv-label {
+  position: absolute;
+  bottom: 10px;
+  left: 12px;
+  font-family: 'Sora', sans-serif;
+  font-size: 9px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: rgba(34,211,238,0.55);
+  pointer-events: none;
+}
+</style>

@@ -1,5 +1,6 @@
 ---
 import ScoreBadge from './ScoreBadge.astro';
+import PlaceholderVisual from './PlaceholderVisual.astro';
 
 interface Props {
   title: string;
@@ -10,14 +11,24 @@ interface Props {
   slug?: string;
   category?: string;
   status?: string;
+  tags?: string[];
 }
-const { title, brand, score, bestFor, summary, slug, category = 'E-bikes', status } = Astro.props;
+const { title, brand, score, bestFor, summary, slug, category = 'E-bikes', status, tags } = Astro.props;
 const isPublished = status === 'published' || (score != null);
 const href = isPublished && slug ? `/reviews/${slug}` : undefined;
 const Tag = href ? 'a' : 'div';
 ---
-<Tag class:list={['review-card', href ? 'review-card--link' : '']} href={href}>
-  <ScoreBadge score={score ?? null} size="md" />
+
+<Tag class:list={['rc', href ? 'rc--link' : '']} href={href}>
+  <!-- Thumbnail -->
+  <div class="rc-thumb">
+    <PlaceholderVisual label={category} />
+    <div class="rc-score-badge">
+      <ScoreBadge score={score ?? null} size="sm" />
+    </div>
+  </div>
+
+  <!-- Content -->
   <div class="rc-body">
     <div class="rc-meta">
       <span class="rc-category">{category}</span>
@@ -25,79 +36,139 @@ const Tag = href ? 'a' : 'div';
     </div>
     <h3 class="rc-title">{title}</h3>
     <p class="rc-summary">{summary}</p>
+    {tags && tags.length > 0 && (
+      <div class="rc-tags">
+        {tags.map(t => <span class="rc-tag">{t}</span>)}
+      </div>
+    )}
   </div>
-  {href && <span class="rc-arrow" aria-hidden="true">→</span>}
+
+  {href && (
+    <span class="rc-arrow" aria-hidden="true">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+        <path d="M2.5 7h9M8 3l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </span>
+  )}
 </Tag>
 
 <style>
-.review-card {
+.rc {
   display: flex;
-  align-items: flex-start;
-  gap: 18px;
+  align-items: center;
+  gap: 0;
   background: #fff;
   border: 1px solid var(--line);
-  border-radius: 14px;
-  padding: 20px;
+  border-radius: 16px;
+  overflow: hidden;
   text-decoration: none;
-  transition: border-color 0.15s ease, box-shadow 0.15s ease, transform 0.15s ease;
+  transition:
+    border-color 0.18s ease,
+    box-shadow 0.18s ease,
+    transform 0.18s var(--ease-spring);
 }
-.review-card--link { cursor: pointer; }
-.review-card--link:hover {
-  border-color: #93E6F8;
+.rc--link { cursor: pointer; }
+.rc--link:hover {
+  border-color: rgba(34,211,238,0.45);
   box-shadow: var(--shadow-md);
   transform: translateY(-2px);
 }
-.review-card--link:active { transform: translateY(0); }
-.review-card--link:focus-visible {
-  outline: 2px solid var(--cyan);
-  outline-offset: 2px;
-  border-radius: 14px;
+.rc--link:active { transform: translateY(0); }
+.rc--link:focus-visible { outline: 2px solid var(--cyan); outline-offset: 3px; border-radius: 16px; }
+
+/* Thumbnail */
+.rc-thumb {
+  position: relative;
+  width: 88px;
+  height: 88px;
+  flex-shrink: 0;
+  align-self: stretch;
 }
-.rc-body { flex: 1; min-width: 0; }
+.rc-score-badge {
+  position: absolute;
+  bottom: 6px;
+  left: 6px;
+}
+
+/* Body */
+.rc-body {
+  flex: 1;
+  min-width: 0;
+  padding: 14px 16px;
+}
 .rc-meta {
   display: flex;
   align-items: center;
   gap: 8px;
-  margin-bottom: 6px;
+  margin-bottom: 5px;
   flex-wrap: wrap;
 }
 .rc-category {
-  font-size: 11px;
-  font-weight: 600;
+  font-size: 10px;
+  font-weight: 700;
   font-family: 'Sora', sans-serif;
   text-transform: uppercase;
-  letter-spacing: 0.07em;
+  letter-spacing: 0.09em;
   color: var(--muted);
 }
 .rc-best {
-  font-size: 12px;
+  font-size: 11px;
   color: #0E7490;
-  background: rgba(34,211,238,0.1);
-  padding: 2px 8px;
-  border-radius: 20px;
+  background: rgba(34,211,238,0.09);
+  padding: 1px 7px;
+  border-radius: 99px;
   font-weight: 500;
 }
 .rc-title {
   font-family: 'Sora', sans-serif;
-  font-size: 17px;
-  font-weight: 600;
-  margin: 0 0 5px;
-  line-height: 1.3;
+  font-size: 15px;
+  font-weight: 700;
+  margin: 0 0 4px;
+  line-height: 1.25;
   color: var(--ink);
+  letter-spacing: -0.02em;
 }
 .rc-summary {
-  font-size: 14px;
+  font-size: 13px;
   color: var(--slate);
-  margin: 0;
   line-height: 1.55;
+  margin: 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
+.rc-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin-top: 7px;
+}
+.rc-tag {
+  font-family: 'Sora', sans-serif;
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--slate);
+  background: var(--paper);
+  border: 1px solid var(--line);
+  padding: 2px 8px;
+  border-radius: 99px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* Arrow */
 .rc-arrow {
   flex-shrink: 0;
-  font-size: 16px;
   color: var(--cyan);
   opacity: 0;
+  padding-right: 16px;
   transition: opacity 0.15s ease, transform 0.15s ease;
-  margin-top: 4px;
 }
-.review-card--link:hover .rc-arrow { opacity: 1; transform: translateX(2px); }
+.rc--link:hover .rc-arrow { opacity: 1; transform: translateX(3px); }
+
+@media (max-width: 480px) {
+  .rc-thumb { width: 72px; height: 72px; }
+  .rc-body { padding: 12px 12px; }
+}
 </style>

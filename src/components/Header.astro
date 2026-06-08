@@ -6,8 +6,8 @@ const isActive = (href: string) =>
 <header class="site-header">
   <div class="header-inner wrap">
     <a class="brand" href="/">
-      <svg width="30" height="30" viewBox="0 0 80 80" aria-hidden="true">
-        <path d="M20 0 H43 L51 17 L59 0 H60 A20 20 0 0 1 80 20 V60 A20 20 0 0 1 60 80 H20 A20 20 0 0 1 0 60 V20 A20 20 0 0 1 20 0 Z" fill="#1C2540"/>
+      <svg width="28" height="28" viewBox="0 0 80 80" aria-label="PickNotch logo">
+        <path d="M20 0 H43 L51 17 L59 0 H60 A20 20 0 0 1 80 20 V60 A20 20 0 0 1 60 80 H20 A20 20 0 0 1 0 60 V20 A20 20 0 0 1 20 0 Z" fill="#1A2442"/>
         <path d="M18 48 L34 64 L62 28" fill="none" stroke="#22D3EE" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/>
         <polyline points="47,28 62,28 62,43" fill="none" stroke="#22D3EE" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/>
       </svg>
@@ -15,14 +15,14 @@ const isActive = (href: string) =>
     </a>
 
     <nav class="main-nav" aria-label="Main navigation">
-      <a href="/reviews" class:list={['nav-link', { active: isActive('/reviews') }]}>Reviews</a>
-      <a href="/categories" class:list={['nav-link', { active: isActive('/categories') }]}>Categories</a>
-      <a href="/best" class:list={['nav-link', { active: isActive('/best') }]}>Best Picks</a>
-      <a href="/compare" class:list={['nav-link', { active: isActive('/compare') }]}>Compare</a>
+      <a href="/reviews"     class:list={['nav-link', { active: isActive('/reviews') }]}>Reviews</a>
+      <a href="/categories"  class:list={['nav-link', { active: isActive('/categories') }]}>Categories</a>
+      <a href="/best"        class:list={['nav-link', { active: isActive('/best') }]}>Best Picks</a>
+      <a href="/compare"     class:list={['nav-link', { active: isActive('/compare') }]}>Compare</a>
       <a href="/methodology" class:list={['nav-link', { active: isActive('/methodology') }]}>Methodology</a>
     </nav>
 
-    <a href="/categories/e-bikes" class="header-cta">Browse picks</a>
+    <a href="/reviews" class="header-cta">Browse picks</a>
 
     <button class="menu-toggle" aria-label="Toggle menu" aria-expanded="false" id="menu-toggle">
       <span></span><span></span><span></span>
@@ -30,12 +30,12 @@ const isActive = (href: string) =>
   </div>
 
   <div class="mobile-nav" id="mobile-nav" aria-hidden="true">
-    <a href="/reviews" class="mobile-link">Reviews</a>
-    <a href="/categories" class="mobile-link">Categories</a>
-    <a href="/best" class="mobile-link">Best Picks</a>
-    <a href="/compare" class="mobile-link">Compare</a>
+    <a href="/reviews"     class="mobile-link">Reviews</a>
+    <a href="/categories"  class="mobile-link">Categories</a>
+    <a href="/best"        class="mobile-link">Best Picks</a>
+    <a href="/compare"     class="mobile-link">Compare</a>
     <a href="/methodology" class="mobile-link">Methodology</a>
-    <a href="/categories/e-bikes" class="mobile-cta">Browse picks</a>
+    <a href="/reviews"     class="mobile-cta">Browse picks</a>
   </div>
 </header>
 
@@ -44,68 +44,73 @@ const isActive = (href: string) =>
   position: sticky;
   top: 0;
   z-index: 100;
-  background: rgba(255,255,255,0.96);
-  border-bottom: 1px solid var(--line);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  background: rgba(255,255,255,0.88);
+  border-bottom: 1px solid rgba(226,232,242,0.8);
+  backdrop-filter: blur(16px) saturate(160%);
+  -webkit-backdrop-filter: blur(16px) saturate(160%);
 }
 .header-inner {
-  height: 64px;
+  height: 58px;
   display: flex;
   align-items: center;
-  gap: 28px;
+  gap: 24px;
 }
 .brand {
   display: flex;
   align-items: center;
-  gap: 9px;
+  gap: 8px;
   flex-shrink: 0;
   text-decoration: none;
+  transition: opacity 0.13s ease;
 }
+.brand:hover { opacity: 0.85; }
+.brand:focus-visible { outline: 2px solid var(--cyan); outline-offset: 3px; border-radius: 4px; }
 .brand-name {
   font-family: 'Sora', sans-serif;
-  font-weight: 700;
-  font-size: 18px;
+  font-weight: 800;
+  font-size: 17px;
   letter-spacing: -0.04em;
   color: var(--ink);
 }
 .main-nav {
   display: flex;
   align-items: center;
-  gap: 2px;
+  gap: 1px;
   flex: 1;
 }
 .nav-link {
-  font-size: 14px;
+  font-family: 'Sora', sans-serif;
+  font-size: 13px;
   font-weight: 500;
   color: var(--slate);
-  padding: 6px 11px;
+  padding: 5px 10px;
   border-radius: 7px;
   transition: color 0.13s ease, background 0.13s ease;
   text-decoration: none;
 }
 .nav-link:hover { color: var(--ink); background: var(--paper); }
-.nav-link.active { color: var(--ink); font-weight: 600; }
-.nav-link:focus-visible { outline: 2px solid var(--cyan); outline-offset: 2px; }
+.nav-link.active { color: var(--ink); font-weight: 700; }
+.nav-link:focus-visible { outline: 2px solid var(--cyan); outline-offset: 2px; border-radius: 7px; }
 .header-cta {
   flex-shrink: 0;
   background: var(--ink);
   color: #fff;
   font-family: 'Sora', sans-serif;
-  font-size: 13px;
-  font-weight: 600;
-  padding: 8px 17px;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 7px 16px;
   border-radius: 8px;
   text-decoration: none;
-  transition: background 0.13s ease, transform 0.13s ease;
+  letter-spacing: 0.01em;
+  transition: background 0.13s ease, transform 0.13s var(--ease-spring);
 }
-.header-cta:hover { background: #263357; transform: translateY(-1px); }
+.header-cta:hover { background: #243060; transform: translateY(-1px); }
 .header-cta:active { transform: translateY(0); }
-.header-cta:focus-visible { outline: 2px solid var(--cyan); outline-offset: 2px; }
+.header-cta:focus-visible { outline: 2px solid var(--cyan); outline-offset: 2px; border-radius: 8px; }
 .menu-toggle {
   display: none;
   flex-direction: column;
-  gap: 5px;
+  gap: 4.5px;
   background: none;
   border: none;
   cursor: pointer;
@@ -115,10 +120,10 @@ const isActive = (href: string) =>
   transition: background 0.13s ease;
 }
 .menu-toggle:hover { background: var(--paper); }
-.menu-toggle:focus-visible { outline: 2px solid var(--cyan); outline-offset: 2px; }
+.menu-toggle:focus-visible { outline: 2px solid var(--cyan); outline-offset: 2px; border-radius: 6px; }
 .menu-toggle span {
   display: block;
-  width: 20px;
+  width: 19px;
   height: 2px;
   background: var(--ink);
   border-radius: 2px;
@@ -127,38 +132,38 @@ const isActive = (href: string) =>
 .mobile-nav {
   display: none;
   flex-direction: column;
-  padding: 10px 24px 18px;
+  padding: 8px 24px 16px;
   border-top: 1px solid var(--line);
-  background: #fff;
-  gap: 0;
+  background: rgba(255,255,255,0.97);
 }
 .mobile-nav.open { display: flex; }
 .mobile-link {
-  font-size: 15px;
+  font-family: 'Sora', sans-serif;
+  font-size: 14px;
   font-weight: 500;
   color: var(--slate);
-  padding: 12px 0;
+  padding: 11px 0;
   border-bottom: 1px solid var(--line);
   text-decoration: none;
   transition: color 0.13s ease;
 }
-.mobile-link:hover { color: var(--ink); }
 .mobile-link:last-of-type { border-bottom: none; }
+.mobile-link:hover { color: var(--ink); }
 .mobile-cta {
   display: block;
   text-align: center;
   background: var(--ink);
   color: #fff;
   font-family: 'Sora', sans-serif;
-  font-size: 14px;
-  font-weight: 600;
-  padding: 12px;
-  border-radius: 8px;
-  margin-top: 14px;
+  font-size: 13px;
+  font-weight: 700;
+  padding: 11px;
+  border-radius: 9px;
+  margin-top: 12px;
   text-decoration: none;
   transition: background 0.13s ease;
 }
-.mobile-cta:hover { background: #263357; }
+.mobile-cta:hover { background: #243060; }
 @media (max-width: 780px) {
   .main-nav, .header-cta { display: none; }
   .menu-toggle { display: flex; }

@@ -3,7 +3,8 @@ import Base from '../layouts/Base.astro';
 import TrustStrip from '../components/TrustStrip.astro';
 import CategoryCard from '../components/CategoryCard.astro';
 import ReviewCard from '../components/ReviewCard.astro';
-import PlaceholderCard from '../components/PlaceholderCard.astro';
+import PlaceholderVisual from '../components/PlaceholderVisual.astro';
+import HeroVisual from '../components/HeroVisual.astro';
 import MethodologyPreview from '../components/MethodologyPreview.astro';
 import { getCollection } from 'astro:content';
 
@@ -11,118 +12,144 @@ const allReviews = await getCollection('reviews');
 const published = allReviews
   .filter(r => r.data.status === 'published' && r.data.score != null)
   .sort((a, b) => (b.data.score ?? 0) - (a.data.score ?? 0));
+
+const subcategories = [
+  { name: 'Budget e-bikes',   desc: 'Under $800. Real value vs cut corners.',              icon: '💰', status: 'Building' },
+  { name: 'Fat tyre e-bikes', desc: 'Rugged & stable — with real trade-offs.',             icon: '🏔️', status: 'Coming soon' },
+  { name: 'Folding e-bikes',  desc: 'Portability vs wheel size, weight, and quality.',     icon: '📦', status: 'Coming soon' },
+  { name: 'Commuter e-bikes', desc: 'Range honesty, motor type, real-world support.',      icon: '🏙️', status: 'Coming soon' },
+];
+
+const catchCards = [
+  { title: 'Great specs. Weak support?',       body: 'High performance means nothing if the brand disappears after 6 months.' },
+  { title: 'Low price. Hidden compromises?',   body: 'We find what corners got cut — and whether they matter for your use case.' },
+  { title: 'Premium feel. Poor value?',        body: "Paying more doesn't always buy you more. We score value independently." },
+];
+
+const compareCards = [
+  { a: 'Qronge', b: 'Happyrunsport', desc: 'Two budget commuters at similar prices. Which one actually wins?' },
+  { a: 'Budget', b: 'Premium',       desc: "Is it worth spending 3× more? We break down what you actually gain." },
+  { a: 'Fat tyre', b: 'Commuter',    desc: 'Different use cases, different trade-offs. Which style suits your ride?' },
+];
 ---
+
 <Base
   title="PickNotch — Better picks. Fewer regrets."
-  description="PickNotch helps people find better products with fewer regrets. Independent research, clear verdicts, and honest trade-offs — starting with e-bikes."
+  description="PickNotch compares the specs, trade-offs, and value behind products worth buying. Independent research. Clear verdicts. No hype."
 >
 
-  <!-- HERO -->
+  <!-- ═══════════════════════════ HERO ═══════════════════════════ -->
   <section class="hero">
+    <div class="hero-glow-a" aria-hidden="true"></div>
+    <div class="hero-glow-b" aria-hidden="true"></div>
+    <div class="hero-glow-c" aria-hidden="true"></div>
+
     <div class="wrap">
       <div class="hero-inner">
+
         <div class="hero-left">
-          <p class="hero-eyebrow">
-            <span>Independently researched</span>
-            <span class="sep">·</span>
-            <span>Affiliate supported</span>
-            <span class="sep">·</span>
-            <span>Clear verdicts, not fake hype</span>
-          </p>
+          <p class="hero-micro">Independent research · Clear verdicts · No hype-first rankings</p>
           <h1 class="hero-heading">Better picks.<br />Fewer regrets.</h1>
-          <p class="hero-sub">PickNotch compares specs, prices, trade-offs, and real-world value so you can find products actually worth buying.</p>
+          <p class="hero-sub">PickNotch compares the specs, trade-offs, and value behind products worth buying.</p>
           <div class="hero-actions">
-            <a href="/reviews" class="btn-primary">Browse reviews</a>
-            <a href="/methodology" class="btn-ghost">See how we pick</a>
+            <a href="/reviews" class="btn btn-primary">Browse reviews</a>
+            <a href="/methodology" class="btn btn-ghost">How we pick</a>
           </div>
         </div>
 
         <div class="hero-right">
-          <div class="hero-card">
-            <div class="hc-top">
-              <div class="hc-score-block">
-                <div class="hc-score">8.6</div>
-                <div class="hc-score-label">PickNotch Score</div>
-              </div>
-              <div class="hc-product">
-                <span class="hc-category">E-bikes</span>
-                <span class="hc-name">Qronge X1 Spark</span>
-                <span class="hc-brand">by Qronge</span>
-              </div>
+          <HeroVisual />
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════ TRUST STRIP ═══════════════════════════ -->
+  <TrustStrip />
+
+  <!-- ═══════════════════════════ CATEGORIES ═══════════════════════════ -->
+  <section class="section">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="eyebrow">Explore</span>
+        <h2 class="section-h2">Browse by category</h2>
+        <p class="section-sub">Starting with e-bikes, then growing into every product category where specs, trade-offs, and support actually matter.</p>
+      </div>
+      <div class="cat-grid">
+        <CategoryCard
+          name="E-bikes"
+          description="Budget commuters to fat-tyre models. We compare value, usability, and support confidence."
+          status="active"
+          icon="🚲"
+          href="/categories/e-bikes"
+          tint="default"
+        />
+        <CategoryCard name="Tech & gadgets"      description="Phones, audio, laptops — where the spec sheet often lies."     status="coming-soon" icon="💻" tint="slate"  />
+        <CategoryCard name="Home gear"           description="Appliances and kitchen tools worth researching before buying." status="coming-soon" icon="🏠" tint="warm"   />
+        <CategoryCard name="Outdoor & mobility"  description="Scooters, camping gear, and outdoor equipment."               status="coming-soon" icon="🏕️" tint="forest" />
+        <CategoryCard name="Tools & equipment"   description="Power tools and workshop gear where quality matters."         status="coming-soon" icon="🔧" tint="slate"  />
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════ E-BIKES FOCUS ═══════════════════════════ -->
+  <section class="section section--paper">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="eyebrow">Current focus</span>
+        <h2 class="section-h2">E-bikes</h2>
+        <p class="section-sub">Our first review library — from budget commuters to fat-tyre models.</p>
+      </div>
+
+      <div class="ebike-layout">
+        <!-- Feature card -->
+        <div class="ebf-card">
+          <div class="ebf-visual">
+            <PlaceholderVisual label="E-bikes" />
+            <div class="ebf-overlay">
+              <span class="ebf-active-chip">Active category</span>
             </div>
-            <div class="hc-divider"></div>
-            <div class="hc-bestfor">
-              <span class="hc-bf-label">Best for</span>
-              <span class="hc-bf-tag">Value-focused commuters</span>
-            </div>
-            <div class="hc-catch">
-              <span class="hc-catch-label">The catch</span>
-              <span class="hc-catch-text">Great specs mean nothing if support is weak — so we factor brand confidence into every score.</span>
-            </div>
-            <a href="/reviews/qronge-x1-spark" class="hc-cta">Read full review →</a>
           </div>
+          <div class="ebf-body">
+            <div class="ebf-spec-tags">
+              <span class="spec-tag">Range</span>
+              <span class="spec-tag">Motor</span>
+              <span class="spec-tag">Value</span>
+              <span class="spec-tag">Support</span>
+            </div>
+            <h3 class="ebf-heading">Our first review library</h3>
+            <p class="ebf-desc">We compare range honesty, motor type, support quality, and real-world value — not just headline specs.</p>
+            <a href="/categories/e-bikes" class="btn btn-outline ebf-cta">Explore e-bikes →</a>
+          </div>
+        </div>
+
+        <!-- Sub-type cards -->
+        <div class="ebike-sub-grid">
+          {subcategories.map(({ name, desc, icon, status }) => (
+            <div class="ebs-card">
+              <div class="ebs-icon-row">
+                <span class="ebs-icon">{icon}</span>
+                <span class:list={['ebs-pill', status === 'Building' ? 'ebs-pill--building' : 'ebs-pill--soon']}>{status}</span>
+              </div>
+              <h4 class="ebs-name">{name}</h4>
+              <p class="ebs-desc">{desc}</p>
+            </div>
+          ))}
         </div>
       </div>
     </div>
   </section>
 
-  <!-- TRUST STRIP -->
-  <TrustStrip />
-
-  <!-- CATEGORIES -->
+  <!-- ═══════════════════════════ LATEST REVIEWS ═══════════════════════════ -->
   <section class="section">
     <div class="wrap">
       <div class="section-head">
-        <p class="eyebrow">Explore</p>
-        <h2>Explore by category</h2>
-        <p class="section-sub">Starting with e-bikes, then expanding into more products where specs, pricing, and trade-offs actually matter.</p>
-      </div>
-      <div class="cat-grid">
-        <CategoryCard name="E-bikes" description="From budget commuters to fat-tyre models. We compare value, real-world usability, and brand confidence." status="active" icon="🚲" href="/categories/e-bikes" />
-        <CategoryCard name="Tech & gadgets" description="Phones, audio, laptops, and accessories where the spec sheet often lies." status="coming-soon" icon="💻" />
-        <CategoryCard name="Home gear" description="Appliances, kitchen tools, and household products worth researching before buying." status="coming-soon" icon="🏠" />
-        <CategoryCard name="Outdoor & mobility" description="Scooters, camping gear, and outdoor equipment with real trade-offs." status="coming-soon" icon="🏕️" />
-        <CategoryCard name="Tools & equipment" description="Power tools, hand tools, and workshop gear where quality genuinely matters." status="coming-soon" icon="🔧" />
-      </div>
-    </div>
-  </section>
-
-  <!-- CURRENT FOCUS: E-BIKES -->
-  <section class="section section--paper">
-    <div class="wrap">
-      <div class="section-head">
-        <p class="eyebrow">Current focus</p>
-        <h2>E-bikes</h2>
-        <p class="section-sub">Our first review library — from budget commuters to fat-tyre models and lightweight urban rides.</p>
-      </div>
-      <div class="ebike-grid">
-        {[
-          { name: 'Budget e-bikes',   desc: 'Under $800. Where to find real value and what corners get cut.',               icon: '💰', status: 'Building' },
-          { name: 'Fat tyre e-bikes', desc: 'Rugged, stable, and fun — but heavier and pricier. We compare the real ones.', icon: '🏔️', status: 'Coming soon' },
-          { name: 'Folding e-bikes',  desc: 'Space-savers for commuters. Trade-offs: wheel size, weight, portability.',     icon: '📦', status: 'Coming soon' },
-          { name: 'Commuter e-bikes', desc: 'Daily riders. We look at range honesty, motor type, and real-world support.',  icon: '🏙️', status: 'Coming soon' },
-        ].map(({ name, desc, icon, status }) => (
-          <div class="ebike-card">
-            <span class="ebike-icon">{icon}</span>
-            <div>
-              <h3 class="ebike-name">{name}</h3>
-              <p class="ebike-desc">{desc}</p>
-              <span class="ebike-pill">{status}</span>
-            </div>
-          </div>
-        ))}
-      </div>
-    </div>
-  </section>
-
-  <!-- LATEST REVIEWS -->
-  <section class="section">
-    <div class="wrap">
-      <div class="section-head">
-        <p class="eyebrow">Latest</p>
-        <h2>Latest picks and reviews</h2>
+        <span class="eyebrow">Latest</span>
+        <h2 class="section-h2">Latest picks</h2>
         <p class="section-sub">Published reviews alongside what we're currently researching.</p>
       </div>
+
       <div class="reviews-list">
         {published.map(r => (
           <ReviewCard
@@ -136,86 +163,107 @@ const published = allReviews
             status={r.data.status}
           />
         ))}
-        <PlaceholderCard name="Happyrunsport E-bike" category="E-bikes" status="Review in progress" focus="Early focus: value, motor/battery spec, brand support, ride use case." />
-        <PlaceholderCard name="Urtopia Carbon One"   category="E-bikes" status="Researching"        focus="Early focus: lightweight design, smart features, price/value trade-off." />
+
+        <!-- In-progress placeholders -->
+        <div class="ph-card">
+          <div class="ph-thumb">
+            <PlaceholderVisual label="E-bikes" />
+          </div>
+          <div class="ph-body">
+            <div class="ph-meta">
+              <span class="ph-category">E-bikes</span>
+              <span class="ph-status">Research in progress</span>
+            </div>
+            <h3 class="ph-name">Happyrunsport E-bike</h3>
+            <p class="ph-focus">Early focus: value, motor/battery spec, brand support, use case fit.</p>
+          </div>
+        </div>
+
+        <div class="ph-card">
+          <div class="ph-thumb">
+            <PlaceholderVisual label="E-bikes" />
+          </div>
+          <div class="ph-body">
+            <div class="ph-meta">
+              <span class="ph-category">E-bikes</span>
+              <span class="ph-status">Researching</span>
+            </div>
+            <h3 class="ph-name">Urtopia Carbon One</h3>
+            <p class="ph-focus">Early focus: lightweight design, smart features, price/value trade-off.</p>
+          </div>
+        </div>
       </div>
+
       <div class="list-cta">
-        <a href="/reviews" class="btn-outline">Browse all reviews →</a>
+        <a href="/reviews" class="btn btn-outline">Browse all reviews</a>
       </div>
     </div>
   </section>
 
-  <!-- METHODOLOGY PREVIEW -->
+  <!-- ═══════════════════════════ METHODOLOGY ═══════════════════════════ -->
   <MethodologyPreview />
 
-  <!-- THE CATCH -->
-  <section class="section catch-section">
+  <!-- ═══════════════════════════ THE CATCH ═══════════════════════════ -->
+  <section class="catch-section">
+    <div class="catch-glow-a" aria-hidden="true"></div>
     <div class="wrap">
-      <div class="catch-inner">
-        <div class="catch-left">
-          <p class="eyebrow">Our philosophy</p>
-          <h2>We always look for the catch.</h2>
-          <p class="catch-body">Most product pages tell you why to buy. PickNotch also tells you why not to. Every serious review explains the trade-offs, the weak points, and who should avoid the product.</p>
-        </div>
-        <div class="catch-right">
-          {[
-            { q: 'Great specs, weak support?',       body: 'High performance means nothing if the brand disappears after 6 months.' },
-            { q: 'Cheap price, hidden compromises?', body: 'We find what corners got cut — and whether they matter for your use case.' },
-            { q: 'Premium design, poor value?',      body: "Paying more doesn't always buy you more. We score value independently." },
-          ].map(({ q, body }) => (
-            <div class="catch-card">
-              <span class="catch-q">{q}</span>
-              <p class="catch-p">{body}</p>
-            </div>
-          ))}
-        </div>
+      <div class="catch-head">
+        <span class="eyebrow eyebrow--dark">Our philosophy</span>
+        <h2 class="catch-heading">We always look for the catch.</h2>
+        <p class="catch-sub">Specs sell the product. The catch tells you if you should actually buy it.</p>
       </div>
-    </div>
-  </section>
-
-  <!-- COMPARE PREVIEW -->
-  <section class="section section--paper">
-    <div class="wrap">
-      <div class="section-head">
-        <p class="eyebrow">Compare</p>
-        <h2>Compare before you buy</h2>
-        <p class="section-sub">Side-by-side comparisons so you can see exactly where each product wins and loses.</p>
-      </div>
-      <div class="compare-grid">
-        {[
-          { title: 'Qronge vs Happyrunsport',      desc: 'Two budget commuter e-bikes at similar prices. Which one wins on value?' },
-          { title: 'Budget vs premium e-bikes',    desc: "Is it worth spending 3× more? We break down what you actually gain." },
-          { title: 'Fat tyre vs commuter e-bikes', desc: 'Different use cases, different trade-offs. Which style suits you?' },
-        ].map(({ title, desc }) => (
-          <div class="compare-card">
-            <span class="vs-tag">VS</span>
-            <h3 class="compare-title">{title}</h3>
-            <p class="compare-desc">{desc}</p>
-            <span class="soon-pill">Coming soon</span>
+      <div class="catch-grid">
+        {catchCards.map(({ title, body }) => (
+          <div class="catch-card">
+            <div class="catch-card-notch"></div>
+            <h4 class="catch-card-title">{title}</h4>
+            <p class="catch-card-body">{body}</p>
           </div>
         ))}
       </div>
     </div>
   </section>
 
-  <!-- DISCLOSURE -->
-  <section class="section section--slim">
-    <div class="wrap-narrow">
-      <div class="disclosure-block">
-        <h3>Independently researched. Affiliate supported.</h3>
-        <p>Some links on PickNotch may earn us a commission. That doesn't change our verdicts, scores, or the catches we call out.</p>
-        <a href="/affiliate-disclosure" class="disclosure-link">Read our disclosure →</a>
+  <!-- ═══════════════════════════ COMPARE ═══════════════════════════ -->
+  <section class="section section--paper">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="eyebrow">Compare</span>
+        <h2 class="section-h2">Compare before you buy</h2>
+        <p class="section-sub">Side-by-side comparisons so you can see exactly where each product wins and loses.</p>
+      </div>
+      <div class="compare-grid">
+        {compareCards.map(({ a, b, desc }) => (
+          <div class="cmp-card">
+            <div class="cmp-vs-row">
+              <span class="cmp-side">{a}</span>
+              <span class="cmp-vs">VS</span>
+              <span class="cmp-side">{b}</span>
+            </div>
+            <p class="cmp-desc">{desc}</p>
+            <span class="cmp-soon">Coming soon</span>
+          </div>
+        ))}
       </div>
     </div>
   </section>
 
-  <!-- UPDATE CTA -->
-  <section class="section section--slim">
-    <div class="wrap-narrow">
-      <div class="update-cta">
-        <h3>New picks, fewer bad buys.</h3>
-        <p>Newsletter coming soon. In the meantime, want a product compared?</p>
-        <a href="/contact" class="btn-outline">Contact us →</a>
+  <!-- ═══════════════════════════ FINAL CTA ═══════════════════════════ -->
+  <section class="cta-section">
+    <div class="cta-glow-a" aria-hidden="true"></div>
+    <div class="cta-glow-b" aria-hidden="true"></div>
+    <div class="wrap">
+      <div class="cta-inner">
+        <h2 class="cta-heading">Don't buy blind.</h2>
+        <p class="cta-sub">Start with clear picks, honest trade-offs, and fewer regrets.</p>
+        <div class="cta-actions">
+          <a href="/reviews" class="btn btn-primary">Browse reviews</a>
+          <a href="/categories" class="btn btn-outline--light">Explore categories</a>
+        </div>
+        <p class="cta-disclosure">
+          Affiliate supported — commissions never change our verdicts.
+          <a href="/affiliate-disclosure" class="cta-disclosure-link">Read disclosure →</a>
+        </p>
       </div>
     </div>
   </section>
@@ -223,30 +271,28 @@ const published = allReviews
 </Base>
 
 <style>
-/* Hero */
+/* ─── Hero ─── */
 .hero {
-  background: var(--ink);
-  padding: 76px 0 84px;
+  background: var(--ink-deep);
+  padding: 112px 0 124px;
   position: relative;
   overflow: hidden;
 }
-.hero::before {
-  content: '';
-  position: absolute;
-  top: -30%;
-  right: -5%;
-  width: 560px;
-  height: 560px;
-  background: radial-gradient(circle, rgba(34,211,238,0.07) 0%, transparent 68%);
+.hero-glow-a {
+  position: absolute; top: -20%; right: -8%;
+  width: 620px; height: 620px;
+  background: radial-gradient(circle, rgba(34,211,238,0.10) 0%, transparent 66%);
   pointer-events: none;
 }
-.hero::after {
-  content: '';
-  position: absolute;
-  bottom: -20%;
-  left: 10%;
-  width: 360px;
-  height: 360px;
+.hero-glow-b {
+  position: absolute; bottom: -30%; left: 5%;
+  width: 440px; height: 440px;
+  background: radial-gradient(circle, rgba(34,211,238,0.05) 0%, transparent 68%);
+  pointer-events: none;
+}
+.hero-glow-c {
+  position: absolute; top: 40%; left: 35%;
+  width: 280px; height: 280px;
   background: radial-gradient(circle, rgba(34,211,238,0.04) 0%, transparent 70%);
   pointer-events: none;
 }
@@ -256,257 +302,449 @@ const published = allReviews
   gap: 64px;
   align-items: center;
 }
-.hero-eyebrow {
-  display: flex;
-  align-items: center;
-  gap: 7px;
-  font-size: 12px;
+.hero-left { max-width: 520px; }
+.hero-micro {
   font-family: 'Sora', sans-serif;
+  font-size: 11px;
   font-weight: 500;
-  color: #5A6E90;
-  margin: 0 0 22px;
-  flex-wrap: wrap;
+  color: rgba(255,255,255,0.28);
+  margin: 0 0 20px;
+  letter-spacing: 0.03em;
 }
-.sep { color: #2E3D5C; }
 .hero-heading {
-  font-size: clamp(38px, 5vw, 58px);
+  font-size: clamp(44px, 5.5vw, 72px);
   font-weight: 800;
   color: #fff;
-  margin: 0 0 18px;
+  margin: 0 0 20px;
   line-height: 1.05;
   letter-spacing: -0.04em;
 }
 .hero-sub {
-  font-size: 17px;
-  color: #7A90B0;
-  line-height: 1.7;
-  margin: 0 0 32px;
-  max-width: 420px;
+  font-size: 18px;
+  color: rgba(255,255,255,0.52);
+  line-height: 1.68;
+  margin: 0 0 36px;
+  max-width: 440px;
 }
-.hero-actions { display: flex; gap: 11px; flex-wrap: wrap; }
-.btn-primary {
-  display: inline-block;
-  background: var(--cyan);
-  color: #0C1F30;
-  font-family: 'Sora', sans-serif;
+.hero-actions { display: flex; gap: 12px; flex-wrap: wrap; }
+
+/* ─── Section headers ─── */
+.section-head { text-align: center; margin-bottom: 52px; }
+.section-h2 {
+  font-size: clamp(26px, 3.2vw, 40px);
   font-weight: 700;
-  font-size: 14px;
-  padding: 12px 24px;
-  border-radius: 9px;
-  text-decoration: none;
-  transition: transform 0.13s ease, box-shadow 0.13s ease;
-  box-shadow: 0 4px 16px rgba(34,211,238,0.28);
+  margin: 0 0 12px;
+  color: var(--ink);
+  letter-spacing: -0.035em;
 }
-.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 6px 22px rgba(34,211,238,0.38); }
-.btn-primary:active { transform: translateY(0); }
-.btn-primary:focus-visible { outline: 2px solid #fff; outline-offset: 3px; border-radius: 9px; }
-.btn-ghost {
-  display: inline-block;
-  background: rgba(255,255,255,0.07);
-  color: #C8D8E8;
-  font-family: 'Sora', sans-serif;
-  font-weight: 600;
-  font-size: 14px;
-  padding: 12px 24px;
-  border-radius: 9px;
-  border: 1px solid rgba(255,255,255,0.1);
-  text-decoration: none;
-  transition: background 0.13s ease, transform 0.13s ease;
+.section-sub {
+  font-size: 16px;
+  color: var(--slate);
+  margin: 0 auto;
+  max-width: 520px;
+  line-height: 1.7;
 }
-.btn-ghost:hover { background: rgba(255,255,255,0.12); transform: translateY(-1px); }
-.btn-ghost:active { transform: translateY(0); }
-.btn-ghost:focus-visible { outline: 2px solid var(--cyan); outline-offset: 3px; border-radius: 9px; }
-/* Hero card */
-.hero-right { display: flex; justify-content: flex-end; }
-.hero-card {
+
+/* ─── Category grid ─── */
+.cat-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 14px;
+}
+
+/* ─── E-bikes focus ─── */
+.ebike-layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  align-items: start;
+}
+.ebf-card {
   background: #fff;
+  border: 1px solid var(--line);
   border-radius: 20px;
-  padding: 26px;
-  width: 100%;
-  max-width: 320px;
-  box-shadow: 0 28px 72px rgba(0,0,0,0.35), 0 4px 14px rgba(0,0,0,0.18);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
 }
-.hc-top { display: flex; gap: 14px; align-items: flex-start; margin-bottom: 18px; }
-.hc-score-block { text-align: center; flex-shrink: 0; }
-.hc-score {
-  font-family: 'Sora', sans-serif;
-  font-size: 38px;
-  font-weight: 800;
-  line-height: 1;
-  background: linear-gradient(130deg, #1C2540 20%, #0E7490);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+.ebf-visual {
+  position: relative;
+  height: 180px;
 }
-.hc-score-label {
+.ebf-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: flex-end;
+  padding: 14px;
+  background: linear-gradient(to top, rgba(13,21,48,0.5) 0%, transparent 60%);
+}
+.ebf-active-chip {
   font-family: 'Sora', sans-serif;
   font-size: 9px;
-  font-weight: 600;
+  font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.07em;
-  color: var(--muted);
-  margin-top: 2px;
-  white-space: nowrap;
+  letter-spacing: 0.1em;
+  color: #22D3EE;
+  background: rgba(34,211,238,0.15);
+  border: 1px solid rgba(34,211,238,0.30);
+  padding: 3px 10px;
+  border-radius: 99px;
 }
-.hc-product { display: flex; flex-direction: column; gap: 2px; padding-top: 5px; }
-.hc-category {
-  font-size: 10px;
-  font-weight: 600;
+.ebf-body {
+  padding: 20px 22px 22px;
+}
+.ebf-spec-tags {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-bottom: 12px;
+}
+.spec-tag {
   font-family: 'Sora', sans-serif;
+  font-size: 9px;
+  font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.08em;
   color: var(--muted);
+  background: var(--paper);
+  border: 1px solid var(--line);
+  padding: 3px 8px;
+  border-radius: 99px;
 }
-.hc-name { font-family: 'Sora', sans-serif; font-size: 15px; font-weight: 700; color: var(--ink); line-height: 1.2; }
-.hc-brand { font-size: 12px; color: var(--slate); }
-.hc-divider { height: 1px; background: var(--line); margin: 0 0 14px; }
-.hc-bestfor { display: flex; align-items: center; gap: 7px; margin-bottom: 12px; }
-.hc-bf-label {
-  font-size: 10px;
-  font-weight: 600;
+.ebf-heading {
   font-family: 'Sora', sans-serif;
-  text-transform: uppercase;
-  letter-spacing: 0.07em;
-  color: var(--muted);
-  white-space: nowrap;
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--ink);
+  margin: 0 0 8px;
+  letter-spacing: -0.02em;
 }
-.hc-bf-tag {
-  font-size: 12px;
-  background: rgba(34,211,238,0.1);
-  color: #0E7490;
-  padding: 2px 9px;
-  border-radius: 20px;
-  font-weight: 500;
+.ebf-desc {
+  font-size: 14px;
+  color: var(--slate);
+  line-height: 1.6;
+  margin: 0 0 18px;
 }
-.hc-catch {
-  background: #FFFBEB;
-  border: 1px solid #FDE68A;
-  border-radius: 9px;
-  padding: 11px 13px;
-  margin-bottom: 14px;
+.ebf-cta { font-size: 13px; }
+
+.ebike-sub-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
 }
-.hc-catch-label {
-  display: block;
+.ebs-card {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 18px;
+  box-shadow: var(--shadow-sm);
+}
+.ebs-icon-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+.ebs-icon { font-size: 22px; line-height: 1; }
+.ebs-pill {
+  font-family: 'Sora', sans-serif;
   font-size: 9px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 2px 8px;
+  border-radius: 99px;
+}
+.ebs-pill--building {
+  background: rgba(34,211,238,0.10);
+  color: #0E7490;
+  border: 1px solid rgba(34,211,238,0.25);
+}
+.ebs-pill--soon {
+  background: var(--paper);
+  color: var(--muted);
+  border: 1px solid var(--line);
+}
+.ebs-name {
+  font-family: 'Sora', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--ink);
+  margin: 0 0 6px;
+  letter-spacing: -0.01em;
+}
+.ebs-desc { font-size: 12px; color: var(--slate); margin: 0; line-height: 1.55; }
+
+/* ─── Reviews list ─── */
+.reviews-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 32px;
+}
+.list-cta { text-align: center; }
+
+/* ─── Placeholder cards (in-progress) ─── */
+.ph-card {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  background: var(--paper);
+  border: 1.5px dashed var(--line);
+  border-radius: 16px;
+  overflow: hidden;
+}
+.ph-thumb {
+  position: relative;
+  width: 88px;
+  height: 88px;
+  flex-shrink: 0;
+  align-self: stretch;
+  opacity: 0.5;
+}
+.ph-body { flex: 1; padding: 14px 16px; }
+.ph-meta { display: flex; align-items: center; gap: 8px; margin-bottom: 5px; }
+.ph-category {
+  font-size: 10px;
   font-weight: 700;
   font-family: 'Sora', sans-serif;
   text-transform: uppercase;
   letter-spacing: 0.09em;
-  color: #92400E;
-  margin-bottom: 3px;
+  color: var(--muted);
 }
-.hc-catch-text { font-size: 12px; color: #78350F; line-height: 1.5; }
-.hc-cta {
-  display: block;
+.ph-status {
+  font-family: 'Sora', sans-serif;
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--muted);
+  background: rgba(148,163,184,0.12);
+  padding: 1px 7px;
+  border-radius: 99px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.ph-name {
+  font-family: 'Sora', sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--slate);
+  margin: 0 0 4px;
+  letter-spacing: -0.02em;
+}
+.ph-focus { font-size: 12px; color: var(--muted); margin: 0; line-height: 1.55; }
+
+/* ─── The Catch ─── */
+.catch-section {
+  background: var(--ink-deep);
+  padding: 96px 0;
+  position: relative;
+  overflow: hidden;
+}
+.catch-glow-a {
+  position: absolute; top: -20%; right: -5%;
+  width: 480px; height: 480px;
+  background: radial-gradient(circle, rgba(34,211,238,0.07) 0%, transparent 65%);
+  pointer-events: none;
+}
+.catch-head {
   text-align: center;
-  background: var(--ink);
+  margin-bottom: 52px;
+}
+.catch-heading {
+  font-size: clamp(28px, 4vw, 52px);
+  font-weight: 800;
   color: #fff;
+  margin: 0 0 14px;
+  letter-spacing: -0.04em;
+  line-height: 1.08;
+}
+.catch-sub {
+  font-size: 17px;
+  color: rgba(255,255,255,0.42);
+  line-height: 1.65;
+  max-width: 480px;
+  margin: 0 auto;
+}
+.catch-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+.catch-card {
+  position: relative;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 18px;
+  padding: 28px 24px;
+  overflow: hidden;
+  transition: border-color 0.18s ease, background 0.18s ease;
+}
+.catch-card:hover {
+  border-color: rgba(34,211,238,0.20);
+  background: rgba(255,255,255,0.05);
+}
+.catch-card-notch {
+  position: absolute;
+  top: 0; left: 22px;
+  width: 3px; height: 22px;
+  background: var(--cyan);
+  border-radius: 0 0 3px 3px;
+  opacity: 0.7;
+}
+.catch-card-title {
+  font-family: 'Sora', sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  color: #fff;
+  margin: 0 0 10px;
+  letter-spacing: -0.02em;
+  line-height: 1.3;
+}
+.catch-card-body {
+  font-size: 14px;
+  color: rgba(255,255,255,0.42);
+  line-height: 1.65;
+  margin: 0;
+}
+
+/* ─── Compare ─── */
+.compare-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+}
+.cmp-card {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 24px;
+  transition: box-shadow 0.15s ease, transform 0.15s var(--ease-spring), border-color 0.15s ease;
+}
+.cmp-card:hover {
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
+  border-color: rgba(34,211,238,0.35);
+}
+.cmp-vs-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+.cmp-side {
   font-family: 'Sora', sans-serif;
   font-size: 13px;
-  font-weight: 600;
-  padding: 10px;
-  border-radius: 8px;
-  text-decoration: none;
-  transition: background 0.13s ease;
-}
-.hc-cta:hover { background: #263357; }
-.hc-cta:focus-visible { outline: 2px solid var(--cyan); outline-offset: 2px; border-radius: 8px; }
-/* Sections */
-.section { padding: 76px 0; }
-.section--paper { background: var(--paper); }
-.section--slim { padding: 28px 0; }
-.section-head { text-align: center; margin-bottom: 40px; }
-.eyebrow {
-  font-family: 'Sora', sans-serif;
-  font-size: 11px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  color: var(--cyan);
-  margin: 0 0 8px;
-}
-.section-head h2 { font-size: clamp(22px, 3vw, 32px); font-weight: 700; margin: 0 0 10px; color: var(--ink); }
-.section-sub { font-size: 16px; color: var(--slate); margin: 0 auto; max-width: 520px; line-height: 1.65; }
-/* Category grid */
-.cat-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(270px, 1fr)); gap: 14px; }
-/* E-bike grid */
-.ebike-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 14px; }
-.ebike-card { background: #fff; border: 1px solid var(--line); border-radius: 13px; padding: 18px 20px; display: flex; gap: 13px; align-items: flex-start; }
-.ebike-icon { font-size: 22px; flex-shrink: 0; margin-top: 1px; }
-.ebike-name { font-family: 'Sora', sans-serif; font-size: 15px; font-weight: 600; margin: 0 0 5px; color: var(--ink); }
-.ebike-desc { font-size: 13px; color: var(--slate); margin: 0 0 9px; line-height: 1.5; }
-.ebike-pill {
-  display: inline-block;
-  font-size: 10px; font-weight: 600;
-  font-family: 'Sora', sans-serif;
-  background: var(--paper); color: var(--muted);
-  padding: 2px 8px; border-radius: 20px;
-  text-transform: uppercase; letter-spacing: 0.05em;
-  border: 1px solid var(--line);
-}
-/* Reviews list */
-.reviews-list { display: flex; flex-direction: column; gap: 11px; margin-bottom: 24px; }
-.list-cta { text-align: center; }
-.btn-outline {
-  display: inline-block;
-  border: 1.5px solid var(--ink);
+  font-weight: 700;
   color: var(--ink);
+  letter-spacing: -0.01em;
+}
+.cmp-vs {
   font-family: 'Sora', sans-serif;
-  font-weight: 600;
-  font-size: 14px;
-  padding: 10px 22px;
-  border-radius: 8px;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  color: var(--cyan);
+  background: rgba(34,211,238,0.10);
+  padding: 3px 8px;
+  border-radius: 99px;
+}
+.cmp-desc { font-size: 13px; color: var(--slate); line-height: 1.55; margin: 0 0 14px; }
+.cmp-soon {
+  display: inline-block;
+  font-family: 'Sora', sans-serif;
+  font-size: 9px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--muted);
+  background: var(--paper);
+  border: 1px solid var(--line);
+  padding: 3px 9px;
+  border-radius: 99px;
+}
+
+/* ─── Final CTA ─── */
+.cta-section {
+  background: var(--ink-deep);
+  padding: 112px 0 120px;
+  position: relative;
+  overflow: hidden;
+}
+.cta-glow-a {
+  position: absolute; top: -30%; left: -10%;
+  width: 500px; height: 500px;
+  background: radial-gradient(circle, rgba(34,211,238,0.08) 0%, transparent 65%);
+  pointer-events: none;
+}
+.cta-glow-b {
+  position: absolute; bottom: -20%; right: -5%;
+  width: 380px; height: 380px;
+  background: radial-gradient(circle, rgba(34,211,238,0.06) 0%, transparent 65%);
+  pointer-events: none;
+}
+.cta-inner {
+  text-align: center;
+  position: relative;
+  z-index: 1;
+}
+.cta-heading {
+  font-size: clamp(36px, 5vw, 64px);
+  font-weight: 800;
+  color: #fff;
+  margin: 0 0 16px;
+  letter-spacing: -0.04em;
+  line-height: 1.05;
+}
+.cta-sub {
+  font-size: 18px;
+  color: rgba(255,255,255,0.48);
+  line-height: 1.65;
+  margin: 0 0 36px;
+  max-width: 440px;
+  margin-left: auto;
+  margin-right: auto;
+}
+.cta-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-bottom: 28px;
+}
+.cta-disclosure {
+  font-size: 12px;
+  color: rgba(255,255,255,0.24);
+}
+.cta-disclosure-link {
+  color: rgba(34,211,238,0.6);
   text-decoration: none;
-  transition: background 0.13s ease, color 0.13s ease;
+  margin-left: 4px;
+  transition: color 0.13s ease;
 }
-.btn-outline:hover { background: var(--ink); color: #fff; }
-.btn-outline:focus-visible { outline: 2px solid var(--cyan); outline-offset: 2px; border-radius: 8px; }
-/* The Catch */
-.catch-section { background: #fff; }
-.catch-inner { display: grid; grid-template-columns: 1fr 1fr; gap: 72px; align-items: start; }
-.catch-left h2 { font-size: clamp(22px, 2.8vw, 30px); font-weight: 700; margin: 0 0 14px; color: var(--ink); }
-.catch-body { font-size: 16px; color: var(--slate); line-height: 1.7; margin: 0; }
-.catch-right { display: flex; flex-direction: column; gap: 11px; }
-.catch-card { background: var(--paper); border: 1px solid var(--line); border-left: 3px solid var(--cyan); border-radius: 0 11px 11px 0; padding: 15px 17px; }
-.catch-q { display: block; font-family: 'Sora', sans-serif; font-size: 14px; font-weight: 600; color: var(--ink); margin-bottom: 4px; }
-.catch-p { font-size: 13px; color: var(--slate); margin: 0; line-height: 1.55; }
-/* Compare */
-.compare-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 14px; }
-.compare-card { background: #fff; border: 1px solid var(--line); border-radius: 13px; padding: 22px; }
-.vs-tag {
-  display: inline-block; font-family: 'Sora', sans-serif;
-  font-size: 10px; font-weight: 700; letter-spacing: 0.1em;
-  color: var(--cyan); background: rgba(34,211,238,0.1);
-  padding: 3px 8px; border-radius: 20px; margin-bottom: 10px;
+.cta-disclosure-link:hover { color: rgba(34,211,238,0.9); }
+
+/* ─── Responsive ─── */
+@media (max-width: 1024px) {
+  .cat-grid { grid-template-columns: repeat(3, 1fr); }
 }
-.compare-title { font-family: 'Sora', sans-serif; font-size: 15px; font-weight: 600; margin: 0 0 7px; color: var(--ink); }
-.compare-desc { font-size: 13px; color: var(--slate); margin: 0 0 13px; line-height: 1.5; }
-.soon-pill {
-  display: inline-block; font-size: 10px; font-weight: 600;
-  font-family: 'Sora', sans-serif; background: var(--paper);
-  color: var(--muted); padding: 2px 8px; border-radius: 20px;
-  text-transform: uppercase; letter-spacing: 0.05em; border: 1px solid var(--line);
-}
-/* Disclosure block */
-.disclosure-block { background: var(--paper); border: 1px solid var(--line); border-radius: 13px; padding: 26px 30px; text-align: center; }
-.disclosure-block h3 { font-size: 17px; font-weight: 700; margin: 0 0 8px; color: var(--ink); }
-.disclosure-block p { font-size: 14px; color: var(--slate); margin: 0 0 14px; line-height: 1.6; }
-.disclosure-link { font-family: 'Sora', sans-serif; font-size: 13px; font-weight: 600; color: var(--cyan); text-decoration: none; transition: opacity 0.13s ease; }
-.disclosure-link:hover { opacity: 0.75; }
-/* Update CTA */
-.update-cta { text-align: center; padding: 8px 0; }
-.update-cta h3 { font-size: 20px; font-weight: 700; margin: 0 0 7px; color: var(--ink); }
-.update-cta p { font-size: 15px; color: var(--slate); margin: 0 0 20px; }
-/* Responsive */
 @media (max-width: 880px) {
-  .hero-inner { grid-template-columns: 1fr; gap: 48px; }
-  .hero-right { justify-content: center; order: -1; }
-  .hero-card { max-width: 380px; }
-  .catch-inner { grid-template-columns: 1fr; gap: 40px; }
+  .hero-inner { grid-template-columns: 1fr; gap: 52px; }
+  .hero-right { display: flex; justify-content: center; }
+  .hero { padding: 80px 0 88px; }
+  .ebike-layout { grid-template-columns: 1fr; }
+  .catch-grid { grid-template-columns: 1fr; gap: 12px; }
+  .compare-grid { grid-template-columns: 1fr; }
 }
-@media (max-width: 600px) {
-  .hero { padding: 52px 0 60px; }
-  .section { padding: 52px 0; }
+@media (max-width: 720px) {
+  .cat-grid { grid-template-columns: repeat(2, 1fr); }
+  .ebike-sub-grid { grid-template-columns: 1fr 1fr; }
+  .section-head { margin-bottom: 36px; }
+}
+@media (max-width: 500px) {
+  .cat-grid { grid-template-columns: 1fr; }
+  .ebike-sub-grid { grid-template-columns: 1fr; }
+  .hero { padding: 64px 0 72px; }
   .hero-sub { font-size: 16px; }
+  .catch-section, .cta-section { padding: 72px 0; }
 }
 </style>

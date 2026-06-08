@@ -1,113 +1,138 @@
 ---
+import PlaceholderVisual from './PlaceholderVisual.astro';
+
 interface Props {
   name: string;
   description: string;
   status: 'active' | 'coming-soon';
   icon: string;
   href?: string;
+  tint?: 'default' | 'warm' | 'forest' | 'slate';
 }
-const { name, description, status, icon, href } = Astro.props;
+const { name, description, status, icon, href, tint = 'default' } = Astro.props;
 const active = status === 'active';
 const Tag = active && href ? 'a' : 'div';
 ---
+
 <Tag
-  class:list={['cat-card', active ? 'cat-card--active' : 'cat-card--soon']}
+  class:list={['cc-card', active ? 'cc-card--active' : 'cc-card--soon']}
   href={active && href ? href : undefined}
 >
-  <div class="cat-icon">{icon}</div>
-  <div class="cat-body">
-    <div class="cat-head">
-      <h3 class="cat-name">{name}</h3>
-      <span class:list={['cat-pill', active ? 'pill-active' : 'pill-soon']}>
-        {active ? 'Active' : 'Coming soon'}
-      </span>
-    </div>
-    <p class="cat-desc">{description}</p>
+  <!-- Visual top area -->
+  <div class="cc-visual">
+    <PlaceholderVisual tint={tint} />
+    <span class="cc-icon" aria-hidden="true">{icon}</span>
+    <span class:list={['cc-pill', active ? 'cc-pill--active' : 'cc-pill--soon']}>
+      {active ? 'Active' : 'Coming soon'}
+    </span>
   </div>
-  {active && href && (
-    <svg class="cat-arrow" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-      <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-    </svg>
-  )}
+
+  <!-- Content -->
+  <div class="cc-body">
+    <div class="cc-head">
+      <h3 class="cc-name">{name}</h3>
+      {active && href && (
+        <svg class="cc-arrow" width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+          <path d="M2.5 7h9M8 3l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      )}
+    </div>
+    <p class="cc-desc">{description}</p>
+  </div>
 </Tag>
 
 <style>
-.cat-card {
+.cc-card {
   display: flex;
-  align-items: flex-start;
-  gap: 14px;
+  flex-direction: column;
   background: #fff;
   border: 1px solid var(--line);
-  border-radius: 14px;
-  padding: 18px 20px;
-  transition: border-color 0.15s ease, box-shadow 0.15s ease, transform 0.15s ease;
+  border-radius: 18px;
+  overflow: hidden;
   text-decoration: none;
+  transition:
+    border-color 0.18s ease,
+    box-shadow 0.18s ease,
+    transform 0.18s var(--ease-spring);
 }
-.cat-card--active {
+.cc-card--active {
   cursor: pointer;
 }
-.cat-card--active:hover {
-  border-color: #93E6F8;
-  box-shadow: 0 4px 20px rgba(34,211,238,0.1), 0 2px 4px rgba(28,37,64,0.04);
-  transform: translateY(-2px);
+.cc-card--active:hover {
+  border-color: rgba(34,211,238,0.5);
+  box-shadow: 0 6px 28px rgba(34,211,238,0.10), var(--shadow-md);
+  transform: translateY(-3px);
 }
-.cat-card--active:active { transform: translateY(0); }
-.cat-card--active:focus-visible {
-  outline: 2px solid var(--cyan);
-  outline-offset: 2px;
-  border-radius: 14px;
+.cc-card--active:active { transform: translateY(0); }
+.cc-card--active:focus-visible { outline: 2px solid var(--cyan); outline-offset: 3px; border-radius: 18px; }
+.cc-card--soon { opacity: 0.55; }
+
+/* Visual area */
+.cc-visual {
+  position: relative;
+  height: 110px;
+  overflow: hidden;
 }
-.cat-card--soon { opacity: 0.6; }
-.cat-icon {
-  font-size: 22px;
-  flex-shrink: 0;
-  width: 44px;
-  height: 44px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: var(--paper);
-  border-radius: 10px;
+.cc-icon {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -56%);
+  font-size: 28px;
+  line-height: 1;
+  filter: drop-shadow(0 2px 6px rgba(0,0,0,0.3));
 }
-.cat-body { flex: 1; min-width: 0; }
-.cat-head {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin-bottom: 5px;
-  flex-wrap: wrap;
-}
-.cat-name {
+.cc-pill {
+  position: absolute;
+  top: 10px;
+  right: 10px;
   font-family: 'Sora', sans-serif;
-  font-size: 15px;
-  font-weight: 600;
-  margin: 0;
-  color: var(--ink);
-}
-.cat-desc {
-  font-size: 13px;
-  color: var(--slate);
-  margin: 0;
-  line-height: 1.55;
-}
-.cat-pill {
-  display: inline-block;
-  font-size: 10px;
-  font-weight: 600;
-  font-family: 'Sora', sans-serif;
+  font-size: 9px;
+  font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.07em;
-  padding: 2px 7px;
-  border-radius: 20px;
+  letter-spacing: 0.09em;
+  padding: 3px 9px;
+  border-radius: 99px;
 }
-.pill-active { background: rgba(34,211,238,0.12); color: #0E7490; }
-.pill-soon   { background: var(--paper); color: var(--muted); border: 1px solid var(--line); }
-.cat-arrow {
+.cc-pill--active {
+  background: rgba(34,211,238,0.18);
+  color: #22D3EE;
+  border: 1px solid rgba(34,211,238,0.30);
+}
+.cc-pill--soon {
+  background: rgba(148,163,184,0.15);
+  color: rgba(148,163,184,0.9);
+  border: 1px solid rgba(148,163,184,0.25);
+}
+
+/* Content */
+.cc-body {
+  padding: 14px 16px 16px;
+  flex: 1;
+}
+.cc-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 6px;
+}
+.cc-name {
+  font-family: 'Sora', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--ink);
+  letter-spacing: -0.02em;
+}
+.cc-arrow {
   color: var(--cyan);
   flex-shrink: 0;
-  margin-top: 2px;
   opacity: 0;
   transition: opacity 0.15s ease, transform 0.15s ease;
 }
-.cat-card--active:hover .cat-arrow { opacity: 1; transform: translateX(2px); }
+.cc-card--active:hover .cc-arrow { opacity: 1; transform: translateX(3px); }
+.cc-desc {
+  font-size: 12px;
+  color: var(--slate);
+  line-height: 1.55;
+}
 </style>
