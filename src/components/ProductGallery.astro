@@ -1,39 +1,44 @@
 ---
 import PlaceholderVisual from './PlaceholderVisual.astro';
 
-interface GalleryImage { src: string; alt: string; }
+interface GalleryImage { src: string; alt: string; fit?: 'cover' | 'contain'; position?: string; }
 interface Props {
   images: GalleryImage[];
   productName: string;
-  category?: string;
-  brand?: string;
+  score?: number | null;
+  tag?: string;
 }
-const { images, productName, category, brand } = Astro.props;
+const { images, productName, score, tag } = Astro.props;
 const main = images[0];
+const mainFit = main?.fit ?? 'cover';
+const mainPos = main?.position ?? 'center';
 ---
 
 <div class="pg">
   <div class="pg-stage">
+    <div class="pg-glow" aria-hidden="true"></div>
     {main ? (
       <img
         id="pg-main"
         class="pg-main-img"
         src={main.src}
         alt={main.alt}
-        width="1000"
-        height="640"
+        style={`object-fit:${mainFit};object-position:${mainPos}`}
+        width="1100"
+        height="700"
         fetchpriority="high"
         decoding="async"
       />
     ) : (
       <div class="pg-placeholder"><PlaceholderVisual label={productName} /></div>
     )}
-    <div class="pg-stage-shade" aria-hidden="true"></div>
-    {category && (
-      <span class="pg-chip">
-        <span class="pg-chip-cat">{category}</span>
-        {brand && <><span class="pg-chip-sep">·</span><span class="pg-chip-brand">{brand}</span></>}
-      </span>
+
+    {tag && <span class="pg-tag">{tag}</span>}
+    {score != null && (
+      <div class="pg-score" aria-hidden="true">
+        <span class="pg-score-num">{score.toFixed(1)}</span>
+        <span class="pg-score-lbl">PickNotch<br/>Score</span>
+      </div>
     )}
   </div>
 
@@ -44,12 +49,14 @@ const main = images[0];
           class:list={['pg-thumb', i === 0 ? 'pg-thumb--active' : '']}
           data-src={img.src}
           data-alt={img.alt}
+          data-fit={img.fit ?? 'cover'}
+          data-position={img.position ?? 'center'}
           type="button"
           role="tab"
           aria-selected={i === 0 ? 'true' : 'false'}
           aria-label={img.alt}
         >
-          <img src={img.src} alt="" width="120" height="86" loading="lazy" decoding="async" />
+          <img src={img.src} alt="" style={`object-fit:${img.fit ?? 'cover'};object-position:${img.position ?? 'center'}`} width="130" height="92" loading="lazy" decoding="async" />
         </button>
       ))}
     </div>
@@ -63,19 +70,18 @@ const main = images[0];
     const thumbs = gallery.querySelectorAll<HTMLButtonElement>('.pg-thumb');
     thumbs.forEach((thumb) => {
       thumb.addEventListener('click', () => {
-        const src = thumb.dataset.src;
-        const alt = thumb.dataset.alt ?? '';
+        const { src, alt, fit, position } = thumb.dataset;
         if (!src || !main || main.src.endsWith(src)) return;
         main.style.opacity = '0';
         const swap = () => {
           main.src = src;
-          main.alt = alt;
+          main.alt = alt ?? '';
+          main.style.objectFit = fit ?? 'cover';
+          main.style.objectPosition = position ?? 'center';
           main.style.opacity = '1';
-          main.removeEventListener('transitionend', swap);
         };
         main.addEventListener('transitionend', swap, { once: true });
-        // fallback if transitionend doesn't fire
-        setTimeout(() => { if (main.style.opacity === '0') swap(); }, 220);
+        setTimeout(() => { if (main.style.opacity === '0') swap(); }, 240);
         thumbs.forEach((t) => { t.classList.remove('pg-thumb--active'); t.setAttribute('aria-selected', 'false'); });
         thumb.classList.add('pg-thumb--active');
         thumb.setAttribute('aria-selected', 'true');
@@ -90,55 +96,89 @@ const main = images[0];
 .pg-stage {
   position: relative;
   width: 100%;
-  aspect-ratio: 25 / 16;
-  border-radius: 20px;
+  aspect-ratio: 11 / 8;
+  border-radius: 24px;
   overflow: hidden;
-  background: #EEF1F6;
+  background:
+    radial-gradient(130% 110% at 50% -10%, #ffffff 0%, #eef2f7 62%, #e6ebf3 100%);
   box-shadow:
-    0 22px 50px rgba(13,21,48,0.16),
-    0 6px 16px rgba(13,21,48,0.08),
+    0 30px 60px rgba(13,21,48,0.14),
+    0 8px 18px rgba(13,21,48,0.07),
     inset 0 0 0 1px rgba(13,21,48,0.05);
+}
+.pg-glow {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(60% 50% at 50% 42%, rgba(34,211,238,0.12), transparent 70%),
+    radial-gradient(90% 60% at 50% 120%, rgba(13,21,48,0.10), transparent 70%);
 }
 .pg-main-img {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
-  object-fit: cover;
-  transition: opacity 0.2s var(--ease-out);
-}
-.pg-placeholder { position: absolute; inset: 0; }
-.pg-stage-shade {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  background: linear-gradient(180deg, rgba(13,21,48,0.12) 0%, transparent 22%, transparent 78%, rgba(13,21,48,0.10) 100%);
+  padding: 10px;
+  transition: opacity 0.22s var(--ease-out);
 }
 
-.pg-chip {
+.pg-placeholder { position: absolute; inset: 0; }
+
+.pg-tag {
   position: absolute;
-  top: 14px;
-  left: 14px;
-  display: inline-flex;
-  align-items: center;
-  gap: 7px;
-  background: rgba(13,21,48,0.62);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255,255,255,0.14);
-  border-radius: 99px;
-  padding: 6px 13px;
-}
-.pg-chip-cat {
+  top: 16px;
+  left: 16px;
   font-family: 'Sora', sans-serif;
-  font-size: 10px;
+  font-size: 11px;
   font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.09em;
+  letter-spacing: 0.08em;
+  color: #0E5C6E;
+  background: rgba(255,255,255,0.82);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(34,211,238,0.35);
+  padding: 7px 14px;
+  border-radius: 99px;
+  box-shadow: 0 4px 14px rgba(13,21,48,0.08);
+}
+
+.pg-score {
+  position: absolute;
+  bottom: 16px;
+  right: 16px;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  background: rgba(11,18,42,0.86);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(34,211,238,0.30);
+  border-radius: 16px;
+  padding: 10px 15px;
+  box-shadow: 0 12px 30px rgba(4,10,24,0.30);
+  animation: pg-float 6s var(--ease-out) infinite;
+}
+@keyframes pg-float { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
+@media (prefers-reduced-motion: reduce) { .pg-score { animation: none; } }
+.pg-score-num {
+  font-family: 'Sora', sans-serif;
+  font-size: 28px;
+  font-weight: 800;
+  letter-spacing: -0.05em;
+  line-height: 1;
   color: #5CE6F7;
 }
-.pg-chip-sep { color: rgba(255,255,255,0.3); font-size: 12px; }
-.pg-chip-brand { font-size: 11px; color: rgba(255,255,255,0.7); font-weight: 500; }
+.pg-score-lbl {
+  font-family: 'Sora', sans-serif;
+  font-size: 8.5px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: rgba(255,255,255,0.5);
+  line-height: 1.25;
+}
 
 .pg-thumbs {
   display: flex;
@@ -152,27 +192,25 @@ const main = images[0];
 .pg-thumb {
   flex: 1 1 0;
   min-width: 72px;
-  max-width: 116px;
+  max-width: 120px;
   aspect-ratio: 7 / 5;
-  border-radius: 12px;
+  border-radius: 13px;
   overflow: hidden;
   border: 2px solid var(--line);
-  background: #EEF1F6;
+  background: #eef2f7;
   padding: 0;
   cursor: pointer;
   scroll-snap-align: start;
   transition: border-color 0.16s ease, transform 0.16s var(--ease-spring), box-shadow 0.16s ease;
 }
-.pg-thumb img { width: 100%; height: 100%; object-fit: cover; }
+.pg-thumb img { width: 100%; height: 100%; }
 .pg-thumb:hover { border-color: rgba(34,211,238,0.5); transform: translateY(-2px); }
 .pg-thumb:active { transform: translateY(0); }
 .pg-thumb:focus-visible { outline: 2px solid var(--cyan); outline-offset: 2px; }
-.pg-thumb--active {
-  border-color: var(--cyan);
-  box-shadow: 0 6px 16px rgba(34,211,238,0.22);
-}
+.pg-thumb--active { border-color: var(--cyan); box-shadow: 0 6px 16px rgba(34,211,238,0.22); }
 
 @media (max-width: 560px) {
   .pg-thumb { flex: 0 0 auto; width: 88px; max-width: none; }
+  .pg-score-num { font-size: 24px; }
 }
 </style>

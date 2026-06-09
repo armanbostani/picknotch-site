@@ -80,6 +80,23 @@ const { score, headline, sub, price, code, discount, merchantUrl, brand, image, 
   width: 540px; height: 540px;
   background: radial-gradient(circle, rgba(34,211,238,0.16) 0%, transparent 66%);
   pointer-events: none;
+  animation: fv-drift 16s ease-in-out infinite;
+}
+.fv::after {
+  content: "";
+  position: absolute;
+  bottom: -25%; left: -5%;
+  width: 460px; height: 460px;
+  background: radial-gradient(circle, rgba(8,145,178,0.14) 0%, transparent 68%);
+  pointer-events: none;
+  animation: fv-drift 20s ease-in-out infinite reverse;
+}
+@keyframes fv-drift {
+  0%, 100% { transform: translate(0, 0); }
+  50% { transform: translate(-36px, 26px); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .fv-glow, .fv::after { animation: none; }
 }
 
 .fv-grid {

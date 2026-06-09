@@ -12,6 +12,8 @@ const reviews = defineCollection({
     discount: z.string().optional(),
     merchantUrl: z.string().optional(),
     summary: z.string(),
+    seoTitle: z.string().optional(),
+    seoDescription: z.string().optional(),
     verdict: z.string().optional(),
     pros: z.array(z.string()).optional(),
     cons: z.array(z.string()).optional(),
@@ -27,6 +29,9 @@ const reviews = defineCollection({
     gallery: z.array(z.object({
       src: z.string(),
       alt: z.string(),
+      fit: z.enum(['cover', 'contain']).optional(),
+      position: z.string().optional(),
+      caption: z.string().optional(),
     })).optional(),
     scores: z.array(z.object({
       label: z.string(),
@@ -37,12 +42,22 @@ const reviews = defineCollection({
     verdictSub: z.string().optional(),
     verdictImage: z.string().optional(),
     verdictImageAlt: z.string().optional(),
+    // Decision snapshot (PickNotch decision system)
+    decision: z.object({
+      buyIf: z.string(),
+      thinkTwiceIf: z.string(),
+      mainCatch: z.string(),
+      alternative: z.string(),
+    }).optional(),
     features: z.array(z.object({
-      eyebrow: z.string().optional(),
+      label: z.string().optional(),
       title: z.string(),
       body: z.string(),
+      take: z.string().optional(),
       image: z.string(),
       imageAlt: z.string(),
+      fit: z.enum(['cover', 'contain']).optional(),
+      position: z.string().optional(),
     })).optional(),
     customerReviews: z.array(z.object({
       name: z.string(),

@@ -1,0 +1,94 @@
+---
+interface Props {
+  buyIf: string;
+  thinkTwiceIf: string;
+  mainCatch: string;
+  alternative: string;
+}
+const { buyIf, thinkTwiceIf, mainCatch, alternative } = Astro.props;
+
+const items = [
+  { key: 'buy', label: 'Buy it if', text: buyIf, icon: 'check' },
+  { key: 'think', label: 'Think twice if', text: thinkTwiceIf, icon: 'pause' },
+  { key: 'catch', label: 'Main catch', text: mainCatch, icon: 'alert' },
+  { key: 'alt', label: 'Best alternative', text: alternative, icon: 'arrow' },
+];
+---
+
+<div class="ds" data-reveal>
+  {items.map((it, i) => (
+    <div class={`ds-item ds-item--${it.key}`} style={`--reveal-delay:${i * 70}ms`} data-reveal>
+      <span class="ds-ic" aria-hidden="true">
+        {it.icon === 'check' && <svg viewBox="0 0 18 18" fill="none"><path d="M4 9.4 7.2 12.6 14 5.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>}
+        {it.icon === 'pause' && <svg viewBox="0 0 18 18" fill="none"><path d="M7 5v8M11 5v8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>}
+        {it.icon === 'alert' && <svg viewBox="0 0 18 18" fill="none"><path d="M9 4v6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="9" cy="13.4" r="1.1" fill="currentColor"/></svg>}
+        {it.icon === 'arrow' && <svg viewBox="0 0 18 18" fill="none"><path d="M3.5 9h10M9.5 4.5 14 9l-4.5 4.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>}
+      </span>
+      <div class="ds-body">
+        <span class="ds-label">{it.label}</span>
+        <p class="ds-text">{it.text}</p>
+      </div>
+    </div>
+  ))}
+</div>
+
+<style>
+.ds {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+}
+.ds-item {
+  position: relative;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 20px 20px 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  box-shadow: 0 4px 16px rgba(13,21,48,0.04);
+  transition: transform 0.18s var(--ease-spring), box-shadow 0.18s ease, border-color 0.18s ease;
+}
+.ds-item::before {
+  content: "";
+  position: absolute;
+  left: 0; top: 18px; bottom: 18px;
+  width: 3px;
+  border-radius: 0 3px 3px 0;
+  background: var(--accent);
+}
+.ds-item:hover { transform: translateY(-3px); box-shadow: 0 14px 34px rgba(13,21,48,0.10); }
+.ds-item--buy   { --accent: #0F766E; }
+.ds-item--think { --accent: #D97706; }
+.ds-item--catch { --accent: #C2410C; }
+.ds-item--alt   { --accent: #0891B2; }
+
+.ds-ic {
+  width: 36px; height: 36px;
+  display: inline-flex; align-items: center; justify-content: center;
+  border-radius: 10px;
+  color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 12%, transparent);
+}
+.ds-ic svg { width: 20px; height: 20px; }
+
+.ds-label {
+  display: block;
+  font-family: 'Sora', sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--accent);
+  margin-bottom: 6px;
+}
+.ds-text { font-size: 14.5px; line-height: 1.55; color: #334155; margin: 0; }
+
+@media (max-width: 880px) {
+  .ds { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 520px) {
+  .ds { grid-template-columns: 1fr; }
+}
+</style>

@@ -15,7 +15,7 @@ function band(v: number) {
 }
 ---
 
-<div class="sb">
+<div class="sb" data-reveal>
   <div class="sb-aside">
     <div class="sb-overall">
       <span class="sb-overall-num">{score.toFixed(1)}</span>
@@ -35,7 +35,7 @@ function band(v: number) {
         <div class="sb-track">
           <div
             class:list={['sb-fill', `sb-fill--${band(s.value)}`]}
-            style={`width: ${s.value * 10}%; animation-delay: ${i * 90}ms`}
+            style={`width: ${s.value * 10}%; --bar-delay: ${i * 90 + 120}ms`}
           ></div>
         </div>
       </div>
@@ -117,19 +117,18 @@ function band(v: number) {
   height: 100%;
   border-radius: 99px;
   transform-origin: left center;
-  animation: sb-grow 0.9s var(--ease-out) both;
+  transform: scaleX(0);
+  transition: transform 0.9s var(--ease-out);
+  transition-delay: var(--bar-delay, 0ms);
 }
+.sb.is-in .sb-fill { transform: scaleX(1); }
 .sb-fill--high { background: linear-gradient(90deg, #22D3EE, #5CE6F7); }
 .sb-fill--good { background: linear-gradient(90deg, #0891B2, #38BDF8); }
 .sb-fill--mid  { background: linear-gradient(90deg, #D97706, #FBBF24); }
 .sb-fill--low  { background: linear-gradient(90deg, #EA580C, #FB923C); }
 
-@keyframes sb-grow {
-  from { transform: scaleX(0); }
-  to   { transform: scaleX(1); }
-}
 @media (prefers-reduced-motion: reduce) {
-  .sb-fill { animation: none; }
+  .sb-fill { transition: none; transform: scaleX(1); }
 }
 
 @media (max-width: 720px) {

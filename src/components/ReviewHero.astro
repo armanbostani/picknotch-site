@@ -44,12 +44,18 @@ const scoreTier = score != null ? tier(score) : null;
 
     <div class="rh-grid">
       <div class="rh-left">
-        <ProductGallery images={images} productName={title} category={category} brand={brand} />
+        <ProductGallery images={images} productName={title} score={score} tag="Comfort commuter" />
       </div>
 
       <aside class="rh-right">
         <div class="rh-panel">
-          {updated && <span class="rh-updated">Updated {updated}</span>}
+          <div class="rh-panel-top">
+            <span class="rh-badge">
+              <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M6 1l1.4 2.9 3.1.45-2.25 2.2.53 3.1L6 8.2 3.2 9.65l.53-3.1L1.5 4.35l3.1-.45L6 1z" fill="#22D3EE"/></svg>
+              Independent review
+            </span>
+            {updated && <span class="rh-updated">Updated {updated}</span>}
+          </div>
           <h1 class="rh-title">{title}</h1>
 
           {score != null && (
@@ -160,15 +166,36 @@ const scoreTier = score != null ? tier(score) : null;
   border-radius: 0 0 3px 3px;
 }
 
+.rh-panel-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+}
+.rh-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: 'Sora', sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #0E7490;
+  background: rgba(34,211,238,0.10);
+  border: 1px solid rgba(34,211,238,0.22);
+  padding: 4px 10px;
+  border-radius: 99px;
+}
 .rh-updated {
-  display: inline-block;
   font-family: 'Sora', sans-serif;
   font-size: 11px;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.07em;
   color: var(--muted);
-  margin-bottom: 10px;
 }
 .rh-title {
   font-size: clamp(24px, 2.4vw, 30px);

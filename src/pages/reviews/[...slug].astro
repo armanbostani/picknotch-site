@@ -7,6 +7,7 @@ import ReviewHero from '../../components/ReviewHero.astro';
 import ReviewScoreBreakdown from '../../components/ReviewScoreBreakdown.astro';
 import ReviewFeatureBlock from '../../components/ReviewFeatureBlock.astro';
 import FinalVerdictCTA from '../../components/FinalVerdictCTA.astro';
+import DecisionSnapshot from '../../components/DecisionSnapshot.astro';
 import { getCollection } from 'astro:content';
 
 export async function getStaticPaths() {
@@ -23,20 +24,63 @@ const gallery = d.gallery && d.gallery.length > 0
   : (d.image ? [{ src: d.image, alt: d.imageAlt ?? d.product }] : []);
 
 const features = d.features ?? [];
+const ownerReviews = d.customerReviews ?? [];
 const verdictHeadline = d.verdictHeadline ?? `Our verdict on the ${d.product}`;
 const verdictSub = d.verdictSub ?? d.verdict ?? d.summary;
 
-const schema = {
-  "@context": "https://schema.org",
-  "@type": "Review",
-  "itemReviewed": { "@type": "Product", "name": d.product, "brand": { "@type": "Brand", "name": d.brand } },
-  "reviewRating": d.score != null ? { "@type": "Rating", "ratingValue": d.score, "bestRating": 10 } : undefined,
-  "author": { "@type": "Organization", "name": "PickNotch" },
-  "publisher": { "@type": "Organization", "name": "PickNotch" },
-  "datePublished": d.updated,
-};
+const seoTitle = d.seoTitle ?? `${d.title} | PickNotch`;
+const seoDescription = d.seoDescription ?? d.summary;
+
+const site = Astro.site ?? new URL(Astro.url.origin);
+const abs = (p?: string) => (p ? new URL(p, site).href : undefined);
+const priceNum = (d.price ?? '').replace(/[^0-9.]/g, '') || undefined;
+
+const aggregate = ownerReviews.length
+  ? {
+      "@type": "AggregateRating",
+      ratingValue: (ownerReviews.reduce((s, r) => s + r.rating, 0) / ownerReviews.length).toFixed(1),
+      reviewCount: ownerReviews.length,
+      bestRating: 5,
+    }
+  : undefined;
+
+const graph: any[] = [
+  {
+    "@type": "Product",
+    name: `${d.brand} ${d.product}`,
+    image: [abs(d.image)].filter(Boolean),
+    description: d.summary,
+    brand: { "@type": "Brand", name: d.brand },
+    ...(aggregate ? { aggregateRating: aggregate } : {}),
+    review: {
+      "@type": "Review",
+      reviewRating: d.score != null ? { "@type": "Rating", ratingValue: d.score, bestRating: 10 } : undefined,
+      author: { "@type": "Organization", name: "PickNotch" },
+      datePublished: d.updated,
+    },
+    ...(d.merchantUrl ? {
+      offers: {
+        "@type": "Offer",
+        price: priceNum,
+        priceCurrency: "USD",
+        availability: "https://schema.org/InStock",
+        url: d.merchantUrl,
+      },
+    } : {}),
+  },
+  {
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Home", item: site.href },
+      { "@type": "ListItem", position: 2, name: "Reviews", item: abs("/reviews") },
+      { "@type": "ListItem", position: 3, name: d.category, item: abs("/categories/e-bikes") },
+      { "@type": "ListItem", position: 4, name: d.title, item: abs(`/reviews/${review.slug}`) },
+    ],
+  },
+];
+const schema = { "@context": "https://schema.org", "@graph": graph };
 ---
-<Base title={`${d.title} | PickNotch`} description={d.summary}>
+<Base title={seoTitle} description={seoDescription} image={d.image} type="article">
 
   <!-- 1. Product hero: gallery + purchase panel -->
   <ReviewHero
@@ -55,93 +99,116 @@ const schema = {
     images={gallery}
   />
 
-  <!-- 2. Score breakdown -->
-  {d.score != null && d.scores && d.scores.length > 0 && (
-    <section class="rv-section">
+  <!-- 2. Quick verdict + decision snapshot -->
+  {d.decision && (
+    <section class="rv-section rv-section--slim">
       <div class="wrap-wide">
-        <div class="rv-head">
-          <span class="eyebrow">How it scores</span>
-          <h2 class="rv-h2">The verdict, by the numbers</h2>
+        <div class="rv-head" data-reveal>
+          <span class="eyebrow">Quick verdict</span>
+          <h2 class="rv-h2">The decision in 30 seconds</h2>
         </div>
-        <div class="rv-intro"><Content /></div>
-        <ReviewScoreBreakdown
-          score={d.score}
-          scores={d.scores}
-          lead={d.scoreLead}
+        <div class="rv-lead" data-reveal><Content /></div>
+        <DecisionSnapshot
+          buyIf={d.decision.buyIf}
+          thinkTwiceIf={d.decision.thinkTwiceIf}
+          mainCatch={d.decision.mainCatch}
+          alternative={d.decision.alternative}
         />
       </div>
     </section>
   )}
 
-  <!-- 3. Pros / cons -->
-  {(d.pros?.length || d.cons?.length) && (
+  <!-- 3. Score breakdown -->
+  {d.score != null && d.scores && d.scores.length > 0 && (
     <section class="rv-section rv-section--paper">
       <div class="wrap-wide">
-        <div class="rv-head">
-          <span class="eyebrow">The balance</span>
-          <h2 class="rv-h2">What works, what to watch</h2>
+        <div class="rv-head" data-reveal>
+          <span class="eyebrow">How it scores</span>
+          <h2 class="rv-h2">Score breakdown</h2>
         </div>
-        <ProsConsTable pros={d.pros} cons={d.cons} />
+        <ReviewScoreBreakdown score={d.score} scores={d.scores} lead={d.scoreLead} />
       </div>
     </section>
   )}
 
-  <!-- 4. Image-led feature story -->
-  {features.length > 0 && (
+  <!-- 4. Pros / cons -->
+  {(d.pros?.length || d.cons?.length) && (
     <section class="rv-section">
       <div class="wrap-wide">
-        <div class="rv-head">
-          <span class="eyebrow">Why it earns 8.5</span>
-          <h2 class="rv-h2">Built around the everyday ride</h2>
+        <div class="rv-head" data-reveal>
+          <span class="eyebrow">The balance</span>
+          <h2 class="rv-h2">What works, what to watch</h2>
+        </div>
+        <div data-reveal>
+          <ProsConsTable pros={d.pros} cons={d.cons} />
+        </div>
+      </div>
+    </section>
+  )}
+
+  <!-- 5. Image-led feature story -->
+  {features.length > 0 && (
+    <section class="rv-section rv-section--paper">
+      <div class="wrap-wide">
+        <div class="rv-head" data-reveal>
+          <span class="eyebrow">In detail</span>
+          <h2 class="rv-h2">Comfort, power, range and safety</h2>
         </div>
         <div class="rv-features">
           {features.map((f, i) => (
             <ReviewFeatureBlock
+              label={f.label}
               title={f.title}
               body={f.body}
+              take={f.take}
               image={f.image}
               imageAlt={f.imageAlt}
-              index={i}
+              fit={f.fit}
+              position={f.position}
               reverse={i % 2 === 1}
             />
           ))}
         </div>
 
         <!-- The catch callout -->
-        <div class="catch">
+        <div class="catch" data-reveal>
           <div class="catch-stat">
             <span class="catch-num">61</span>
             <span class="catch-unit">lb</span>
           </div>
           <div class="catch-text">
             <span class="catch-eyebrow">The catch</span>
-            <p class="catch-body">The comfort hardware is also the compromise. This is a bike you ride from ground-level storage — not one you want to carry upstairs every day.</p>
+            <p class="catch-body">The comfort hardware is also the compromise. At a claimed 61lb — closer to 65lb as tested — this is a bike you ride from ground-level storage, not one you want to carry upstairs every day.</p>
           </div>
         </div>
       </div>
     </section>
   )}
 
-  <!-- 5. Owner reviews -->
-  {d.customerReviews && d.customerReviews.length > 0 && (
-    <section class="rv-section rv-section--paper owners">
-      <div class="rv-head wrap-wide">
+  <!-- 6. Owner reviews -->
+  {ownerReviews.length > 0 && (
+    <section class="rv-section owners">
+      <div class="rv-head wrap-wide" data-reveal>
         <span class="eyebrow">Owner feedback</span>
-        <h2 class="rv-h2">What 150,000+ riders report</h2>
+        <h2 class="rv-h2">What owners say</h2>
       </div>
       <div class="owners-rail">
-        <CustomerReviewCarousel reviews={d.customerReviews} />
+        <CustomerReviewCarousel reviews={ownerReviews} />
       </div>
     </section>
   )}
 
-  <!-- 6. Specs (lower priority, collapsible) -->
+  <!-- 7. Specs (collapsible) -->
   {d.specs && Object.keys(d.specs).length > 0 && (
-    <section class="rv-section rv-section--slim">
+    <section class="rv-section rv-section--slim rv-section--paper">
       <div class="wrap">
-        <details class="specs-acc">
+        <div class="rv-head rv-head--center" data-reveal>
+          <span class="eyebrow">The details</span>
+          <h2 class="rv-h2">Full specifications</h2>
+        </div>
+        <details class="specs-acc" data-reveal>
           <summary class="specs-summary">
-            <span class="specs-summary-label">Full specifications</span>
+            <span class="specs-summary-label">Velotric Discover 3 — full spec sheet</span>
             <span class="specs-summary-meta">{Object.keys(d.specs).length} details</span>
             <svg class="specs-chev" width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">
               <path d="M5 7l4 4 4-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
@@ -160,7 +227,7 @@ const schema = {
     </section>
   )}
 
-  <!-- 7. Final verdict CTA -->
+  <!-- 8. Final verdict CTA -->
   <FinalVerdictCTA
     score={d.score}
     headline={verdictHeadline}
@@ -174,6 +241,31 @@ const schema = {
     imageAlt={d.verdictImageAlt}
   />
 
+  <!-- Keep exploring (internal links) -->
+  <section class="explore">
+    <div class="wrap-wide" data-reveal>
+      <span class="eyebrow eyebrow--muted">Keep exploring</span>
+      <div class="explore-links">
+        <a href="/categories/e-bikes" class="explore-link">
+          <span class="explore-link-title">More e-bike reviews</span>
+          <span class="explore-link-sub">See every bike we've rated →</span>
+        </a>
+        <a href="/reviews" class="explore-link">
+          <span class="explore-link-title">All PickNotch reviews</span>
+          <span class="explore-link-sub">Browse the full library →</span>
+        </a>
+        <a href="/methodology" class="explore-link">
+          <span class="explore-link-title">How we score</span>
+          <span class="explore-link-sub">Our testing methodology →</span>
+        </a>
+        <a href="/affiliate-disclosure" class="explore-link">
+          <span class="explore-link-title">Affiliate disclosure</span>
+          <span class="explore-link-sub">How we stay independent →</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
   <!-- Disclosure -->
   <div class="disclosure-wrap wrap-narrow">
     <DisclosureBox />
@@ -184,10 +276,11 @@ const schema = {
 
 <style>
 .rv-section { padding: 64px 0; }
-.rv-section--slim { padding: 40px 0; }
+.rv-section--slim { padding: 48px 0; }
 .rv-section--paper { background: var(--paper); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
 
 .rv-head { margin-bottom: 32px; }
+.rv-head--center { text-align: center; }
 .rv-h2 {
   font-size: clamp(24px, 3vw, 34px);
   font-weight: 800;
@@ -196,22 +289,10 @@ const schema = {
   line-height: 1.1;
 }
 
-.rv-intro {
-  max-width: 720px;
-  margin-bottom: 30px;
-}
-.rv-intro :global(p) {
-  font-size: 17px;
-  line-height: 1.7;
-  color: var(--slate);
-  margin: 0;
-}
+.rv-lead { max-width: 760px; margin-bottom: 30px; }
+.rv-lead :global(p) { font-size: 17.5px; line-height: 1.7; color: var(--slate); margin: 0; }
 
-.rv-features {
-  display: flex;
-  flex-direction: column;
-  gap: 64px;
-}
+.rv-features { display: flex; flex-direction: column; gap: 64px; }
 
 /* The catch callout */
 .catch {
@@ -225,101 +306,61 @@ const schema = {
   border-radius: 20px;
   box-shadow: 0 20px 48px rgba(8,16,40,0.26);
 }
-.catch-stat {
-  display: flex;
-  align-items: baseline;
-  gap: 3px;
-  flex-shrink: 0;
-  padding-right: 28px;
-  border-right: 1px solid rgba(255,255,255,0.12);
-}
+.catch-stat { display: flex; align-items: baseline; gap: 3px; flex-shrink: 0; padding-right: 28px; border-right: 1px solid rgba(255,255,255,0.12); }
 .catch-num {
-  font-family: 'Sora', sans-serif;
-  font-size: 64px;
-  font-weight: 800;
-  letter-spacing: -0.05em;
-  line-height: 1;
-  background: linear-gradient(120deg, #FBBF24, #F59E0B);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
+  font-family: 'Sora', sans-serif; font-size: 64px; font-weight: 800; letter-spacing: -0.05em; line-height: 1;
+  background: linear-gradient(120deg, #FBBF24, #F59E0B); -webkit-background-clip: text; background-clip: text; color: transparent;
 }
 .catch-unit { font-family: 'Sora', sans-serif; font-size: 22px; font-weight: 700; color: rgba(255,255,255,0.5); }
-.catch-eyebrow {
-  display: inline-block;
-  font-family: 'Sora', sans-serif;
-  font-size: 10px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.12em;
-  color: #FBBF24;
-  margin-bottom: 6px;
-}
-.catch-body { font-size: 15.5px; line-height: 1.6; color: rgba(255,255,255,0.78); margin: 0; max-width: 60ch; }
+.catch-eyebrow { display: inline-block; font-family: 'Sora', sans-serif; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.12em; color: #FBBF24; margin-bottom: 6px; }
+.catch-body { font-size: 15.5px; line-height: 1.6; color: rgba(255,255,255,0.78); margin: 0; max-width: 64ch; }
 
 /* Owners */
 .owners .rv-head { text-align: center; }
 .owners-rail { padding: 0 12px; }
 
 /* Specs accordion */
-.specs-acc {
-  border: 1px solid var(--line);
-  border-radius: 16px;
-  background: #fff;
-  overflow: hidden;
-}
-.specs-summary {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 18px 22px;
-  cursor: pointer;
-  list-style: none;
-  user-select: none;
-  transition: background 0.14s ease;
-}
+.specs-acc { border: 1px solid var(--line); border-radius: 16px; background: #fff; overflow: hidden; max-width: 900px; margin: 0 auto; }
+.specs-summary { display: flex; align-items: center; gap: 12px; padding: 18px 22px; cursor: pointer; list-style: none; user-select: none; transition: background 0.14s ease; }
 .specs-summary::-webkit-details-marker { display: none; }
 .specs-summary:hover { background: var(--paper); }
 .specs-summary:focus-visible { outline: 2px solid var(--cyan); outline-offset: -2px; border-radius: 16px; }
-.specs-summary-label {
-  font-family: 'Sora', sans-serif;
-  font-size: 16px;
-  font-weight: 700;
-  color: var(--ink);
-}
+.specs-summary-label { font-family: 'Sora', sans-serif; font-size: 16px; font-weight: 700; color: var(--ink); }
 .specs-summary-meta { font-size: 12px; color: var(--muted); }
-.specs-chev {
-  margin-left: auto;
-  color: var(--slate);
-  transition: transform 0.2s var(--ease-spring);
-}
+.specs-chev { margin-left: auto; color: var(--slate); transition: transform 0.2s var(--ease-spring); }
 .specs-acc[open] .specs-chev { transform: rotate(180deg); }
-
-.specs-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  column-gap: 36px;
-  padding: 6px 22px 22px;
-  border-top: 1px solid var(--line);
-}
-.spec-row {
-  display: grid;
-  grid-template-columns: minmax(108px, 44%) 1fr;
-  gap: 14px;
-  align-items: baseline;
-  padding: 11px 2px;
-  border-bottom: 1px solid var(--line);
-}
+.specs-grid { display: grid; grid-template-columns: 1fr 1fr; column-gap: 36px; padding: 6px 22px 22px; border-top: 1px solid var(--line); background: #fff; }
+.spec-row { display: grid; grid-template-columns: minmax(120px, 46%) 1fr; gap: 14px; align-items: baseline; padding: 11px 2px; border-bottom: 1px solid var(--line); }
 .spec-row dt { font-family: 'Sora', sans-serif; font-size: 12.5px; font-weight: 600; color: var(--slate); }
 .spec-row dd { margin: 0; font-size: 13.5px; color: var(--ink); line-height: 1.4; }
 
-.disclosure-wrap { padding: 48px 28px 72px; }
+/* Keep exploring */
+.explore { padding: 56px 0; }
+.explore .eyebrow { display: block; text-align: center; margin-bottom: 22px; }
+.explore-links { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+.explore-link {
+  display: flex; flex-direction: column; gap: 5px;
+  padding: 18px 20px; border: 1px solid var(--line); border-radius: 14px; background: #fff;
+  transition: transform 0.16s var(--ease-spring), box-shadow 0.16s ease, border-color 0.16s ease;
+}
+.explore-link:hover { transform: translateY(-3px); box-shadow: 0 12px 28px rgba(13,21,48,0.08); border-color: rgba(34,211,238,0.4); }
+.explore-link:focus-visible { outline: 2px solid var(--cyan); outline-offset: 3px; }
+.explore-link-title { font-family: 'Sora', sans-serif; font-size: 14px; font-weight: 700; color: var(--ink); }
+.explore-link-sub { font-size: 12.5px; color: var(--slate); }
 
+.disclosure-wrap { padding: 8px 28px 72px; }
+
+@media (max-width: 880px) {
+  .explore-links { grid-template-columns: 1fr 1fr; }
+}
 @media (max-width: 760px) {
   .rv-section { padding: 48px 0; }
   .rv-features { gap: 44px; }
   .catch { flex-direction: column; align-items: flex-start; gap: 16px; padding: 24px; margin-top: 40px; }
   .catch-stat { padding-right: 0; padding-bottom: 14px; border-right: none; border-bottom: 1px solid rgba(255,255,255,0.12); width: 100%; }
   .specs-grid { grid-template-columns: 1fr; column-gap: 0; }
+}
+@media (max-width: 520px) {
+  .explore-links { grid-template-columns: 1fr; }
 }
 </style>
