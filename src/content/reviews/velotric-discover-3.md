@@ -8,11 +8,9 @@ score: 8.5
 price: "$1,999"
 priceRange: "$1,999"
 merchantUrl: "https://www.velotricbike.com/products/velotric-discover-3-commuter-ebike?page_source=banner_swiper-wrapper-3d0c167ad3e66ed2%7Cshop_now&ref=ARMAN&utm_campaign=&utm_medium=affiliate&utm_source=goaffpro"
-code: "REF204801"
-discount: "Use code REF204801"
 summary: "A comfort-first commuter e-bike with a 750W motor, 80-mile claimed range, hydraulic brakes, smart security, and a premium upright ride. The catch is weight."
-seoTitle: "Velotric Discover 3 Review (2026): Comfort Commuter E-Bike Tested | PickNotch"
-seoDescription: "Velotric Discover 3 review: a comfort-first commuter e-bike with a 750W motor, ~87-mile tested range, air-fork suspension and smart security. PickNotch score 8.5/10."
+seoTitle: "Velotric Discover 3 Review (June 2026): Honest Research Verdict | PickNotch"
+seoDescription: "Velotric Discover 3 review, research-based: 750W motor, claimed 80-mile range that owner reports often beat, air-fork suspension and smart security. PickNotch score 8.5/10."
 verdict: "One of the most complete comfort commuters at $1,999 — air-fork suspension, real all-week range, and smart security. The trade-off is its 61lb weight."
 bestFor: "Comfort-first commuters who ride from ground-level storage and want a complete bike out of the box."
 avoidIf: "You carry your bike up stairs, rely on transit, or want a light, sporty ride."
@@ -47,7 +45,7 @@ scoreLead: "Comfort and completeness carry the score. Portability is the one rea
 decision:
   buyIf: "You want comfort, real range, power and smart security from a complete bike you store at ground level."
   thinkTwiceIf: "You're a shorter rider — the suspension seatpost raises the minimum seat height by about 4 inches."
-  mainCatch: "61lb (closer to 65lb as tested). Great to ride, awkward to carry upstairs."
+  mainCatch: "61lb claimed — owners report closer to 65lb equipped. Great to ride, awkward to carry upstairs."
   alternative: "A lightweight city e-bike if portability matters more than comfort."
 verdictHeadline: "Strong comfort commuter. Heavy, but seriously complete."
 verdictSub: "The Discover 3 earns 8.5 because it combines comfort, power, safety credentials and everyday practicality at a competitive price."
@@ -56,12 +54,12 @@ verdictImageAlt: "A rider enjoying the Velotric Discover 3 on a city bike path b
 pros:
   - "Air fork plus suspension seatpost — comfort rare under $2,000"
   - "750W motor with SensorSwap torque/cadence tuning"
-  - "Real-world range beats the claim (~87 mi tested in Eco)"
+  - "Owner-reported range regularly beats the 80-mile claim in Eco"
   - "UL 2849 + UL 2271 certified, IPX6/7 weather resistance"
   - "Step-through frame, lights, turn signals, 66lb-rated rack"
   - "NFC unlock with Apple Find My and Google Find Hub"
 cons:
-  - "61lb (≈65lb as tested) — heavy to lift or carry upstairs"
+  - "61lb claimed (owners report ≈65lb equipped) — heavy to lift or carry upstairs"
   - "Suspension seatpost adds ~4in to the minimum seat height"
   - "Step-through only — there's no high-step option"
   - "Hybrid tread isn't ideal if you only ride smooth pavement"
@@ -84,7 +82,7 @@ features:
     imageAlt: "Rider climbing a golden-hour hill on the Velotric Discover 3"
   - label: "Range"
     title: "All-week range, fully equipped"
-    body: "The 730Wh battery returned about 87 miles in Eco testing — past the 80-mile claim — and the bike ships with lights, turn signals, fenders and a 66lb rack."
+    body: "Velotric claims up to 80 miles in Eco from the 730Wh battery, and owner range logs regularly land past that claim — and the bike ships with lights, turn signals, fenders and a 66lb rack."
     take: "Range anxiety isn't really a factor here; most commuters will go days between charges."
     image: "/images/products/velotric-discover-3/cockpit-display.webp"
     fit: "cover"
@@ -101,8 +99,8 @@ features:
 specs:
   Motor: "48V 750W hub motor, 1100W peak, 75Nm torque"
   Battery: "48V 15.2Ah, 730Wh, IPX7, UL 2271 certified"
-  Range (tested, Eco): "~87 miles"
-  Range (tested, Turbo): "~38 miles"
+  Range (owner-reported, Eco): "~80–87 miles"
+  Range (owner-reported, Turbo): "~35–40 miles"
   Claimed range: "Up to 80 miles"
   Top speed: "20mph default, adjustable 12–28mph"
   Class: "Class 1 / 2 / 3"
@@ -117,31 +115,10 @@ specs:
   Lights: "500-lumen front, integrated rear with turn signals"
   Security: "NFC unlock, Apple Find My, Google Find Hub"
   Water resistance: "IPX6 frame, IPX7 battery"
-  Bike weight: "61lb claimed (~65lb as tested)"
+  Bike weight: "61lb claimed (~65lb equipped, owner-reported)"
   Max load: "440lb (200kg)"
   Rear rack capacity: "66lb (30kg), MIK HD"
   Warranty: "2 years"
-customerReviews:
-  - name: "@Ric L."
-    rating: 5
-    title: "Comfort You Feel From the First Ride"
-    body: "The seat is incredibly comfortable, and the suspension post really makes a difference. The ride feels much smoother—super comfortable, yet still powerful on hills."
-    source: "Velotric owner review"
-  - name: "@Olivia S."
-    rating: 5
-    title: "My First Ebike — Great Decision."
-    body: "This is my first Ebike, and I couldn't be happier with the Discover 3. It's super comfortable and easy to ride. The 80-mile range is a huge plus — less charging, more riding."
-    source: "Velotric owner review"
-  - name: "@Ryan N."
-    rating: 5
-    title: "Confidence on Every Hill"
-    body: "The 750W motor with 75Nm of torque makes hill climbs effortless. I ride over two hills every day on my way to work, and I still arrive without breaking a sweat."
-    source: "Velotric owner review"
-  - name: "@Jack T."
-    rating: 5
-    title: "A Ride That Adapts to Every Moment"
-    body: "With a suspension seatpost, cushioned saddle, and air fork, comfort really stands out — 100+ miles and counting without any discomfort."
-    source: "Velotric owner review"
 ---
 
-The Velotric Discover 3 is one of the most complete comfort commuters you can buy at $1,999. It pairs a 750W motor and a 730Wh battery — good for roughly 87 tested miles in Eco — with air-fork suspension, a suspension seatpost, integrated lights, turn signals and smart security. The honest trade-off is weight: at a claimed 61lb it rewards ground-level storage and punishes stairs.
+The Velotric Discover 3 is one of the most complete comfort commuters you can buy at $1,999. It pairs a 750W motor and a 730Wh battery — with owner-reported Eco range routinely past the 80-mile claim — with air-fork suspension, a suspension seatpost, integrated lights, turn signals and smart security. This is a research-based verdict built on the spec sheet and owner feedback. The honest trade-off is weight: at a claimed 61lb it rewards ground-level storage and punishes stairs.

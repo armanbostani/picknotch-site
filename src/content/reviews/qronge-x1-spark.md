@@ -1,63 +1,75 @@
 ---
-title: "Qronge X1 Spark review: more e-bike than the price suggests"
+title: "Qronge X1 Spark review: a 50mph dirt bike wearing a budget price"
 brand: "Qronge"
-product: "Qronge X1 Spark"
-score: 8.6
-price: "$575"
-priceRange: "$500–$650"
-code: "PICKNOTCH10"
-discount: "10% off"
-merchantUrl: "https://qronge.com"
-summary: "A torque-sensor commuter that punches well above its price. Smooth power, honest range, and a build that feels a tier up."
-verdict: "At $575 with a real torque sensor and hydraulic brakes, the X1 Spark is one of the most honestly-specced budget commuters available. The catch is the weak app ecosystem and Qronge's uncertain long-term brand support. If you commute daily and don't need app integration, this is a confident buy."
-bestFor: "Value-focused daily commuters"
-avoidIf: "You rely on app connectivity or need strong brand warranty support"
-pros:
-  - "Real torque sensor at this price point"
-  - "Range consistently matches the claim"
-  - "Confident hydraulic disc brakes"
-  - "Build quality feels a tier above the price"
-cons:
-  - "Companion app is clunky and unreliable"
-  - "Cheap stock bell and accessories"
-  - "Brand support track record is unclear"
-  - "Packaging could be better protected"
-updated: "June 2026"
+product: "X1 Spark"
 category: "E-bikes"
 status: "published"
+score: 7.2
+price: "$1,099.99"
+merchantUrl: "https://qronge.com/products/x1-spark"
+summary: "A 4,500W-peak, 283Nm electric dirt bike that undercuts the segment on price. Big power, real suspension — and an off-road-only machine from a brand still proving itself."
+seoTitle: "Qronge X1 Spark Review (June 2026): 50mph Electric Dirt Bike, Honest Verdict | PickNotch"
+seoDescription: "Qronge X1 Spark review, research-based: 4,500W peak mid-drive, 283Nm, 50mph, 60V 28.8Ah battery, full suspension. Who it's for, the support catch — and the truth about Qronge discount codes."
+verdict: "Spec-for-money it's hard to argue with: mid-drive torque and full suspension at a price the established dirt e-bike names don't touch. The catch is everything around the bike — a young brand, unproven parts and warranty support, and a machine that's off-road only. Buy it for the thrills, not the logistics."
+bestFor: "Off-road riders and families with private land who want maximum power per dollar and can wrench on their own machines."
+avoidIf: "You need something street-legal, dealer support, or proven long-term parts availability."
+pros:
+  - "4,500W peak mid-drive with 283Nm — serious torque for the money"
+  - "Full suspension (150mm front / 75mm rear) and dual hydraulic discs"
+  - "60V 28.8Ah battery is large for the class"
+  - "Undercuts established dirt e-bike rivals on price"
+cons:
+  - "Off-road only — not street-legal, and 50mph demands real protective gear"
+  - "Qronge's warranty and parts support are unproven at scale"
+  - "Claimed 60-mile range assumes ideal conditions; aggressive riding will see far less"
+  - "Marketed for ages 13+, but this is not a toy — supervision and gear are non-negotiable"
+scores:
+  - { label: "Value for money", value: 8.3 }
+  - { label: "Power & spec", value: 8.6 }
+  - { label: "Build & brakes", value: 7.6 }
+  - { label: "Brand & support", value: 5.0 }
+  - { label: "Practicality & legality", value: 5.8 }
+scoreLead: "Research-based score: spec and price carry it; brand confidence and off-road-only practicality hold it back."
+decision:
+  buyIf: "You have somewhere legal to ride it and want pit-bike thrills at a price the big names don't match."
+  thinkTwiceIf: "This would be your only 'bike' — it can't legally touch a public road, and that changes what you're actually buying."
+  mainCatch: "Support risk: a young brand, unproven warranty handling, and parts availability nobody can vouch for yet."
+  alternative: "Happyrun G300 Pro — similar mission and money, with a slightly longer track record."
+verdictHeadline: "Huge spec, small price, young brand."
+verdictSub: "The X1 Spark earns 7.2 on spec-for-money alone. It loses ground where budget brands usually do: support confidence and real-world practicality."
+updated: "June 2026"
 specs:
-  Motor: "250W rear hub (torque sensor)"
-  Battery: "374Wh (36V 10.4Ah)"
-  Range: "40–55 km claimed"
-  Brakes: "Hydraulic disc"
-  Weight: "22 kg"
-  Max speed: "25 km/h (EU) / 32 km/h (US)"
-  Frame: "Aluminium alloy 6061"
-  Gears: "Shimano 7-speed"
+  Motor: "Mid-drive, 4,500W peak, 283Nm torque"
+  Battery: "60V 28.8Ah (≈1,728Wh)"
+  Top speed: "Up to 50mph — three modes (≈12.5 / 22 / 50mph)"
+  Claimed range: "Up to 60 miles (ideal conditions)"
+  Brakes: "Dual hydraulic disc"
+  Suspension: "Full — ≈150mm front / 75mm rear"
+  Wheels: "14in front / 12in rear knobby (M); 17/14 on the larger L"
+  Intended use: "Off-road only — not street-legal"
+  Rider guidance: "Manufacturer lists ages 13+ with adult supervision"
 ---
 
-Most bikes at $575 cut the corner that matters most — the sensor. The X1 Spark doesn't. Over two weeks of commuting it metered power smoothly on hills where cadence-only rivals lurch.
+The X1 Spark is not a commuter, not a pedal-assist e-bike, and not street-legal — and Qronge doesn't pretend otherwise. It's an electric dirt bike: 4,500W peak mid-drive, 283Nm of torque, 50mph in its unlocked mode, full suspension, knobby tires. What makes it interesting is the price. At $1,099.99 it undercuts most of the established mini dirt e-bike segment while out-spec'ing a fair chunk of it on paper.
 
-## What makes this different
+This is a research-based review: it's built from manufacturer specs, retailer listings and early owner feedback, not our own saddle time — and we say that because most "reviews" of bikes like this won't.
 
-The torque sensor is the headline. At this price, most brands use a cadence sensor — it detects pedalling motion and delivers a fixed motor boost regardless of how hard you're pushing. A torque sensor reads actual pedal force and responds proportionally. The difference in feel is immediate: it rides like an assist, not a throttle. Hills stop feeling like a fight.
+## The spec, reality-checked
 
-The hydraulic brakes are the second surprise. Budget e-bikes overwhelmingly ship with mechanical disc or even V-brakes. The X1 Spark's hydraulics give a modulated, confident feel with no break-in period.
+The headline numbers check out across Qronge's own listings and major retailers: 60V 28.8Ah battery (about 1,728Wh — genuinely large for the class), dual hydraulic discs, ~150mm/75mm of travel, and the 4,500W peak figure. Treat the "up to 60 miles" range claim the way you should treat every range claim in this category: as a best-case number at gentle speeds. Ride it like a dirt bike and you should plan around a fraction of that.
 
-## The range question
-
-Claimed range is 40–55 km. Over two weeks of mixed urban riding — roughly 70% pedal assist level 2, hills, starts/stops — I averaged 43–48 km per charge. That's honest. Many bikes at this price inflate range figures by 30–40% and assume flat, wind-free conditions. The X1 Spark's numbers are conservative and achievable.
+The two variants matter: the M runs 14"/12" wheels and suits smaller riders; the L's 17"/14" setup is the one adults should look at.
 
 ## The catch
 
-Qronge is a newer brand with limited UK/EU service infrastructure. The companion app — used for unlocking higher speed modes and viewing battery data — is unstable on Android and absent from Apple's UK App Store at the time of writing. If you don't care about the app, this doesn't matter. If you want full diagnostic access or plan to resell, it's a real limitation.
+Qronge is a young brand. The bike's spec sheet is easy to verify; the things that decide whether you're happy in year two are not — warranty turnaround, parts availability, and whether support answers email in a month's time. None of that has a track record yet at scale. Established names charge more partly because those questions are answered. With Qronge, you're the early adopter, and the discount is your compensation for it.
 
-The brand's warranty support history is also unproven at scale. Established brands like Specialized or Trek charge 3× the price partly because their dealer network and parts availability are reliable for years. Qronge can't guarantee that yet.
+And the legality point is not small print: this machine has no pedals-first pretensions — it's off-road only. If you don't have private land or legal trails, the X1 Spark is a very fast way to own something you can't use.
 
-## Who should buy this
+## Who should buy it — and who shouldn't
 
-Daily commuters within the 40 km round-trip range who want torque-sensor smoothness without paying premium prices. People who maintain their own bikes and don't rely on dealer networks.
+Buy it if you've got somewhere to ride, you maintain your own machines, and you want the most torque per dollar in the segment. Skip it if you need street-legal transport, dealer support, or proven resale value — and think hard before putting a 50mph-capable machine under a young teenager, whatever the marketing says.
 
-## Who should avoid this
+## The code question
 
-Anyone who needs guaranteed long-term parts support, solid app connectivity, or brand resale value. If you're buying for light occasional use, a cheaper cadence-sensor bike might be fine. If you're buying for premium feel and support, spend more.
+We don't list discount codes we haven't verified ourselves. There's no working Qronge code in our hands right now; when there is, it will appear here with a last-verified date — that's the deal on every PickNotch review.

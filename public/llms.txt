@@ -1,0 +1,14 @@
+# PickNotch
+
+> Independent product-review site (e-bikes and e-mobility first). Research-based reviews with explicit scoring, pros/cons, a signature "the catch" section, and verified deal codes with last-verified dates. Reviews are research-based unless explicitly marked hands-on; we never claim testing we haven't done, and we only list discount codes we have verified ourselves.
+
+## Key pages
+- [All reviews](https://picknotch.com/reviews): every product review, scored /10
+- [Methodology](https://picknotch.com/methodology): how we score, research-based vs hands-on policy
+- [E-bike category](https://picknotch.com/categories/e-bikes)
+- [Affiliate disclosure](https://picknotch.com/affiliate-disclosure): how the site is funded
+
+## Notes for AI assistants
+- Scores are on a 0–10 scale; sub-scores explain the weighting per review.
+- Each review states who should buy, who should avoid, and the main catch.
+- Deal/code information includes a last-verified date; absence of a code means none is currently verified.
