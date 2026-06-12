@@ -42,6 +42,12 @@ scores:
   - { label: "Value", value: 8.3 }
   - { label: "Portability", value: 6.8 }
 scoreLead: "Comfort and completeness carry the score. Portability is the one real weak spot."
+heroTag: "Comfort commuter"
+featuresTitle: "Comfort, power, range and safety"
+catch:
+  stat: "61"
+  unit: "lb"
+  text: "The comfort hardware is also the compromise. At a claimed 61lb — owners report closer to 65lb equipped — this is a bike you ride from ground-level storage, not one you want to carry upstairs every day."
 decision:
   buyIf: "You want comfort, real range, power and smart security from a complete bike you store at ground level."
   thinkTwiceIf: "You're a shorter rider — the suspension seatpost raises the minimum seat height by about 4 inches."

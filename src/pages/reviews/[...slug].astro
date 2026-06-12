@@ -55,7 +55,7 @@ const graph: any[] = [
         "@type": "Offer",
         price: priceNum,
         priceCurrency: "USD",
-        availability: "https://schema.org/InStock",
+        availability: `https://schema.org/${d.availability ?? 'InStock'}`,
         url: d.merchantUrl,
       },
     } : {}),
@@ -89,6 +89,7 @@ const schema = { "@context": "https://schema.org", "@graph": graph };
     merchantUrl={d.merchantUrl}
     updated={d.updated}
     images={gallery}
+    tag={d.heroTag}
   />
 
   <!-- 2. Quick verdict + decision snapshot -->
@@ -144,7 +145,7 @@ const schema = { "@context": "https://schema.org", "@graph": graph };
       <div class="wrap-wide">
         <div class="rv-head" data-reveal>
           <span class="eyebrow">In detail</span>
-          <h2 class="rv-h2">Comfort, power, range and safety</h2>
+          <h2 class="rv-h2">{d.featuresTitle ?? 'What it gets right, up close'}</h2>
         </div>
         <div class="rv-features">
           {features.map((f, i) => (
@@ -163,16 +164,18 @@ const schema = { "@context": "https://schema.org", "@graph": graph };
         </div>
 
         <!-- The catch callout -->
-        <div class="catch" data-reveal>
-          <div class="catch-stat">
-            <span class="catch-num">61</span>
-            <span class="catch-unit">lb</span>
+        {d.catch && (
+          <div class="catch" data-reveal>
+            <div class="catch-stat">
+              <span class="catch-num">{d.catch.stat}</span>
+              <span class="catch-unit">{d.catch.unit}</span>
+            </div>
+            <div class="catch-text">
+              <span class="catch-eyebrow">The catch</span>
+              <p class="catch-body">{d.catch.text}</p>
+            </div>
           </div>
-          <div class="catch-text">
-            <span class="catch-eyebrow">The catch</span>
-            <p class="catch-body">The comfort hardware is also the compromise. At a claimed 61lb — owners report closer to 65lb equipped — this is a bike you ride from ground-level storage, not one you want to carry upstairs every day.</p>
-          </div>
-        </div>
+        )}
       </div>
     </section>
   )}

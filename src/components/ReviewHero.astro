@@ -17,10 +17,11 @@ interface Props {
   merchantUrl?: string;
   updated?: string;
   images: GalleryImage[];
+  tag?: string;
 }
 const {
   title, brand, category, categoryHref = '/categories/e-bikes',
-  score, verdict, bestFor, avoidIf, price, code, discount, merchantUrl, updated, images,
+  score, verdict, bestFor, avoidIf, price, code, discount, merchantUrl, updated, images, tag,
 } = Astro.props;
 
 function tier(s: number) {
@@ -44,7 +45,7 @@ const scoreTier = score != null ? tier(score) : null;
 
     <div class="rh-grid">
       <div class="rh-left">
-        <ProductGallery images={images} productName={title} score={score} tag="Comfort commuter" />
+        <ProductGallery images={images} productName={title} score={score} tag={tag} />
       </div>
 
       <aside class="rh-right">
