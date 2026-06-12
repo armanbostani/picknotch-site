@@ -77,6 +77,7 @@ const ogImage = new URL(image, site).href;
 
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     html { scroll-behavior: smooth; }
+    body { overflow-x: hidden; overflow-x: clip; }
 
     /* ─── Scroll reveal system ─── */
     [data-reveal] {
@@ -86,9 +87,49 @@ const ogImage = new URL(image, site).href;
       transition-delay: var(--reveal-delay, 0ms);
       will-change: opacity, transform;
     }
+    [data-reveal="left"]  { transform: translateX(-28px); }
+    [data-reveal="right"] { transform: translateX(28px); }
+    [data-reveal="zoom"]  { transform: translateY(14px) scale(0.95); }
     [data-reveal].is-in { opacity: 1; transform: none; }
+
+    /* ─── Scroll progress beam ─── */
+    .scroll-progress {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      height: 2.5px;
+      z-index: 300;
+      pointer-events: none;
+    }
+    .scroll-progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--cyan), #0891B2 80%, var(--cyan));
+      transform: scaleX(0);
+      transform-origin: left center;
+      box-shadow: 0 0 12px rgba(34,211,238,0.55);
+    }
+
+    /* ─── Shimmer sweep (futuristic CTA accent) ─── */
+    .shine { position: relative; overflow: hidden; }
+    .shine::after {
+      content: "";
+      position: absolute;
+      top: -40%; bottom: -40%;
+      left: 0;
+      width: 36%;
+      background: linear-gradient(105deg, transparent, rgba(255,255,255,0.55), transparent);
+      transform: translateX(-220%) rotate(12deg);
+      animation: shine-sweep 5.5s var(--ease-out) infinite;
+      animation-delay: 1.2s;
+      pointer-events: none;
+    }
+    @keyframes shine-sweep {
+      0%       { transform: translateX(-220%) rotate(12deg); }
+      18%, 100%{ transform: translateX(420%) rotate(12deg); }
+    }
+
     @media (prefers-reduced-motion: reduce) {
       [data-reveal] { opacity: 1 !important; transform: none !important; transition: none !important; }
+      .shine::after { animation: none; opacity: 0; }
       html { scroll-behavior: auto; }
     }
     body {
@@ -218,24 +259,79 @@ const ogImage = new URL(image, site).href;
   </style>
 </head>
 <body>
+  <div class="scroll-progress" aria-hidden="true"><div class="scroll-progress-fill"></div></div>
   <Header />
   <main><slot /></main>
   <Footer />
   <script>
     (() => {
-      const els = document.querySelectorAll('[data-reveal]');
-      if (!els.length) return;
       const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-      if (reduce || !('IntersectionObserver' in window)) {
-        els.forEach((el) => el.classList.add('is-in'));
-        return;
+
+      /* Scroll reveal */
+      const els = document.querySelectorAll('[data-reveal]');
+      if (els.length) {
+        if (reduce || !('IntersectionObserver' in window)) {
+          els.forEach((el) => el.classList.add('is-in'));
+        } else {
+          const io = new IntersectionObserver((entries) => {
+            entries.forEach((e) => {
+              if (e.isIntersecting) { e.target.classList.add('is-in'); io.unobserve(e.target); }
+            });
+          }, { rootMargin: '0px 0px -8% 0px', threshold: 0.08 });
+          els.forEach((el) => io.observe(el));
+        }
       }
-      const io = new IntersectionObserver((entries) => {
-        entries.forEach((e) => {
-          if (e.isIntersecting) { e.target.classList.add('is-in'); io.unobserve(e.target); }
+
+      /* Count-up tickers (data-countup) */
+      const nums = document.querySelectorAll('[data-countup]');
+      if (nums.length && !reduce && 'IntersectionObserver' in window) {
+        const tick = (el) => {
+          const raw = (el.textContent || '').trim();
+          const target = parseFloat(raw);
+          if (isNaN(target)) return;
+          const decimals = (raw.split('.')[1] || '').length;
+          const dur = 950;
+          let start;
+          const step = (ts) => {
+            if (start === undefined) start = ts;
+            const p = Math.min((ts - start) / dur, 1);
+            const eased = 1 - Math.pow(1 - p, 3);
+            el.textContent = (target * eased).toFixed(decimals);
+            if (p < 1) requestAnimationFrame(step); else el.textContent = raw;
+          };
+          requestAnimationFrame(step);
+        };
+        const nio = new IntersectionObserver((entries) => {
+          entries.forEach((e) => {
+            if (e.isIntersecting) { tick(e.target); nio.unobserve(e.target); }
+          });
+        }, { threshold: 0.5 });
+        nums.forEach((el) => nio.observe(el));
+      }
+
+      /* Scroll progress + header elevation + hero parallax */
+      const fill = document.querySelector('.scroll-progress-fill');
+      const header = document.querySelector('.site-header');
+      const para = reduce ? [] : Array.from(document.querySelectorAll('[data-parallax]'));
+      let raf = false;
+      const onScroll = () => {
+        if (raf) return;
+        raf = true;
+        requestAnimationFrame(() => {
+          const y = window.scrollY;
+          const max = document.documentElement.scrollHeight - window.innerHeight;
+          if (fill) fill.style.transform = `scaleX(${max > 0 ? Math.min(y / max, 1) : 0})`;
+          if (header) header.classList.toggle('is-scrolled', y > 8);
+          for (const el of para) {
+            if (y < window.innerHeight * 1.4) {
+              el.style.transform = `translate3d(0, ${(y * parseFloat(el.dataset.parallax || '0.1')).toFixed(1)}px, 0)`;
+            }
+          }
+          raf = false;
         });
-      }, { rootMargin: '0px 0px -8% 0px', threshold: 0.08 });
-      els.forEach((el) => io.observe(el));
+      };
+      window.addEventListener('scroll', onScroll, { passive: true });
+      onScroll();
     })();
   </script>
 </body>

@@ -17,7 +17,7 @@ const items = [
 
 <div class="ds" data-reveal>
   {items.map((it, i) => (
-    <div class={`ds-item ds-item--${it.key}`} style={`--reveal-delay:${i * 70}ms`} data-reveal>
+    <div class={`ds-item ds-item--${it.key}`} style={`--reveal-delay:${i * 70}ms`} data-reveal="zoom">
       <span class="ds-ic" aria-hidden="true">
         {it.icon === 'check' && <svg viewBox="0 0 18 18" fill="none"><path d="M4 9.4 7.2 12.6 14 5.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>}
         {it.icon === 'pause' && <svg viewBox="0 0 18 18" fill="none"><path d="M7 5v8M11 5v8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>}

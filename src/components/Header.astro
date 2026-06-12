@@ -48,6 +48,11 @@ const isActive = (href: string) =>
   border-bottom: 1px solid rgba(226,232,242,0.8);
   backdrop-filter: blur(16px) saturate(160%);
   -webkit-backdrop-filter: blur(16px) saturate(160%);
+  transition: box-shadow 0.25s ease, background 0.25s ease;
+}
+.site-header.is-scrolled {
+  background: rgba(255,255,255,0.96);
+  box-shadow: 0 4px 20px rgba(18,30,56,0.10), 0 2px 6px rgba(18,30,56,0.05);
 }
 .header-inner {
   height: 58px;

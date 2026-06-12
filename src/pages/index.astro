@@ -46,22 +46,23 @@ const compareCards = [
 
   <!-- ═══════════════════════════ HERO ═══════════════════════════ -->
   <section class="hero">
-    <div class="hero-glow-a" aria-hidden="true"></div>
-    <div class="hero-glow-b" aria-hidden="true"></div>
-    <div class="hero-glow-c" aria-hidden="true"></div>
+    <div class="hero-grid-layer" aria-hidden="true"></div>
+    <div class="hero-glow-a" aria-hidden="true" data-parallax="0.18"></div>
+    <div class="hero-glow-b" aria-hidden="true" data-parallax="0.10"></div>
+    <div class="hero-glow-c" aria-hidden="true" data-parallax="0.26"></div>
 
     <div class="wrap">
       <div class="hero-inner">
         <div class="hero-left">
-          <p class="hero-micro">Independent research · Clear verdicts · No hype-first rankings</p>
-          <h1 class="hero-heading">Better picks.<br />Fewer regrets.</h1>
-          <p class="hero-sub">PickNotch compares the specs, trade-offs, and value behind products worth buying.</p>
-          <div class="hero-actions">
-            <a href="/reviews" class="btn btn-primary">Browse reviews</a>
+          <p class="hero-micro" data-reveal>Independent research · Clear verdicts · No hype-first rankings</p>
+          <h1 class="hero-heading" data-reveal style="--reveal-delay: 80ms">Better picks.<br />Fewer regrets.</h1>
+          <p class="hero-sub" data-reveal style="--reveal-delay: 170ms">PickNotch compares the specs, trade-offs, and value behind products worth buying.</p>
+          <div class="hero-actions" data-reveal style="--reveal-delay: 260ms">
+            <a href="/reviews" class="btn btn-primary shine">Browse reviews</a>
             <a href="/methodology" class="btn btn-ghost">How we pick</a>
           </div>
         </div>
-        <div class="hero-right">
+        <div class="hero-right" data-reveal="zoom" style="--reveal-delay: 200ms">
           <HeroVisual />
         </div>
       </div>
@@ -74,12 +75,12 @@ const compareCards = [
   <!-- ═══════════════════════════ CATEGORIES ═══════════════════════════ -->
   <section class="section">
     <div class="wrap">
-      <div class="section-head">
+      <div class="section-head" data-reveal>
         <span class="eyebrow">Explore</span>
         <h2 class="section-h2">Browse by category</h2>
         <p class="section-sub">Starting with e-bikes, then growing into every product category where specs, trade-offs, and support actually matter.</p>
       </div>
-      <div class="cat-grid">
+      <div class="cat-grid" data-reveal style="--reveal-delay: 90ms">
         <CategoryCard
           name="E-bikes"
           description="Budget commuters to fat-tyre models. We compare value, usability, and support confidence."
@@ -99,13 +100,13 @@ const compareCards = [
   <!-- ═══════════════════════════ E-BIKES FOCUS ═══════════════════════════ -->
   <section class="section section--paper">
     <div class="wrap">
-      <div class="section-head">
+      <div class="section-head" data-reveal>
         <span class="eyebrow">Current focus</span>
         <h2 class="section-h2">E-bikes</h2>
         <p class="section-sub">Our first review library — from budget commuters to fat-tyre models.</p>
       </div>
 
-      <div class="ebike-layout">
+      <div class="ebike-layout" data-reveal style="--reveal-delay: 80ms">
         <div class="ebf-card">
           <div class="ebf-visual">
             <PlaceholderVisual label="E-bikes" />
@@ -126,7 +127,7 @@ const compareCards = [
           </div>
         </div>
 
-        <div class="ebike-sub-grid">
+        <div class="ebike-sub-grid" data-reveal style="--reveal-delay: 160ms">
           {subcategories.map(({ name, desc, iconName, status }) => (
             <div class="ebs-card">
               <div class="ebs-icon-row">
@@ -147,13 +148,13 @@ const compareCards = [
   <!-- ═══════════════════════════ LATEST REVIEWS ═══════════════════════════ -->
   <section class="section">
     <div class="wrap">
-      <div class="section-head">
+      <div class="section-head" data-reveal>
         <span class="eyebrow">Latest</span>
         <h2 class="section-h2">Latest picks</h2>
         <p class="section-sub">Published reviews alongside what we're currently researching.</p>
       </div>
 
-      <div class="reviews-list">
+      <div class="reviews-list" data-reveal style="--reveal-delay: 90ms">
         {published.map(r => (
           <ReviewCard
             title={r.data.title}
@@ -184,7 +185,7 @@ const compareCards = [
         </div>
       </div>
 
-      <div class="list-cta">
+      <div class="list-cta" data-reveal>
         <a href="/reviews" class="btn btn-outline">Browse all reviews</a>
       </div>
     </div>
@@ -197,14 +198,14 @@ const compareCards = [
   <section class="catch-section">
     <div class="catch-glow-a" aria-hidden="true"></div>
     <div class="wrap">
-      <div class="catch-head">
+      <div class="catch-head" data-reveal>
         <span class="eyebrow eyebrow--dark">Our philosophy</span>
         <h2 class="catch-heading">We always look for the catch.</h2>
         <p class="catch-sub">Specs sell the product. The catch tells you if you should actually buy it.</p>
       </div>
       <div class="catch-grid">
         {catchCards.map(({ title, body }) => (
-          <div class="catch-card">
+          <div class="catch-card" data-reveal="zoom">
             <div class="catch-card-notch"></div>
             <h4 class="catch-card-title">{title}</h4>
             <p class="catch-card-body">{body}</p>
@@ -217,14 +218,14 @@ const compareCards = [
   <!-- ═══════════════════════════ COMPARE ═══════════════════════════ -->
   <section class="section section--paper">
     <div class="wrap">
-      <div class="section-head">
+      <div class="section-head" data-reveal>
         <span class="eyebrow">Compare</span>
         <h2 class="section-h2">Compare before you buy</h2>
         <p class="section-sub">Side-by-side comparisons so you can see exactly where each product wins and loses.</p>
       </div>
       <div class="compare-grid">
         {compareCards.map(({ a, b, desc }) => (
-          <div class="cmp-card">
+          <div class="cmp-card" data-reveal="zoom">
             <div class="cmp-vs-row">
               <span class="cmp-side">{a}</span>
               <span class="cmp-vs">VS</span>
@@ -243,11 +244,11 @@ const compareCards = [
     <div class="cta-glow-a" aria-hidden="true"></div>
     <div class="cta-glow-b" aria-hidden="true"></div>
     <div class="wrap">
-      <div class="cta-inner">
+      <div class="cta-inner" data-reveal>
         <h2 class="cta-heading">Don't buy blind.</h2>
         <p class="cta-sub">Start with clear picks, honest trade-offs, and fewer regrets.</p>
         <div class="cta-actions">
-          <a href="/reviews" class="btn btn-primary">Browse reviews</a>
+          <a href="/reviews" class="btn btn-primary shine">Browse reviews</a>
           <a href="/categories" class="btn btn-outline--light">Explore categories</a>
         </div>
         <p class="cta-disclosure">
@@ -268,23 +269,51 @@ const compareCards = [
   position: relative;
   overflow: hidden;
 }
+.hero-grid-layer {
+  position: absolute;
+  inset: -8% -4%;
+  background-image: radial-gradient(rgba(92,230,247,0.16) 1px, transparent 1.4px);
+  background-size: 28px 28px;
+  -webkit-mask-image: radial-gradient(110% 90% at 72% 18%, black 0%, transparent 64%);
+  mask-image: radial-gradient(110% 90% at 72% 18%, black 0%, transparent 64%);
+  animation: grid-drift 26s linear infinite alternate;
+  pointer-events: none;
+}
+@keyframes grid-drift {
+  from { transform: translate3d(0, 0, 0); }
+  to   { transform: translate3d(-28px, -28px, 0); }
+}
 .hero-glow-a {
   position: absolute; top: -20%; right: -8%;
   width: 620px; height: 620px;
   background: radial-gradient(circle, rgba(34,211,238,0.10) 0%, transparent 66%);
   pointer-events: none;
+  animation: glow-drift-a 18s ease-in-out infinite;
 }
 .hero-glow-b {
   position: absolute; bottom: -30%; left: 5%;
   width: 440px; height: 440px;
   background: radial-gradient(circle, rgba(34,211,238,0.05) 0%, transparent 68%);
   pointer-events: none;
+  animation: glow-drift-b 24s ease-in-out infinite;
 }
 .hero-glow-c {
   position: absolute; top: 40%; left: 35%;
   width: 280px; height: 280px;
   background: radial-gradient(circle, rgba(34,211,238,0.04) 0%, transparent 70%);
   pointer-events: none;
+  animation: glow-drift-a 21s ease-in-out infinite reverse;
+}
+@keyframes glow-drift-a {
+  0%, 100% { translate: 0 0; }
+  50%      { translate: -42px 30px; }
+}
+@keyframes glow-drift-b {
+  0%, 100% { translate: 0 0; }
+  50%      { translate: 36px -26px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero-grid-layer, .hero-glow-a, .hero-glow-b, .hero-glow-c { animation: none; }
 }
 .hero-inner {
   display: grid;

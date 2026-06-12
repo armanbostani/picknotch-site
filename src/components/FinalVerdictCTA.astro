@@ -26,7 +26,7 @@ const { score, headline, sub, price, code, discount, merchantUrl, brand, image, 
         <div class="fv-buy">
           {score != null && (
             <div class="fv-score">
-              <span class="fv-score-num">{score.toFixed(1)}</span>
+              <span class="fv-score-num" data-countup>{score.toFixed(1)}</span>
               <span class="fv-score-den">/10</span>
             </div>
           )}
@@ -47,7 +47,7 @@ const { score, headline, sub, price, code, discount, merchantUrl, brand, image, 
         </div>
 
         {merchantUrl && (
-          <a class="fv-cta" href={merchantUrl} rel="nofollow sponsored" target="_blank">
+          <a class="fv-cta shine" href={merchantUrl} rel="nofollow sponsored" target="_blank">
             Check price at {brand}
             <svg width="15" height="15" viewBox="0 0 15 15" fill="none" aria-hidden="true">
               <path d="M3 7.5h8.5M7.5 3l4.5 4.5L7.5 12" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>

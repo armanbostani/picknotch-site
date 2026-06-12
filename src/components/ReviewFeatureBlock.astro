@@ -13,7 +13,7 @@ interface Props {
 const { label, title, body, take, image, imageAlt, fit = 'cover', position = 'center', reverse = false } = Astro.props;
 ---
 
-<div class:list={['fb', reverse ? 'fb--reverse' : '']} data-reveal>
+<div class:list={['fb', reverse ? 'fb--reverse' : '']} data-reveal={reverse ? 'right' : 'left'}>
   <div class="fb-media">
     <img src={image} alt={imageAlt} loading="lazy" decoding="async" width="900" height="675" style={`object-fit:${fit};object-position:${position}`} />
     <div class="fb-media-tint" aria-hidden="true"></div>

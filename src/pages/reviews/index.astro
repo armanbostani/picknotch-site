@@ -45,8 +45,8 @@ const published = allReviews
 
       {published.length > 0 && (
         <div class="reviews-section-block">
-          <h2 class="block-heading">Published reviews</h2>
-          <div class="reviews-list">
+          <h2 class="block-heading" data-reveal>Published reviews</h2>
+          <div class="reviews-list" data-reveal style="--reveal-delay: 80ms">
             {published.map(r => (
               <ReviewCard
                 title={r.data.title}
@@ -64,8 +64,8 @@ const published = allReviews
       )}
 
       <div class="reviews-section-block">
-        <h2 class="block-heading">Research in progress</h2>
-        <div class="reviews-list">
+        <h2 class="block-heading" data-reveal>Research in progress</h2>
+        <div class="reviews-list" data-reveal style="--reveal-delay: 80ms">
           <PlaceholderCard name="Urtopia Carbon One" category="E-bikes" status="Researching" focus="Focus: lightweight design, smart features, price/value trade-off." />
           <PlaceholderCard name="Lectric XP 3.0" category="E-bikes" status="Coming soon" focus="Budget folding e-bike. Focus: portability, build quality, real-world range." />
         </div>
