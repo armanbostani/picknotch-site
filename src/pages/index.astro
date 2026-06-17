@@ -6,7 +6,6 @@ import ReviewCard from '../components/ReviewCard.astro';
 import PlaceholderVisual from '../components/PlaceholderVisual.astro';
 import HeroVisual from '../components/HeroVisual.astro';
 import MethodologyPreview from '../components/MethodologyPreview.astro';
-import Icon from '../components/Icon.astro';
 import { getCollection } from 'astro:content';
 
 const allReviews = await getCollection('reviews');
@@ -19,12 +18,27 @@ const published = allReviews
     return (b.data.score ?? 0) - (a.data.score ?? 0);
   });
 
-const subcategories = [
-  { name: 'Budget e-bikes',   desc: 'Under $800. Real value vs cut corners.',          iconName: 'budget', status: 'Building' },
-  { name: 'Fat tyre e-bikes', desc: 'Rugged & stable — with real trade-offs.',          iconName: 'outdoor', status: 'Coming soon' },
-  { name: 'Folding e-bikes',  desc: 'Portability vs wheel size, weight, and quality.', iconName: 'fold', status: 'Coming soon' },
-  { name: 'Commuter e-bikes', desc: 'Range honesty, motor type, real-world support.',  iconName: 'city', status: 'Coming soon' },
-] as const;
+// Sort published reviews into ride-type lanes for the E-bikes focus section
+function scoreColor(s: number | null | undefined) {
+  if (s == null) return '#94A3B8';
+  if (s >= 8.5) return '#0D9488';
+  if (s >= 7.0) return '#0891B2';
+  if (s >= 5.5) return '#D97706';
+  return '#DC2626';
+}
+
+const ebikeTypes = [
+  { type: 'Commuter & city',      desc: 'Daily riders judged on range honesty, comfort and long-term support.' },
+  { type: 'Fat tyre & adventure', desc: 'Full-suspension, fat-tyre bikes for trail, sand and snow — capability vs weight.' },
+  { type: 'Mountain & trekking',  desc: 'Geared 29ers for rough roads and light trails — value vs brand confidence.' },
+  { type: 'Folding',              desc: 'Bikes that fold into a boot or cupboard — portability vs weight and wheel size.' },
+  { type: 'Cargo',                desc: 'Long-tails built to carry kids, shopping and gear, and replace short car trips.' },
+  { type: 'Moped & cargo',        desc: 'Throttle-first haulers with passenger room and real all-week range.' },
+  { type: 'Off-road & dirt',      desc: 'E-motos and dirt bikes — big power, real suspension, the support gamble.' },
+];
+const ebikeGroups = ebikeTypes
+  .map(g => ({ ...g, items: published.filter(r => r.data.type === g.type) }))
+  .filter(g => g.items.length > 0);
 
 const catchCards = [
   { title: 'Great specs. Weak support?',       body: 'High performance means nothing if the brand disappears after 6 months.' },
@@ -102,45 +116,33 @@ const compareCards = [
     <div class="wrap">
       <div class="section-head" data-reveal>
         <span class="eyebrow">Current focus</span>
-        <h2 class="section-h2">E-bikes</h2>
-        <p class="section-sub">Our first review library — from budget commuters to fat-tyre models.</p>
+        <h2 class="section-h2">E-bikes, sorted by how you ride</h2>
+        <p class="section-sub">Our first review library — grouped by ride type so you can jump straight to the bikes built for your kind of riding.</p>
       </div>
 
-      <div class="ebike-layout" data-reveal style="--reveal-delay: 80ms">
-        <div class="ebf-card">
-          <div class="ebf-visual">
-            <PlaceholderVisual label="E-bikes" />
-            <div class="ebf-overlay">
-              <span class="ebf-active-chip">Active category</span>
+      <div class="ebcat-grid" data-reveal style="--reveal-delay: 80ms">
+        {ebikeGroups.map(g => (
+          <div class="ebcat-card">
+            <div class="ebcat-head">
+              <h3 class="ebcat-name">{g.type}</h3>
+              <span class="ebcat-count">{g.items.length} {g.items.length === 1 ? 'review' : 'reviews'}</span>
+            </div>
+            <p class="ebcat-desc">{g.desc}</p>
+            <div class="ebcat-list">
+              {g.items.map(r => (
+                <a href={`/reviews/${r.slug}`} class="ebcat-item">
+                  <span class="ebcat-score" style={`--sc: ${scoreColor(r.data.score)}`}>{r.data.score?.toFixed(1)}</span>
+                  <span class="ebcat-item-name">{r.data.brand} {r.data.product}</span>
+                  <span class="ebcat-item-arrow" aria-hidden="true">→</span>
+                </a>
+              ))}
             </div>
           </div>
-          <div class="ebf-body">
-            <div class="ebf-spec-tags">
-              <span class="spec-tag">Range</span>
-              <span class="spec-tag">Motor</span>
-              <span class="spec-tag">Value</span>
-              <span class="spec-tag">Support</span>
-            </div>
-            <h3 class="ebf-heading">Our first review library</h3>
-            <p class="ebf-desc">We compare range honesty, motor type, support quality, and real-world value — not just headline specs.</p>
-            <a href="/categories/e-bikes" class="btn btn-outline ebf-cta">Explore e-bikes →</a>
-          </div>
-        </div>
+        ))}
+      </div>
 
-        <div class="ebike-sub-grid" data-reveal style="--reveal-delay: 160ms">
-          {subcategories.map(({ name, desc, iconName, status }) => (
-            <div class="ebs-card">
-              <div class="ebs-icon-row">
-                <div class="ebs-icon-wrap">
-                  <Icon name={iconName} size={18} />
-                </div>
-                <span class:list={['ebs-pill', status === 'Building' ? 'ebs-pill--building' : 'ebs-pill--soon']}>{status}</span>
-              </div>
-              <h4 class="ebs-name">{name}</h4>
-              <p class="ebs-desc">{desc}</p>
-            </div>
-          ))}
-        </div>
+      <div class="ebcat-cta" data-reveal>
+        <a href="/categories/e-bikes" class="btn btn-outline">Explore all e-bikes →</a>
       </div>
     </div>
   </section>
@@ -371,131 +373,119 @@ const compareCards = [
   gap: 14px;
 }
 
-/* ─── E-bikes focus ─── */
-.ebike-layout {
+/* ─── E-bikes focus — category lanes ─── */
+.ebcat-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 20px;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
   align-items: start;
 }
-.ebf-card {
+.ebcat-card {
   background: #fff;
   border: 1px solid var(--line);
-  border-radius: 20px;
-  overflow: hidden;
+  border-radius: 18px;
+  padding: 22px 22px 16px;
   box-shadow: var(--shadow-sm);
 }
-.ebf-visual {
-  position: relative;
-  height: 180px;
-}
-.ebf-overlay {
-  position: absolute;
-  inset: 0;
+.ebcat-head {
   display: flex;
-  align-items: flex-end;
-  padding: 14px;
-  background: linear-gradient(to top, rgba(13,21,48,0.5) 0%, transparent 60%);
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 6px;
 }
-.ebf-active-chip {
+.ebcat-name {
   font-family: 'Sora', sans-serif;
-  font-size: 9px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  color: #22D3EE;
-  background: rgba(34,211,238,0.15);
-  border: 1px solid rgba(34,211,238,0.30);
-  padding: 3px 10px;
-  border-radius: 99px;
-}
-.ebf-body { padding: 20px 22px 22px; }
-.ebf-spec-tags {
-  display: flex;
-  gap: 6px;
-  flex-wrap: wrap;
-  margin-bottom: 12px;
-}
-.spec-tag {
-  font-family: 'Sora', sans-serif;
-  font-size: 9px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: var(--muted);
-  background: var(--paper);
-  border: 1px solid var(--line);
-  padding: 3px 8px;
-  border-radius: 99px;
-}
-.ebf-heading {
-  font-family: 'Sora', sans-serif;
-  font-size: 17px;
+  font-size: 16px;
   font-weight: 700;
   color: var(--ink);
-  margin: 0 0 8px;
+  margin: 0;
   letter-spacing: -0.02em;
 }
-.ebf-desc { font-size: 14px; color: var(--slate); line-height: 1.6; margin: 0 0 18px; }
-.ebf-cta { font-size: 13px; }
-
-.ebike-sub-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 14px;
-}
-.ebs-card {
-  background: #fff;
-  border: 1px solid var(--line);
-  border-radius: 16px;
-  padding: 18px;
-  box-shadow: var(--shadow-sm);
-}
-.ebs-icon-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 10px;
-}
-.ebs-icon-wrap {
-  width: 34px;
-  height: 34px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: rgba(34,211,238,0.08);
-  border: 1px solid rgba(34,211,238,0.15);
-  border-radius: 10px;
-  color: #22D3EE;
-}
-.ebs-pill {
+.ebcat-count {
+  flex-shrink: 0;
   font-family: 'Sora', sans-serif;
-  font-size: 9px;
+  font-size: 10px;
   font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.08em;
-  padding: 2px 8px;
-  border-radius: 99px;
-}
-.ebs-pill--building {
-  background: rgba(34,211,238,0.10);
-  color: #0E7490;
-  border: 1px solid rgba(34,211,238,0.25);
-}
-.ebs-pill--soon {
-  background: var(--paper);
+  letter-spacing: 0.06em;
   color: var(--muted);
-  border: 1px solid var(--line);
 }
-.ebs-name {
+.ebcat-desc {
+  font-size: 13px;
+  color: var(--slate);
+  line-height: 1.55;
+  margin: 0 0 16px;
+}
+.ebcat-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.ebcat-item {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  padding: 9px 12px;
+  border-radius: 11px;
+  border: 1px solid var(--line);
+  background: var(--paper);
+  text-decoration: none;
+  transition:
+    border-color 0.16s ease,
+    background 0.16s ease,
+    transform 0.16s var(--ease-spring);
+}
+.ebcat-item:hover {
+  border-color: rgba(34,211,238,0.45);
+  background: #fff;
+  transform: translateX(2px);
+}
+.ebcat-item:focus-visible {
+  outline: 2px solid var(--cyan);
+  outline-offset: 2px;
+}
+.ebcat-score {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 9px;
   font-family: 'Sora', sans-serif;
   font-size: 13px;
   font-weight: 700;
-  color: var(--ink);
-  margin: 0 0 6px;
-  letter-spacing: -0.01em;
+  color: var(--sc);
+  border: 1.5px solid var(--sc);
+  background: color-mix(in srgb, var(--sc) 8%, transparent);
 }
-.ebs-desc { font-size: 12px; color: var(--slate); margin: 0; line-height: 1.55; }
+.ebcat-item-name {
+  flex: 1;
+  min-width: 0;
+  font-family: 'Sora', sans-serif;
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--ink);
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.ebcat-item-arrow {
+  flex-shrink: 0;
+  color: var(--muted);
+  font-size: 14px;
+  opacity: 0;
+  transform: translateX(-3px);
+  transition: opacity 0.16s ease, transform 0.16s ease, color 0.16s ease;
+}
+.ebcat-item:hover .ebcat-item-arrow {
+  opacity: 1;
+  transform: translateX(0);
+  color: var(--cyan);
+}
+.ebcat-cta { text-align: center; margin-top: 32px; }
 
 /* ─── Reviews list ─── */
 .reviews-list {
@@ -736,22 +726,22 @@ const compareCards = [
 @media (max-width: 1024px) {
   .cat-grid { grid-template-columns: repeat(3, 1fr); }
 }
+@media (max-width: 960px) {
+  .ebcat-grid { grid-template-columns: 1fr; }
+}
 @media (max-width: 880px) {
   .hero-inner { grid-template-columns: 1fr; gap: 52px; }
   .hero-right { display: flex; justify-content: center; }
   .hero { padding: 80px 0 88px; }
-  .ebike-layout { grid-template-columns: 1fr; }
   .catch-grid { grid-template-columns: 1fr; gap: 12px; }
   .compare-grid { grid-template-columns: 1fr; }
 }
 @media (max-width: 720px) {
   .cat-grid { grid-template-columns: repeat(2, 1fr); }
-  .ebike-sub-grid { grid-template-columns: 1fr 1fr; }
   .section-head { margin-bottom: 36px; }
 }
 @media (max-width: 500px) {
   .cat-grid { grid-template-columns: 1fr; }
-  .ebike-sub-grid { grid-template-columns: 1fr; }
   .hero { padding: 64px 0 72px; }
   .hero-sub { font-size: 16px; }
   .catch-section, .cta-section { padding: 72px 0; }

@@ -3,6 +3,7 @@ title: "HappyRun G300 Pro Review"
 brand: "HappyRun"
 product: "G300 Pro"
 category: "E-bikes"
+type: "Off-road & dirt"
 status: "published"
 score: 8.0
 price: "$1,959"

@@ -3,6 +3,7 @@ title: "HappyRun G70 Review"
 brand: "HappyRun"
 product: "G70"
 category: "E-bikes"
+type: "Moped & cargo"
 status: "published"
 score: 7.8
 price: "$1,599"

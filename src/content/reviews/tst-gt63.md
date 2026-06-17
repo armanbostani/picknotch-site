@@ -3,6 +3,7 @@ title: "TST GT63 Review"
 brand: "TST"
 product: "GT63"
 category: "E-bikes"
+type: "Off-road & dirt"
 status: "published"
 score: 7.9
 price: "$1,199"

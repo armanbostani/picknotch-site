@@ -7,6 +7,7 @@ interface Props {
   description?: string;
   image?: string;
   type?: string;
+  noindex?: boolean;
 }
 
 const {
@@ -14,11 +15,37 @@ const {
   description = 'PickNotch helps people find better products with fewer regrets. Independent research, clear verdicts, honest trade-offs.',
   image = '/og-default.png',
   type = 'website',
+  noindex = false,
 } = Astro.props;
 
 const site = Astro.site ?? new URL(Astro.url.origin);
 const canonical = new URL(Astro.url.pathname, site).href.replace(/\/$/, '') || site.href;
 const ogImage = new URL(image, site).href;
+
+// Sitewide brand-entity structured data (helps Google associate the domain with a
+// trusted publisher). Page-specific Product/Review/Breadcrumb schema is added per page.
+const siteSchema = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'Organization',
+      '@id': `${site.href}#organization`,
+      name: 'PickNotch',
+      url: site.href,
+      logo: new URL('/favicon.svg', site).href,
+      description: 'Independent product research with clear verdicts and honest trade-offs.',
+    },
+    {
+      '@type': 'WebSite',
+      '@id': `${site.href}#website`,
+      url: site.href,
+      name: 'PickNotch',
+      description: 'Independent research. Clear verdicts. Honest trade-offs.',
+      publisher: { '@id': `${site.href}#organization` },
+      inLanguage: 'en',
+    },
+  ],
+};
 ---
 <!doctype html>
 <html lang="en">
@@ -28,7 +55,12 @@ const ogImage = new URL(image, site).href;
   <title>{title}</title>
   <meta name="description" content={description} />
   <link rel="canonical" href={canonical} />
+  {noindex
+    ? <meta name="robots" content="noindex, follow" />
+    : <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />}
   <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <link rel="sitemap" type="application/xml" href="/sitemap.xml" />
+  <meta name="theme-color" content="#0D1530" />
 
   <!-- Open Graph -->
   <meta property="og:type" content={type} />
@@ -45,6 +77,7 @@ const ogImage = new URL(image, site).href;
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=Inter:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet" />
+  <script type="application/ld+json" set:html={JSON.stringify(siteSchema)} />
   <style is:global>
     :root {
       --ink: #1A2442;
@@ -332,6 +365,34 @@ const ogImage = new URL(image, site).href;
       };
       window.addEventListener('scroll', onScroll, { passive: true });
       onScroll();
+
+      /* Copy coupon code buttons (data-copy-code) */
+      document.addEventListener('click', (e) => {
+        const btn = e.target.closest('[data-copy-code]');
+        if (!btn) return;
+        e.preventDefault();
+        const code = btn.getAttribute('data-copy-code') || '';
+        const label = btn.querySelector('.copy-label');
+        const done = () => {
+          btn.classList.add('is-copied');
+          if (label) label.textContent = 'Copied!';
+          window.setTimeout(() => {
+            btn.classList.remove('is-copied');
+            if (label) label.textContent = 'Copy';
+          }, 1600);
+        };
+        const fallback = () => {
+          const ta = document.createElement('textarea');
+          ta.value = code; ta.setAttribute('readonly', '');
+          ta.style.position = 'fixed'; ta.style.opacity = '0';
+          document.body.appendChild(ta); ta.select();
+          try { document.execCommand('copy'); } catch (err) {}
+          document.body.removeChild(ta); done();
+        };
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(code).then(done).catch(fallback);
+        } else { fallback(); }
+      });
     })();
   </script>
 </body>

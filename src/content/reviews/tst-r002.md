@@ -3,6 +3,7 @@ title: "TST R002 Review"
 brand: "TST"
 product: "R002"
 category: "E-bikes"
+type: "Moped & cargo"
 status: "published"
 score: 8.1
 price: "$799"

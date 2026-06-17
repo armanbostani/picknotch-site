@@ -106,15 +106,22 @@ const scoreTier = score != null ? tier(score) : null;
                   <span class="rh-coupon-label">Code</span>
                   <span class="rh-coupon-code">{code}</span>
                   {discount && <span class="rh-coupon-save">saves at checkout</span>}
+                  <button type="button" class="rh-coupon-copy" data-copy-code={code} aria-label={`Copy code ${code}`}>
+                    <svg viewBox="0 0 14 14" fill="none" aria-hidden="true">
+                      <rect x="4.6" y="4.6" width="7.4" height="7.4" rx="1.4" stroke="currentColor" stroke-width="1.3"/>
+                      <path d="M9.4 4.6V3.2A1.6 1.6 0 0 0 7.8 1.6H3.2A1.6 1.6 0 0 0 1.6 3.2v4.6A1.6 1.6 0 0 0 3.2 9.4h1.4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/>
+                    </svg>
+                    <span class="copy-label">Copy</span>
+                  </button>
                 </div>
               )}
-              <a class="rh-cta shine" href={merchantUrl} rel="nofollow sponsored" target="_blank">
+              <a class="rh-cta shine" href={merchantUrl} rel="nofollow sponsored noopener" target="_blank">
                 Check price
                 <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
                   <path d="M2.5 7h8M7 3l4 4-4 4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
                 </svg>
               </a>
-              <p class="rh-affil">Affiliate-supported · our score stays independent</p>
+              <p class="rh-affil">Prices change regularly. We may earn a commission if you buy through our link, at no extra cost to you.</p>
             </div>
           )}
         </div>
@@ -339,7 +346,28 @@ const scoreTier = score != null ? tier(score) : null;
   letter-spacing: 0.06em;
   color: #0E7490;
 }
-.rh-coupon-save { font-size: 11px; color: var(--muted); margin-left: auto; }
+.rh-coupon-save { font-size: 11px; color: var(--muted); }
+.rh-coupon-copy {
+  margin-left: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-family: 'Sora', sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  color: #fff;
+  background: var(--ink);
+  border: none;
+  padding: 6px 11px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.15s ease, transform 0.15s var(--ease-spring);
+}
+.rh-coupon-copy svg { width: 12px; height: 12px; flex-shrink: 0; }
+.rh-coupon-copy:hover { background: var(--ink-deep); transform: translateY(-1px); }
+.rh-coupon-copy:active { transform: translateY(0); }
+.rh-coupon-copy:focus-visible { outline: 2px solid var(--cyan); outline-offset: 2px; }
+.rh-coupon-copy.is-copied { background: var(--green); }
 
 .rh-cta {
   display: flex;

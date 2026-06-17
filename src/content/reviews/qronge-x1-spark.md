@@ -3,6 +3,7 @@ title: "Qronge X1 Spark review: a 50mph dirt bike wearing a budget price"
 brand: "Qronge"
 product: "X1 Spark"
 category: "E-bikes"
+type: "Off-road & dirt"
 status: "published"
 score: 7.2
 price: "$1,099.99"

@@ -2,3 +2,12 @@ node_modules/
 dist/
 .astro/
 .DS_Store
+
+# Local tooling — not part of the deployed site
+serve.mjs
+screenshot.mjs
+screenshot-section.mjs
+screenshot-el.mjs
+fetch-images.mjs
+temporary screenshots/
+img-*.json

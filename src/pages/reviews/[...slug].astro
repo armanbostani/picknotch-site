@@ -54,7 +54,7 @@ const graph: any[] = [
       offers: {
         "@type": "Offer",
         price: priceNum,
-        priceCurrency: "USD",
+        priceCurrency: d.currency ?? "USD",
         availability: `https://schema.org/${d.availability ?? 'InStock'}`,
         url: d.merchantUrl,
       },
