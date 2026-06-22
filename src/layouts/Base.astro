@@ -46,6 +46,15 @@ const siteSchema = {
     },
   ],
 };
+
+// ── Search-console verification + privacy-friendly analytics ──
+// Google Search Console: paste the token from the "HTML tag" verification method
+// (only the content="..." value, not the whole tag). DNS verification via Cloudflare
+// is preferred and needs nothing here — leave this empty if you verified by DNS.
+const GSC_VERIFICATION = '';
+// Cloudflare Web Analytics: paste the site token from the Cloudflare dashboard
+// (Web Analytics → your site → JS snippet → the "token" value). Empty = disabled.
+const CF_ANALYTICS_TOKEN = 'e11cbf2324b5442495d0e9b1e3590cfe';
 ---
 <!doctype html>
 <html lang="en">
@@ -61,6 +70,7 @@ const siteSchema = {
   <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
   <link rel="sitemap" type="application/xml" href="/sitemap.xml" />
   <meta name="theme-color" content="#0D1530" />
+  {GSC_VERIFICATION && <meta name="google-site-verification" content={GSC_VERIFICATION} />}
 
   <!-- Open Graph -->
   <meta property="og:type" content={type} />
@@ -78,6 +88,9 @@ const siteSchema = {
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=Inter:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet" />
   <script type="application/ld+json" set:html={JSON.stringify(siteSchema)} />
+  {CF_ANALYTICS_TOKEN && (
+    <script is:inline defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon={`{"token": "${CF_ANALYTICS_TOKEN}"}`}></script>
+  )}
   <style is:global>
     :root {
       --ink: #1A2442;
