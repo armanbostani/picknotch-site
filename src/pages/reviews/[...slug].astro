@@ -35,6 +35,21 @@ const site = Astro.site ?? new URL(Astro.url.origin);
 const abs = (p?: string) => (p ? new URL(p, site).href : undefined);
 const priceNum = (d.price ?? '').replace(/[^0-9.]/g, '') || undefined;
 
+// `updated` is a human "Month YYYY" (e.g. "June 2026"). Schema.org dates must be
+// ISO 8601 — emit an ISO year-month, or nothing if it won't parse, so we never
+// ship an invalid datePublished that disqualifies the review from rich results.
+const MONTHS = ['january','february','march','april','may','june','july','august','september','october','november','december'];
+const toIsoMonth = (s?: string): string | undefined => {
+  if (!s) return undefined;
+  const m = s.trim().toLowerCase().match(/^([a-z]+)\s+(\d{4})$/);
+  if (m) {
+    const idx = MONTHS.indexOf(m[1]);
+    if (idx >= 0) return `${m[2]}-${String(idx + 1).padStart(2, '0')}`;
+  }
+  return /^\d{4}-\d{2}/.test(s) ? s.slice(0, 10) : undefined;
+};
+const datePublishedIso = toIsoMonth(d.updated);
+
 // NOTE: never compute AggregateRating from third-party/owner reviews —
 // schema carries only PickNotch's own editorial Review (policy, 2026-06-11).
 const graph: any[] = [
@@ -48,7 +63,7 @@ const graph: any[] = [
       "@type": "Review",
       reviewRating: d.score != null ? { "@type": "Rating", ratingValue: d.score, bestRating: 10 } : undefined,
       author: { "@type": "Organization", name: "PickNotch" },
-      datePublished: d.updated,
+      datePublished: datePublishedIso,
     },
     ...(d.merchantUrl ? {
       offers: {
