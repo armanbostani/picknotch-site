@@ -1,2 +1,7 @@
 import { defineConfig } from 'astro/config';
-export default defineConfig({ site: 'https://picknotch.com' });
+import cloudflare from "@astrojs/cloudflare";
+export default defineConfig({
+  site: 'https://picknotch.com',
+  output: "hybrid",
+  adapter: cloudflare()
+});
